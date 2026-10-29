@@ -1,0 +1,288 @@
+/* i1.css: רעיון 1 · ההזמנה. המאמר הוא סוויטת הזמנה שמונחת על סאטן שוקולד.
+   פתיחה: הזמנה מתקפלת (gatefold) מכותנה עבה, הכותרת בפויל זהב מובלט; בגלילה הכנפיים נפתחות בתלת ממד וחושפות את צילום הבר.
+   גוף: דף כותנה ארוך עם קצה פרום ומסגרת בהטבעה עיוורת, ציטוט על וולום שקוף, צילום בפינות פויל, טיפ כתווית מתנה, רשימה ככרטיס "נא להשיב".
+   כל הכללים כאן תחת html.idea-1 (נבנה יחד עם i1.js). */
+
+html.idea-1{
+  --i1-ink:#3F1E0E;
+  --i1-grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .33  0 0 0 0 .2  0 0 0 0 .09  1.15 0 0 0 -.62'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  --i1-grain-lt:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .98  0 0 0 0 .93  0 1.2 0 0 -.68'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+  --i1-mottle:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='640' height='640'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='.008 .012' numOctaves='4' seed='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .62  0 0 0 0 .45  0 0 0 0 .26  .3 0 0 0 -.13'/></filter><rect width='100%25' height='100%25' filter='url(%23m)'/></svg>");
+  --i1-fibers:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='520' height='520'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.012 .32' numOctaves='2' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .4  0 0 0 0 .22  1 0 0 0 -.72'/></filter><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>");
+  --i1-foil-noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='5' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .93  0 0 0 0 .72  1 0 0 0 -.55'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  /* פויל זהב שתופס אור: פסים בהירים וכהים שזזים עם --bx */
+  --i1-foil:linear-gradient(100deg,#6A4614 0%,#86601F 12%,#B08535 22%,#F6E2A6 29.5%,#CFA44E 34%,#7A5419 47%,#8A6522 59%,#C69E4C 69%,#F7E5AE 74.5%,#97702A 83%,#6A4614 100%);
+  /* כותנה עבה בשמנת: גרעין, סיבים וכתמים רכים */
+  --i1-cotton:var(--i1-grain) 0 0/200px 200px,var(--i1-grain-lt) 0 0/240px 240px,var(--i1-fibers) 0 0/520px 520px,var(--i1-mottle) 0 0/640px 640px,radial-gradient(130% 95% at 82% 0%,#FAF1DE 0%,#F3E5C9 50%,#E9D5AF 100%);
+  --i1-sheet:var(--i1-grain) 0 0/200px 200px,var(--i1-grain-lt) 0 0/240px 240px,var(--i1-fibers) 0 0/520px 520px,var(--i1-mottle) 0 0/640px 640px,linear-gradient(180deg,#F8EEDA 0,#F4E7CD 900px,#F2E3C6 100%);
+  --i1-cast:0 1px 2px rgba(30,12,4,.35),0 10px 22px rgba(30,12,4,.32),0 34px 64px rgba(30,12,4,.38);
+  /* הריפוד של דף הכותנה (הציטוט על הוולום נשען עליו כדי שהשורות יתחילו באותו קו) */
+  --i1-pad:clamp(46px,5.4vw,80px);
+  --i1-vp:clamp(26px,2.6vw,38px);
+  --i1-vo:clamp(28px,4vw,62px);
+}
+html.idea-1 body{background:#5A2C16}
+
+/* ---------- סאטן שוקולד (canvas קבוע, מצויר פעם אחת ב-i1.js) ---------- */
+html.idea-1 .i1-satin{position:fixed;inset:0;z-index:-1;display:block;width:100%;height:100%;pointer-events:none;background:#5C2E17}
+html.idea-1 .i1-satin-l{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.85;
+  background:var(--i1-grain) 0 0/200px 200px,radial-gradient(52% 44% at 52% 38%,rgba(255,206,160,.12),rgba(255,206,160,0) 72%)}
+
+/* ---------- 1. פתיחה: ההזמנה הסגורה ---------- */
+html.idea-1 .ar-hero{min-height:220vh;min-height:220svh;padding:0;background:none;overflow:visible}
+html.idea-1 .ar-hero .dust,html.idea-1 .ar-hero .h-wave,html.idea-1 .ar-hin,html.idea-1 .ar-shot{display:none}
+html.idea-1 .ar-crumbs,html.idea-1 .ar-hero .label,html.idea-1 .ar-l1,html.idea-1 .ar-l2,html.idea-1 .ar-lead,html.idea-1 .ar-meta{animation:none}
+
+html.idea-1 .i1-scene{position:relative;height:220vh;height:220svh}
+html.idea-1 .i1-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+html.idea-1 .i1-rig{position:absolute;inset:0;display:grid;place-items:center;perspective:2800px;perspective-origin:50% 44%}
+html.idea-1 .i1-card{position:relative;width:var(--W,800px);height:var(--H,600px);transform-style:preserve-3d;will-change:transform;cursor:pointer;opacity:0}
+html.idea-1 .i1-card.ok{opacity:1;transition:opacity .7s ease}
+html.idea-1 .i1-card.open{cursor:default}
+
+/* הצל על הסאטן */
+html.idea-1 .i1-cast,html.idea-1 .i1-cast2{position:absolute;left:0;top:0;width:var(--W);height:var(--H);transform-origin:0 0;pointer-events:none}
+html.idea-1 .i1-cast{background:rgba(30,12,4,.6);filter:blur(26px)}
+html.idea-1 .i1-cast2{background:rgba(30,12,4,.5);filter:blur(5px)}
+
+/* הנייר: כותנה עבה עם קצה פרום (clip-path מ-JS) */
+html.idea-1 .i1-face{position:absolute;inset:0;overflow:hidden;container-type:inline-size;background:var(--i1-cotton);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:inset 0 0 0 1px rgba(255,250,236,.32),inset 0 0 14px rgba(120,80,40,.1)}
+html.idea-1 .i1-shade{position:absolute;inset:0;background:#2A1206;opacity:0;pointer-events:none}
+html.idea-1 .i1-sheen{position:absolute;inset:0;pointer-events:none;background:radial-gradient(60% 70% at var(--px,70%) var(--py,20%),rgba(255,249,235,.32),rgba(255,249,235,0) 70%)}
+html.idea-1 .i1-center{transform:translateZ(0)}
+html.idea-1 .i1-wing{position:absolute;top:0;height:100%;transform-style:preserve-3d}
+html.idea-1 .i1-wing-l{left:0;width:var(--L);transform-origin:0 50%}
+html.idea-1 .i1-wing-r{right:0;width:var(--R);transform-origin:100% 50%}
+html.idea-1 .i1-wing .i1-back{transform:rotateY(180deg)}
+html.idea-1 .i1-edge{position:absolute;top:0;width:2px;height:100%;background:linear-gradient(#D9C196,#CDB487);pointer-events:none}
+html.idea-1 .i1-wing-r .i1-edge{left:0;transform-origin:0 50%;transform:rotateY(90deg)}
+html.idea-1 .i1-wing-l .i1-edge{right:0;transform-origin:100% 50%;transform:rotateY(-90deg)}
+
+/* מסגרת בהטבעה עיוורת (שני קווים: צל למעלה, אור למטה) */
+html.idea-1 .i1-frame{position:absolute;inset:calc(var(--H) * .036);pointer-events:none;
+  border-top:1px solid rgba(63,30,14,.17);border-right:1px solid rgba(63,30,14,.13);border-bottom:1px solid rgba(255,250,238,.85);border-left:1px solid rgba(255,250,238,.85)}
+html.idea-1 .i1-frame::after{content:'';position:absolute;inset:calc(var(--H) * .01);
+  border-top:1px solid rgba(255,250,238,.8);border-right:1px solid rgba(255,250,238,.8);border-bottom:1px solid rgba(63,30,14,.14);border-left:1px solid rgba(63,30,14,.12)}
+
+/* הלוגו בהטבעה עיוורת: אותו צבע של הנייר, רק אור וצל */
+html.idea-1 .i1-blind{display:block;line-height:0}
+html.idea-1 .i1-blind svg{display:block;width:100%;height:auto;overflow:visible;
+  filter:drop-shadow(-1px -1px 0 rgba(255,251,240,.95)) drop-shadow(1px 1.5px .8px rgba(63,30,14,.3)) drop-shadow(0 3px 5px rgba(63,30,14,.08))}
+html.idea-1 .i1-wing-l .i1-blind{position:absolute;left:17cqi;right:17cqi;top:50%;translate:0 -30%}
+
+/* חזית: כנף ימין עם הכותרת */
+html.idea-1 .i1-fr{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:12cqi 10cqi 11cqi 8cqi;color:var(--i1-ink);text-align:right}
+html.idea-1 .i1-fr .i1-blind{display:none}
+html.idea-1 .i1-fr .ar-crumbs{position:relative;padding-bottom:3.4cqi;font:500 calc(max(16px,3.1cqi) * var(--fs))/1 var(--font);color:#6E4C32}
+html.idea-1 .i1-fr .ar-crumbs::after{content:'';position:absolute;right:0;bottom:0;width:12cqi;height:2px;border-top:1px solid rgba(63,30,14,.22);border-bottom:1px solid rgba(255,250,238,.9)}
+html.idea-1 .i1-fr .ar-crumbs a{color:var(--i1-ink);border-bottom-color:rgba(138,98,32,.55);text-shadow:0 1px 0 rgba(255,251,240,.85)}
+html.idea-1 .i1-fr .ar-crumbs a:hover{color:var(--gold-d)}
+html.idea-1 .i1-fr .ar-crumbs span{text-shadow:0 1px 0 rgba(255,251,240,.85)}
+html.idea-1 .i1-fr .ar-crumbs .i{color:var(--gold-d)}
+html.idea-1 .i1-fr .ar-h1{margin:0;align-items:flex-start}
+html.idea-1 .i1-fr .ar-l1{margin-bottom:.22em;font:700 calc(6.9cqi * var(--fs))/1.18 var(--font);letter-spacing:-.005em;color:#4A2414;text-wrap:balance;
+  text-shadow:0 1px 0 rgba(255,251,240,.85),0 -.5px 0 rgba(63,30,14,.35)}
+html.idea-1 .i1-fr .ar-l2{margin:0;font:700 calc(15.6cqi * var(--fs))/1.04 var(--font);letter-spacing:-.012em;padding-bottom:.04em}
+html.idea-1 .i1-fr .ar-l2::before,html.idea-1 .i1-fr .ar-l2::after{display:none}
+
+/* פויל זהב מובלט שתופס אור (האור זז עם העכבר ונושם לאט כשאין עכבר) */
+html.idea-1 .i1-foil,html.idea-1 .i1-fr .ar-l2 > span{
+  background-image:radial-gradient(circle at var(--fx,60%) var(--fy,35%),rgba(255,245,215,.95) 0%,rgba(240,212,138,.6) 7%,rgba(240,212,138,0) 22%),var(--i1-foil-noise),var(--i1-foil);
+  background-size:100% 100%,160px 160px,320% 100%;background-position:0 0,0 0,var(--bx,40%) 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 .4px rgba(63,30,14,.95)) drop-shadow(0 0 .4px rgba(63,30,14,.8)) drop-shadow(0 -1px 0 rgba(255,251,240,.85)) drop-shadow(0 1.6px 1.1px rgba(63,30,14,.55)) drop-shadow(0 5px 9px rgba(63,30,14,.18))}
+
+/* פנים: צילום הבר מודפס (ממשיך מכנף שמאל אל הלוח האמצעי) */
+html.idea-1 .i1-win{position:absolute;top:var(--m);bottom:var(--m);overflow:hidden;background:#EFE4D0}
+html.idea-1 .i1-win img{position:absolute;top:0;height:100%;width:calc(var(--L) + var(--W) - 2 * var(--m));max-width:none;object-fit:cover;object-position:50% 58%;filter:brightness(1.05) saturate(1.04)}
+html.idea-1 .i1-win::after{content:'';position:absolute;inset:0;pointer-events:none;background:var(--i1-grain-lt) 0 0/240px 240px;opacity:.28;box-shadow:inset 0 0 0 1px rgba(63,30,14,.16)}
+html.idea-1 .i1-win-l{left:var(--m);right:0}
+html.idea-1 .i1-win-l img{left:0}
+html.idea-1 .i1-win-c{left:0;right:var(--m)}
+html.idea-1 .i1-win-c img{left:calc(var(--m) - var(--L))}
+html.idea-1 .i1-crease{position:absolute;top:0;bottom:0;right:0;width:calc(var(--W) * .02);pointer-events:none;background:linear-gradient(270deg,rgba(42,18,6,.18),rgba(255,248,230,.1) 40%,rgba(42,18,6,0))}
+html.idea-1 .i1-fold{position:absolute;top:0;bottom:0;width:34%;pointer-events:none;opacity:0}
+html.idea-1 .i1-fold-l{left:0;background:linear-gradient(90deg,rgba(32,13,4,.7),rgba(32,13,4,0))}
+html.idea-1 .i1-fold-r{right:0;background:linear-gradient(270deg,rgba(32,13,4,.7),rgba(32,13,4,0))}
+
+/* פנים: כנף ימין, הפתיח (הגדלים כפול --si כי כל הפריסה מוקטנת כשההזמנה פתוחה) */
+html.idea-1 .i1-in-d{position:absolute;inset:0;padding:calc(var(--H) * .1) calc(var(--R) * .1) calc(var(--H) * .085) calc(var(--R) * .09)}
+html.idea-1 .i1-in-ph{display:none}
+html.idea-1 .i1-inner{display:flex;flex-direction:column;align-items:flex-start;height:100%;color:var(--i1-ink);text-align:right}
+html.idea-1 .i1-inner .label{margin-bottom:calc(26px * var(--si,1));padding:calc(8px * var(--si,1)) calc(26px * var(--si,1)) calc(9px * var(--si,1));font-size:calc(14px * var(--si,1) * var(--fs));
+  clip-path:polygon(0 0,100% 0,calc(100% - 12px * var(--si,1)) 50%,100% 100%,0 100%,calc(12px * var(--si,1)) 50%)}
+html.idea-1 .i1-inner .label::before,html.idea-1 .i1-inner .label::after{inset-inline:calc(14px * var(--si,1))}
+html.idea-1 .i1-inner .ar-lead{max-width:none;font:400 calc(var(--i1-lf,22px) * var(--si,1) * var(--fs))/1.55 var(--font);color:var(--i1-ink);text-wrap:pretty;text-shadow:0 1px 0 rgba(255,251,240,.6)}
+html.idea-1 .i1-rule{display:block;flex:none;width:calc(56px * var(--si,1));height:calc(3px * var(--si,1));margin:calc(22px * var(--si,1)) 0;
+  background:var(--i1-foil) 30% 0/300% 100%;box-shadow:0 1px 0 rgba(255,251,240,.9),0 -1px 0 rgba(63,30,14,.25)}
+html.idea-1 .i1-inner .ar-meta{row-gap:calc(8px * var(--si,1));font-size:calc(16px * var(--si,1) * var(--fs));color:#6E4C32}
+html.idea-1 .i1-inner .ar-mi{gap:calc(8px * var(--si,1))}
+html.idea-1 .i1-inner .ar-mi .i{width:calc(18px * var(--si,1));height:calc(18px * var(--si,1));color:var(--gold-d)}
+html.idea-1 .i1-inner .ar-mi:not(:last-child)::after{width:calc(5px * var(--si,1));height:calc(5px * var(--si,1));margin-inline:calc(6px * var(--si,1)) calc(14px * var(--si,1));background:var(--gold-d)}
+/* כשההזמנה הפתוחה קטנה על המסך (טאבלט, מסך נמוך): פתיח קטן יותר ורווחים צפופים */
+html.idea-1 .i1-card.tight .i1-in-d{padding:calc(var(--H) * .075) calc(var(--R) * .09) calc(var(--H) * .065) calc(var(--R) * .08)}
+html.idea-1 .i1-card.tight .i1-inner{--i1-lf:18px}
+html.idea-1 .i1-card.tight .i1-inner .label{margin-bottom:calc(14px * var(--si,1))}
+html.idea-1 .i1-card.tight .i1-rule{margin:calc(14px * var(--si,1)) 0}
+/* במחשב הפרטים בטור, עם יהלום זהב קטן לפני כל שורה (כדי שלא תישאר נקודה בסוף שורה) */
+@media (min-width:821px){
+  html.idea-1 .i1-inner .ar-meta{flex-direction:column;align-items:flex-start;row-gap:calc(10px * var(--si,1))}
+  html.idea-1 .i1-inner .ar-mi .i,html.idea-1 .i1-inner .ar-mi:not(:last-child)::after{display:none}
+  html.idea-1 .i1-inner .ar-mi{gap:calc(12px * var(--si,1))}
+  html.idea-1 .i1-inner .ar-mi::before{content:'';flex:none;width:calc(6px * var(--si,1));height:calc(6px * var(--si,1));rotate:45deg;background:linear-gradient(135deg,#F7E3A3,#C9A04A 50%,#8A6220);box-shadow:0 1px 0 rgba(255,251,240,.8)}
+}
+html.idea-1 .i1-go{display:inline-flex;align-items:center;gap:calc(8px * var(--si,1));margin-top:auto;padding-bottom:calc(8px * var(--si,1));border-bottom:calc(1.5px * var(--si,1)) solid rgba(138,98,32,.65);
+  font:700 calc(16px * var(--si,1) * var(--fs))/1 var(--font);color:var(--i1-ink);text-decoration:none;text-shadow:0 1px 0 rgba(255,251,240,.8);transition:color .25s}
+html.idea-1 .i1-go svg{width:calc(18px * var(--si,1));height:calc(18px * var(--si,1));fill:none;stroke:var(--gold-d);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s var(--ease)}
+html.idea-1 .i1-go:hover{color:var(--gold-d)}
+html.idea-1 .i1-go:hover svg{transform:translateY(3px)}
+
+/* רמז לגלילה */
+html.idea-1 .i1-hint{position:absolute;left:50%;top:auto;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;transform:translateX(-50%);
+  font:500 calc(16px * var(--fs))/1 var(--font);letter-spacing:.04em;color:#F2E3C6;text-shadow:0 1px 2px rgba(30,12,4,.6)}
+html.idea-1 .i1-hint i{display:block;width:1px;height:34px;background:linear-gradient(#F7E3A3,rgba(201,160,74,0));transform-origin:top;animation:i1Drip 2.4s ease-in-out infinite}
+@keyframes i1Drip{0%{transform:scaleY(0);opacity:1}60%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+/* ---------- 2. גוף המאמר: דף כותנה אחד ארוך על הסאטן ---------- */
+html.idea-1 .ar-body{padding:clamp(30px,3vw,48px) 0 clamp(110px,10vw,150px);background:none}
+html.idea-1 .ar-grid{grid-template-columns:clamp(200px,17vw,250px) minmax(0,840px)}
+html.idea-1 .ar-art{position:relative;isolation:isolate;max-width:840px;padding:clamp(54px,5.4vw,84px) var(--i1-pad) clamp(48px,5vw,76px);scroll-margin-top:90px}
+html.idea-1 .i1-paper{position:absolute;inset:0;z-index:-1;pointer-events:none}
+html.idea-1 .i1-paper::before{content:'';position:absolute;inset:4px;box-shadow:var(--i1-cast)}
+html.idea-1 .i1-pp{position:absolute;inset:0;background:var(--i1-sheet)}
+html.idea-1 .i1-pframe{position:absolute;inset:clamp(13px,1.5vw,20px);
+  border-top:1px solid rgba(63,30,14,.15);border-right:1px solid rgba(63,30,14,.12);border-bottom:1px solid rgba(255,250,238,.85);border-left:1px solid rgba(255,250,238,.85)}
+html.idea-1 .i1-pframe::after{content:'';position:absolute;inset:6px;
+  border-top:1px solid rgba(255,250,238,.8);border-right:1px solid rgba(255,250,238,.8);border-bottom:1px solid rgba(63,30,14,.12);border-left:1px solid rgba(63,30,14,.1)}
+/* הלוגו בהטבעה עיוורת בראש הדף (כמו נייר מכתבים) */
+html.idea-1 .i1-mark{display:block;width:clamp(96px,9vw,128px);margin:0 0 clamp(34px,3.4vw,48px);margin-inline-start:auto}
+
+html.idea-1 .ar-intro{color:var(--i1-ink);text-shadow:0 1px 0 rgba(255,251,240,.6)}
+html.idea-1 .ar-sec h2{color:var(--i1-ink);text-shadow:0 1px 0 rgba(255,251,240,.8),0 -.5px 0 rgba(63,30,14,.22)}
+
+/* קישוט פויל קטן ליד כל כותרת: ענף זהב עם יהלום, והמספר בפויל */
+html.idea-1 .ar-n{gap:11px;margin-bottom:16px;font:700 calc(18px * var(--fs))/1.1 var(--font);letter-spacing:.14em;
+  background:linear-gradient(180deg,#F8E4A8 0%,#D9B25E 42%,#A57A2C 70%,#E2C27A 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 .35px rgba(63,30,14,.9)) drop-shadow(0 -1px 0 rgba(255,251,240,.9)) drop-shadow(0 1.2px .8px rgba(63,30,14,.45))}
+html.idea-1 .ar-n::before{width:58px;height:15px;border-radius:0;
+  background:var(--i1-foil-noise) 0 0/120px 120px,linear-gradient(90deg,#F7E3A3,#C9A04A 30%,#8A6220 55%,#E9CC80 80%,#B98B3C);
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 13'><path d='M5.5 1.5 L10 6.5 L5.5 11.5 L1 6.5Z M18 5.6 L50 6.1 L50 6.9 L18 7.4Z'/><circle cx='14' cy='6.5' r='1.5'/></svg>") center/100% 100% no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 13'><path d='M5.5 1.5 L10 6.5 L5.5 11.5 L1 6.5Z M18 5.6 L50 6.1 L50 6.9 L18 7.4Z'/><circle cx='14' cy='6.5' r='1.5'/></svg>") center/100% 100% no-repeat}
+
+/* הציטוט על נייר וולום שקוף: מונח מעל הדף ויוצא מהקצה שלו אל הסאטן. המירכאות בפויל על הוולום */
+html.idea-1 .ar-quote{margin-block:clamp(48px,4.6vw,64px) clamp(42px,4vw,56px);margin-inline:calc(var(--i1-vp) * -1) calc((var(--i1-pad) + var(--i1-vo)) * -1);
+  padding:clamp(80px,6.8vw,98px) var(--i1-vp) clamp(34px,3.2vw,44px) calc(var(--i1-pad) + var(--i1-vo));rotate:-.7deg;
+  background:var(--i1-grain-lt) 0 0/240px 240px,linear-gradient(170deg,rgba(255,253,248,.58),rgba(255,250,240,.4) 60%,rgba(255,252,246,.5));
+  -webkit-backdrop-filter:blur(2.4px) saturate(.85) brightness(1.05);backdrop-filter:blur(2.4px) saturate(.85) brightness(1.05);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.4),inset 0 1px 0 rgba(255,255,255,.7),0 1px 1px rgba(40,16,6,.1),0 14px 26px -14px rgba(40,16,6,.42)}
+html.idea-1 .ar-quote::before{display:none}
+html.idea-1 .ar-qm{top:clamp(16px,1.6vw,22px);inset-inline-start:calc(var(--i1-vp) - .03em)}
+html.idea-1 .ar-quote p{color:var(--i1-ink)}
+
+/* צילום נוסף: הדפסה שנכנסת לארבע פינות פויל */
+html.idea-1 .ar-pic{margin-inline:0 calc(clamp(0px,3vw,44px) * -1)}
+html.idea-1 .ar-pic .print{rotate:.5deg;box-shadow:0 0 0 1px rgba(59,26,16,.07),0 2px 3px rgba(40,16,6,.12),0 18px 30px -16px rgba(30,10,4,.5)}
+html.idea-1 .i1-corner{position:absolute;z-index:3;width:clamp(30px,2.8vw,40px);height:clamp(30px,2.8vw,40px);pointer-events:none;filter:drop-shadow(0 1px .6px rgba(40,16,6,.4)) drop-shadow(0 2px 3px rgba(40,16,6,.18))}
+html.idea-1 .i1-corner::before{content:'';position:absolute;inset:0;background:var(--i1-foil-noise) 0 0/120px 120px,var(--i1-foil) 30% 0/260% 100%}
+html.idea-1 .i1-c-tr{top:-5px;right:-5px}
+html.idea-1 .i1-c-tr::before{clip-path:polygon(0 0,100% 0,100% 100%)}
+html.idea-1 .i1-c-tl{top:-5px;left:-5px}
+html.idea-1 .i1-c-tl::before{clip-path:polygon(0 0,100% 0,0 100%)}
+html.idea-1 .i1-c-br{bottom:-5px;right:-5px}
+html.idea-1 .i1-c-br::before{clip-path:polygon(100% 0,100% 100%,0 100%)}
+html.idea-1 .i1-c-bl{bottom:-5px;left:-5px}
+html.idea-1 .i1-c-bl::before{clip-path:polygon(0 0,100% 100%,0 100%)}
+
+/* הטיפ: תווית מתנה עם קצה מוזהב, עין זהב וסרט סאטן שוקולד */
+html.idea-1 .ar-tip{isolation:isolate;max-width:560px;margin:clamp(52px,5vw,66px) 0 clamp(8px,1vw,14px);padding:clamp(58px,4.8vw,64px) clamp(28px,3vw,42px) clamp(30px,2.8vw,38px);
+  border-radius:0;rotate:-1.1deg;background:none;box-shadow:none;filter:drop-shadow(0 1px 1px rgba(40,16,6,.22)) drop-shadow(0 14px 16px rgba(40,16,6,.2))}
+html.idea-1 .ar-tip::before,html.idea-1 .ar-tip::after{content:'';position:absolute;pointer-events:none;--c:30px}
+html.idea-1 .ar-tip::before{inset:0;z-index:-2;background:var(--i1-foil-noise) 0 0/120px 120px,var(--i1-foil) 35% 0/240% 100%;
+  clip-path:polygon(0 var(--c),var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
+html.idea-1 .ar-tip::after{inset:2.5px;z-index:-1;--c:29px;background:var(--i1-grain) 0 0/200px 200px,var(--i1-fibers) 0 0/520px 520px,linear-gradient(172deg,#F4E6CA,#EAD6B0);
+  clip-path:polygon(0 var(--c),var(--c) 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
+html.idea-1 .ar-pin{top:18px;width:24px;height:24px;margin-left:-12px;z-index:1;
+  background:radial-gradient(circle,#E2CFAA 0 5px,rgba(90,58,14,.55) 5.6px,transparent 6.2px),radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E 80%);
+  box-shadow:inset 0 -1.5px 2px rgba(90,58,14,.35),0 1px 1.5px rgba(40,16,6,.35)}
+html.idea-1 .i1-ribbon{position:absolute;left:50%;top:-4.3px;z-index:2;width:96px;height:91.4px;margin-left:-48px;overflow:visible;pointer-events:none;filter:drop-shadow(0 1.5px 1.5px rgba(40,16,6,.35))}
+html.idea-1 .ar-tip-h{margin-bottom:12px;font:700 calc(16px * var(--fs))/1.2 var(--font);letter-spacing:.06em;
+  background:linear-gradient(180deg,#E9CB80 0%,#B88C3A 55%,#8A6220 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+html.idea-1 .ar-tip-h::after{background:linear-gradient(90deg,#C9A04A,rgba(201,160,74,.15));height:1.5px}
+html.idea-1 .ar-tip p:not(.ar-tip-h){color:var(--i1-ink)}
+
+/* הרשימה: כרטיס "נא להשיב" עם קצה פויל, עיגולים בהטבעה עיוורת שמתמלאים בזהב */
+html.idea-1 .ar-check{border:3px solid transparent;border-radius:3px;padding:clamp(26px,2.8vw,38px) clamp(24px,3vw,42px) clamp(26px,2.6vw,34px);
+  background:var(--i1-grain) 0 0/200px 200px padding-box,var(--i1-fibers) 0 0/520px 520px padding-box,linear-gradient(176deg,#FCF5E6,#F6EAD3) padding-box,var(--i1-foil) 0 0/220% 100% border-box;
+  box-shadow:0 2px 3px rgba(40,16,6,.2),0 20px 36px -16px rgba(40,16,6,.45)}
+html.idea-1 .i1-rsvp-k{display:flex;align-items:center;gap:12px;margin-bottom:16px;font:700 calc(16px * var(--fs))/1 var(--font);letter-spacing:.08em;color:var(--gold-d)}
+html.idea-1 .i1-rsvp-k::after{content:'';flex:1;max-width:120px;height:2px;border-top:1px solid rgba(63,30,14,.18);border-bottom:1px solid rgba(255,250,238,.95)}
+html.idea-1 .ar-ck-h{color:var(--i1-ink);text-shadow:0 1px 0 rgba(255,251,240,.8)}
+html.idea-1 .ar-ck-bar{height:4px;background:transparent;box-shadow:inset 0 1px 1.5px rgba(63,30,14,.28),0 1px 0 rgba(255,251,240,.95)}
+html.idea-1 .ar-ck-bar i{background:var(--i1-foil-noise) 0 0/120px 120px,var(--i1-foil) 40% 0/200% 100%}
+html.idea-1 .ar-ck-l li + li{border-top:0;background:linear-gradient(rgba(63,30,14,.13),rgba(63,30,14,.13)) 0 0/100% 1px no-repeat,linear-gradient(rgba(255,251,240,.95),rgba(255,251,240,.95)) 0 1px/100% 1px no-repeat}
+html.idea-1 .ar-box{background:transparent;box-shadow:inset 1px 1.5px 1.5px rgba(63,30,14,.32),inset -1px -1px 0 rgba(255,251,240,.95),0 1px 0 rgba(255,251,240,.9)}
+html.idea-1 .ar-ck-l label:hover .ar-box{box-shadow:inset 1px 1.5px 1.5px rgba(63,30,14,.32),inset -1px -1px 0 rgba(255,251,240,.95),0 0 0 1.5px rgba(201,160,74,.7)}
+html.idea-1 .ar-ck-l input:checked + .ar-box{background:var(--i1-foil-noise) 0 0/120px 120px,radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:inset 0 1px 0 rgba(255,246,214,.8),0 0 0 1px rgba(63,30,14,.5),0 2px 4px rgba(59,26,16,.28)}
+html.idea-1 .ar-ready{border-top:0;background:linear-gradient(rgba(63,30,14,.14),rgba(63,30,14,.14)) 0 0/100% 1px no-repeat,linear-gradient(rgba(255,251,240,.95),rgba(255,251,240,.95)) 0 1px/100% 1px no-repeat}
+
+/* שיתוף בסוף הדף: קו בהטבעה עיוורת במקום קו מקווקו */
+html.idea-1 .ar-share{border-top:0;background:linear-gradient(rgba(63,30,14,.14),rgba(63,30,14,.14)) 0 0/100% 1px no-repeat,linear-gradient(rgba(255,251,240,.95),rgba(255,251,240,.95)) 0 1px/100% 1px no-repeat}
+
+/* ---------- תוכן העניינים: זהב על הסאטן (מחשב) ---------- */
+@media (min-width:1081px){
+  html.idea-1 .ar-side{top:112px;margin-top:clamp(54px,5.4vw,84px)}
+  html.idea-1 .ar-toc-h{color:#EBD08E}
+  html.idea-1 .ar-toc-l a{color:rgba(244,230,204,.8)}
+  html.idea-1 .ar-toc-l a:hover,html.idea-1 .ar-toc-l li.on a{color:#FCF3E0}
+  html.idea-1 .ar-toc-l a::before{background:#5E2F17;box-shadow:inset 0 0 0 1.5px #C9A04A}
+  html.idea-1 .ar-toc-l::before{background:rgba(201,160,74,.36)}
+  html.idea-1 .ar-toc-l li.on a::before{box-shadow:0 0 0 1.5px #E3C27A,0 0 0 6px rgba(201,160,74,.24),0 2px 6px rgba(20,6,2,.45)}
+}
+
+/* ---------- טאבלט ---------- */
+@media (max-width:1080px){
+  html.idea-1 .ar-grid{grid-template-columns:minmax(0,840px);justify-content:center}
+  html.idea-1 .ar-side{margin-bottom:26px}
+  html.idea-1 .ar-toc{border-radius:3px;background:var(--i1-cotton);box-shadow:0 1px 2px rgba(30,12,4,.3),0 16px 30px -14px rgba(30,12,4,.55)}
+  html.idea-1 .ar-toc-t{color:var(--i1-ink)}
+}
+
+/* ---------- טלפון: כריכה אחת שנפתחת ימינה, והצילום והפתיח בפנים ---------- */
+@media (max-width:820px){
+  html.idea-1{--i1-pad:20px;--i1-vp:16px;--i1-vo:12px}
+  html.idea-1 .ar-hero{min-height:200vh;min-height:200svh}
+  html.idea-1 .i1-scene{height:200vh;height:200svh}
+  html.idea-1 .i1-rig{perspective:1900px}
+  html.idea-1 .i1-wing-l{display:none}
+  html.idea-1 .i1-fr{padding:13cqi 10cqi 12cqi 9cqi}
+  html.idea-1 .i1-fr .i1-blind{display:block;width:44cqi;margin-inline:auto;translate:0 -10%}
+  html.idea-1 .i1-fr .ar-crumbs{font-size:calc(16px * var(--fs))}
+  html.idea-1 .i1-fr .ar-l1{font-size:calc(7.6cqi * var(--fs))}
+  html.idea-1 .i1-fr .ar-l2{font-size:calc(16.2cqi * var(--fs))}
+  html.idea-1 .i1-win-c{left:var(--m);right:var(--m);bottom:auto;height:53%}
+  html.idea-1 .i1-win-c img{left:0;width:100%;object-position:50% 60%}
+  html.idea-1 .i1-in-d{display:none}
+  html.idea-1 .i1-in-ph{display:block;position:absolute;inset:auto 0 0;top:calc(var(--m) + 53%);padding:22px 22px 20px}
+  html.idea-1 .i1-inner{--i1-lf:18px}
+  html.idea-1 .i1-inner .label{display:none}
+  html.idea-1 .i1-rule{margin:16px 0}
+
+  html.idea-1 .ar-body{padding-top:20px}
+  html.idea-1 .ar-art{padding:34px var(--i1-pad) 34px}
+  html.idea-1 .i1-pframe{inset:9px}
+  html.idea-1 .i1-pframe::after{inset:4px}
+  html.idea-1 .i1-mark{width:92px;margin-bottom:26px}
+  html.idea-1 .ar-quote{rotate:-.5deg;padding-top:76px}
+  html.idea-1 .ar-pic{margin-inline:0}
+  html.idea-1 .ar-tip{margin-top:48px;rotate:-.8deg;padding:80px 22px 28px}
+  html.idea-1 .ar-check{padding:24px 18px 22px}
+}
+
+/* ---------- בלי תנועה ---------- */
+@media (prefers-reduced-motion:reduce){
+  html.idea-1 .i1-hint i{animation:none}
+  html.idea-1 .i1-card.ok{transition:none}
+}
+html.still.idea-1 .i1-hint i,html.a11y-still.idea-1 .i1-hint i{animation:none}
+html.a11y-still.idea-1 .i1-card.ok{transition:none}

@@ -35,6 +35,8 @@ var BARS = [
     lead: { f: 'IMG_9027', lg: 1, fx: .52 },
     more: [{ f: 'IMG_9008', fx: .5, mx: .5 }, { f: 'IMG_8984', fx: .5, mx: .3 }] }
 ];
+// 26.10.2026: הברים מגיעים מהמערכת (מסך עמודים ותוכן, לשונית ספר הגלריה) דרך cms.js, אם פורסמו
+if (window.PAT_BOOK && Array.isArray(window.PAT_BOOK.bars) && window.PAT_BOOK.bars.length) BARS = window.PAT_BOOK.bars;
 // הטקסטים הקבועים של הספר (הכריכה, השער והעמוד האחרון)
 var BOOK = {
   title: 'שמחה בלתי נשכחת', sub: 'האלבום של פטיסייר',
@@ -48,7 +50,7 @@ var BOOK = {
 /* ===================================================================================== */
 const CDN = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
 const FONT = '"Google Sans","Rubik Local","Segoe UI",system-ui,sans-serif';
-const C = { paper: '#FBF6EC', ink: '#3B1A10', body: '#4A2B1D', fade: '#7A604E', gd: '#86601F', g: '#BE9244' };
+const C = { paper: '#3A2C24', ink: '#EAD7B4', body: 'rgba(234,215,180,.9)', fade: 'rgba(234,215,180,.72)', gd: '#D9B666', g: '#D9B666' }; // אספרסו (29.10.2026): paper = color-mix(#2B1D17 92%, #EAD7B4)
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
@@ -58,12 +60,12 @@ const html = document.documentElement;
 const calm = () => /(^|[?&])still(=|&|$)/.test(location.search) || html.classList.contains('a11y-still') || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const phoneW = () => innerWidth <= 820;
 const TEST = /(^|[?&])b3test/.test(location.search);
-const MAXC = 10;                                                    // מצבים: 0 סגור, 1 שער, 2..9 ברים, 10 סוף
+const MAXC = 2 * BARS.length + 2;                                                    // מצבים: 0 סגור, 1 שער, 2..9 ברים, 10 סוף
 
 const G = document.getElementById('gallery'), A = document.getElementById('alb');
 
 /* ---------- הצילומים: רשימה אחת לפי הסדר (גם להגדלה) ---------- */
-const SRC = p => p.lg ? 'media/img/' + p.f + '-lg.webp' : 'media/gal/' + p.f + '.webp';
+const SRC = p => p.src ? p.src : p.lg ? 'media/img/' + p.f + '-lg.webp' : 'media/gal/' + p.f + '.webp';
 const PH = [];
 BARS.forEach((b, i) => [b.lead].concat(b.more).forEach((p, k, all) => {
   p.n = PH.length; PH.push({ p, b: i, src: SRC(p), cap: b.title + ' · ' + b.when + ' · צילום ' + (k + 1) + ' מתוך ' + all.length });
@@ -131,7 +133,6 @@ function grain() {
 }
 function paper(x, W, H) {
   x.fillStyle = C.paper; x.fillRect(0, 0, W, H);
-  x.fillStyle = x.createPattern(grain(), 'repeat'); x.fillRect(0, 0, W, H);
 }
 // הצל הרך ליד השדרה (בנוסף לעיקול האמיתי)
 function gutter(x, W, H, side, a) {
@@ -140,7 +141,7 @@ function gutter(x, W, H, side, a) {
   x.fillStyle = g; if (side === 'L') x.fillRect(W - w, 0, w, H); else x.fillRect(0, 0, w, H);
 }
 function cover(x, im, X, Y, W, H, fx, fy) {
-  if (!im) { x.fillStyle = '#E6D6BA'; x.fillRect(X, Y, W, H); return; }
+  if (!im) { x.fillStyle = '#2B1D17'; x.fillRect(X, Y, W, H); return; }
   const iw = im.naturalWidth, ih = im.naturalHeight, s = Math.max(W / iw, H / ih), sw = W / s, sh = H / s;
   x.drawImage(im, (iw - sw) * clamp(fx == null ? .5 : fx, 0, 1), (ih - sh) * clamp(fy == null ? .5 : fy, 0, 1), sw, sh, X, Y, W, H);
 }
@@ -166,8 +167,8 @@ function logo(tone) {
   x.globalCompositeOperation = 'source-in';
   const g = x.createLinearGradient(0, 0, 0, 204);
   if (tone === 'w') { g.addColorStop(0, '#fff'); g.addColorStop(1, '#fff'); }
-  else if (tone === 'l') { g.addColorStop(0, '#F6DE9A'); g.addColorStop(.5, '#E2BE6C'); g.addColorStop(1, '#C69A48'); }
-  else { g.addColorStop(0, '#C9A04A'); g.addColorStop(.5, '#A57A2C'); g.addColorStop(1, '#8A6220'); }
+  else if (tone === 'l') { g.addColorStop(0, '#F7E7B0'); g.addColorStop(.5, '#D9B666'); g.addColorStop(1, '#D3AE5C'); }
+  else { g.addColorStop(0, '#F7E7B0'); g.addColorStop(.5, '#D9B666'); g.addColorStop(1, '#A07834'); }
   x.fillStyle = g; x.fillRect(0, 0, 620, 204);
   return LG[tone] = c;
 }
@@ -194,7 +195,7 @@ function put(x, U, L, box, R, m) {
     const it = o.it, top = box.t + o.y;
     if (it.t === 'tx') {
       x.font = ff(it.w || 400, o.z); setLS(x, (it.ls || 0) * o.z); x.textAlign = ctr ? 'center' : 'right';
-      if (it.gold) { const g = x.createLinearGradient(0, top, 0, top + o.h); g.addColorStop(0, '#CFA757'); g.addColorStop(.55, '#A67C2E'); g.addColorStop(1, '#86601F'); x.fillStyle = g; }
+      if (it.gold) { const g = x.createLinearGradient(0, top, 0, top + o.h); g.addColorStop(0, '#D9B666'); g.addColorStop(.42, '#F7E7B0'); g.addColorStop(.55, '#D3AE5C'); g.addColorStop(1, '#A07834'); x.fillStyle = g; }
       else x.fillStyle = it.c || C.body;
       o.lines.forEach((ln, i) => x.fillText(ln, ctr ? mid : box.r, top + i * o.lh + o.lh / 2 + o.z * .04));
       setLS(x, 0);
@@ -206,13 +207,13 @@ function put(x, U, L, box, R, m) {
       x.beginPath(); x.moveTo(cx, cy - d); x.lineTo(cx + d, cy); x.lineTo(cx, cy + d); x.lineTo(cx - d, cy); x.closePath(); x.fill();
     } else if (it.t === 'pill') {
       x.font = ff(700, o.z); const w = Math.max(x.measureText(it.s).width + 12 * U, 44 * U), h = o.h, l = ctr ? mid - w / 2 : box.r - w;
-      const g = x.createLinearGradient(0, top, 0, top + h); g.addColorStop(0, '#F8E6AE'); g.addColorStop(.45, '#E2C276'); g.addColorStop(1, '#C49A48');
+      const g = x.createLinearGradient(0, top, 0, top + h); g.addColorStop(0, '#F7E7B0'); g.addColorStop(.45, '#D9B666'); g.addColorStop(1, '#A07834');
       x.fillStyle = 'rgba(70,34,12,.22)'; rr(x, l, top + .5 * U, w, h, h / 2); x.fill();
       x.fillStyle = g; rr(x, l, top, w, h, h / 2); x.fill();
-      x.fillStyle = C.ink; x.textAlign = 'center'; x.fillText(it.s, l + w / 2, top + h / 2 + o.z * .04);
+      x.fillStyle = '#2B1D17'; x.textAlign = 'center'; x.fillText(it.s, l + w / 2, top + h / 2 + o.z * .04);
       if (it.reg) R.push({ x0: l / m.cw, y0: top / m.ch, x1: (l + w) / m.cw, y1: (top + h) / m.ch, a: it.reg });
     } else if (it.t === 'link') {
-      x.font = ff(500, o.z); x.fillStyle = '#5E3020'; x.textAlign = 'center';
+      x.font = ff(500, o.z); x.fillStyle = C.ink; x.textAlign = 'center';
       const w = x.measureText(it.s).width, cx = ctr ? mid : box.r - w / 2, cy = top + o.h / 2;
       x.fillText(it.s, cx, cy); x.fillStyle = C.g; x.fillRect(cx - w / 2, cy + o.z * .62, w, Math.max(1.5, .3 * U));
       if (it.reg) R.push({ x0: (cx - w / 2 - 2 * U) / m.cw, y0: top / m.ch, x1: (cx + w / 2 + 2 * U) / m.cw, y1: (top + o.h) / m.ch, a: it.reg });
@@ -230,10 +231,10 @@ function flow(x, m, items, box, va, R) {
 }
 function folio(x, m, side, n, light) {
   const U = m.U; x.font = ff(700, 3 * U); x.textBaseline = 'middle'; x.direction = 'ltr';
-  x.fillStyle = light ? 'rgba(255,246,226,.9)' : C.gd; x.textAlign = side === 'L' ? 'left' : 'right';
+  x.fillStyle = light ? 'rgba(234,215,180,.9)' : C.gd; x.textAlign = side === 'L' ? 'left' : 'right';
   x.fillText(String(n), side === 'L' ? 8 * U : m.cw - 8 * U, m.ch - 5.4 * U); x.direction = 'rtl';
 }
-function frame(x, X, Y, W, H) { x.strokeStyle = 'rgba(59,26,16,.16)'; x.lineWidth = 1.4; x.strokeRect(X + .7, Y + .7, W - 1.4, H - 1.4); }
+function frame(x, X, Y, W, H) { x.strokeStyle = 'rgba(234,215,180,.18)'; x.lineWidth = 1.4; x.strokeRect(X + .7, Y + .7, W - 1.4, H - 1.4); }
 const reg = (R, m, X, Y, W, H, a) => R.push({ x0: X / m.cw, y0: Y / m.ch, x1: (X + W) / m.cw, y1: (Y + H) / m.ch, a });
 
 // ציור צד אחד. מחזיר את הקנבס ואת האזורים הלחיצים בו (בקואורדינטות 0..1)
@@ -254,17 +255,17 @@ function paint(sp, m) {
     let y = (m.ph ? 98 : 76) * U;
     x.font = ff(700, 3.7 * U); setLS(x, .1 * 3.7 * U); x.fillStyle = C.gd; x.textAlign = 'right'; x.textBaseline = 'middle';
     x.fillText(BOOK.toc, r, y); setLS(x, 0); y += 4.6 * U;
-    x.fillStyle = 'rgba(59,26,16,.5)'; x.fillRect(l, y, r - l, Math.max(1.5, .22 * U)); y += 1.2 * U;
+    x.fillStyle = 'rgba(234,215,180,.5)'; x.fillRect(l, y, r - l, Math.max(1.5, .22 * U)); y += 1.2 * U;
     BARS.forEach((bar, i) => {
       const cy = y + rowH / 2, pg = m.ph ? 2 + 2 * i : 4 * i + 2;
       x.font = ff(500, z); x.fillStyle = C.ink; x.textAlign = 'right'; x.direction = 'rtl'; x.fillText(bar.title, r, cy);
       const tw = x.measureText(bar.title).width;
       x.font = ff(700, z * .92); x.fillStyle = C.gd; x.textAlign = 'left'; x.direction = 'ltr'; x.fillText(String(pg), l, cy);
       const nw = x.measureText(String(pg)).width; x.direction = 'rtl';
-      x.fillStyle = 'rgba(138,98,32,.55)';
+      x.fillStyle = 'rgba(217,182,102,.55)';
       for (let d = r - tw - 2.4 * U; d > l + nw + 2.4 * U; d -= 1.7 * U) x.fillRect(d - .2 * U, cy + z * .22, .4 * U, .4 * U);
       reg(R, m, l - U, y, r - l + 2 * U, rowH, { t: 'go', to: 2 + 2 * i });
-      y += rowH; x.fillStyle = 'rgba(59,26,16,.14)'; x.fillRect(l, y - 1, r - l, 1.2);
+      y += rowH; x.fillStyle = 'rgba(234,215,180,.14)'; x.fillRect(l, y - 1, r - l, 1.2);
     });
     gutter(x, W, H, side, 1);
   } else if (sp.k === 'A' && !m.ph) {
@@ -340,15 +341,14 @@ function paint(sp, m) {
 function endpaper(w, h, which, fx, fy) {
   const c = mk(w, h), x = c.getContext('2d'), U = w / 100;
   fx = fx || 0; fy = fy || 0;
-  const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#6E3B1E'); g.addColorStop(1, '#552A14'); x.fillStyle = g; x.fillRect(0, 0, w, h);
-  x.fillStyle = x.createPattern(grain(), 'repeat'); x.fillRect(0, 0, w, h);
-  x.fillStyle = 'rgba(226,192,112,.42)'; const s = 4.4 * U;
+  x.fillStyle = '#2B1D17'; x.fillRect(0, 0, w, h);
+  x.fillStyle = 'rgba(217,182,102,.42)'; const s = 4.4 * U;
   for (let yy = s / 2; yy < h; yy += s) for (let xx = s / 2 + ((Math.round(yy / s) % 2) * s / 2); xx < w; xx += s) { x.beginPath(); x.arc(xx, yy, .2 * U, 0, 7); x.fill(); }
   const bw = 54 * U, bh = 36 * U, bl = (w - bw) / 2, bt = (h - bh) / 2;
-  x.fillStyle = '#5E3018'; x.fillRect(bl - 2 * U, bt - 2 * U, bw + 4 * U, bh + 4 * U);
-  x.strokeStyle = 'rgba(226,192,112,.55)'; x.lineWidth = .3 * U; x.strokeRect(bl, bt, bw, bh); x.strokeRect(bl - 1.1 * U, bt - 1.1 * U, bw + 2.2 * U, bh + 2.2 * U);
+  x.fillStyle = '#3A2C24'; x.fillRect(bl - 2 * U, bt - 2 * U, bw + 4 * U, bh + 4 * U);
+  x.strokeStyle = 'rgba(217,182,102,.55)'; x.lineWidth = .3 * U; x.strokeRect(bl, bt, bw, bh); x.strokeRect(bl - 1.1 * U, bt - 1.1 * U, bw + 2.2 * U, bh + 2.2 * U);
   const lg = logo('l'), lw = 36 * U; x.drawImage(lg, (w - lw) / 2, bt + 6 * U, lw, lw * lg.height / lg.width);
-  x.font = ff(500, 3.2 * U); setLS(x, .5 * U); x.fillStyle = '#E2C070'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.direction = 'rtl';
+  x.font = ff(500, 3.2 * U); setLS(x, .5 * U); x.fillStyle = '#D9B666'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.direction = 'rtl';
   x.fillText(which === 'f' ? BOOK.sub : BOOK.title, w / 2, bt + bh - 7 * U); setLS(x, 0);
   if (fx || fy) {
     const tw = fx * w, th2 = fy * h, l = which === 'f' ? 0 : tw, r = which === 'f' ? w - tw : w, pat = x.createPattern(linen().c, 'repeat');
@@ -367,18 +367,18 @@ let LIN = null;
 function linen() {
   if (LIN) return LIN;
   const n = 256, c = mk(n, n), x = c.getContext('2d'), b = mk(n, n), y = b.getContext('2d');
-  x.fillStyle = '#56321F'; x.fillRect(0, 0, n, n); y.fillStyle = '#808080'; y.fillRect(0, 0, n, n);
+  x.fillStyle = '#3A2C24'; x.fillRect(0, 0, n, n); y.fillStyle = '#808080'; y.fillRect(0, 0, n, n);
   for (let i = 0; i < n; i++) {
     const a = Math.random(), d = Math.random();
-    x.fillStyle = 'rgba(236,214,192,' + (a * .085).toFixed(3) + ')'; x.fillRect(0, i, n, 1);
-    x.fillStyle = 'rgba(28,10,2,' + (d * .13).toFixed(3) + ')'; x.fillRect(i, 0, 1, n);
+    x.fillStyle = 'rgba(234,215,180,' + (a * .085).toFixed(3) + ')'; x.fillRect(0, i, n, 1);
+    x.fillStyle = 'rgba(43,29,23,' + (d * .13).toFixed(3) + ')'; x.fillRect(i, 0, 1, n);
     y.fillStyle = 'rgba(255,255,255,' + (a * .35).toFixed(3) + ')'; y.fillRect(0, i, n, 1);
     y.fillStyle = 'rgba(0,0,0,' + (d * .35).toFixed(3) + ')'; y.fillRect(i, 0, 1, n);
     if (i % 2) { y.fillStyle = 'rgba(0,0,0,.12)'; y.fillRect(0, i, n, 1); y.fillRect(i, 0, 1, n); }
   }
   for (let k = 0; k < 120; k++) {
     const L = 6 + Math.random() * 26, X = Math.random() * n, Y = Math.random() * n, hz = Math.random() < .5, lt = Math.random() < .5;
-    x.fillStyle = lt ? 'rgba(236,216,196,.11)' : 'rgba(30,12,4,.15)'; y.fillStyle = lt ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.3)';
+    x.fillStyle = lt ? 'rgba(234,215,180,.11)' : 'rgba(43,29,23,.15)'; y.fillStyle = lt ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.3)';
     if (hz) { x.fillRect(X, Y, L, 1.4); y.fillRect(X, Y, L, 1.4); } else { x.fillRect(X, Y, 1.4, L); y.fillRect(X, Y, 1.4, L); }
   }
   return LIN = { c, b };
@@ -409,7 +409,7 @@ function coverSet(w, h, kind) {
   bx.strokeStyle = 'rgba(0,0,0,.55)'; bx.lineWidth = .55 * U; cx.strokeStyle = 'rgba(40,16,4,.28)'; cx.lineWidth = .55 * U;
   blind.forEach(r => { if (r[2]) { bx.strokeRect(r[0], r[1], r[2], r[3]); cx.strokeRect(r[0], r[1], r[2], r[3]); } else { bx.fillStyle = cx.fillStyle = 'rgba(0,0,0,.4)'; bx.fillRect(r[0], r[1] - .3 * U, w - 2 * r[0], .6 * U); } });
   const paintM = (c2, fill) => { const t = mk(w, h), tx = t.getContext('2d'); tx.drawImage(msk, 0, 0); tx.globalCompositeOperation = 'source-in'; tx.fillStyle = fill(tx); tx.fillRect(0, 0, w, h); c2.drawImage(t, 0, 0); };
-  paintM(cx, t => { const g = t.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#E9CB84'); g.addColorStop(.5, '#D8B266'); g.addColorStop(1, '#E3C27A'); return g; });
+  paintM(cx, t => { const g = t.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#D9B666'); g.addColorStop(.5, '#F7E7B0'); g.addColorStop(1, '#D3AE5C'); return g; });
   paintM(ox, () => 'rgb(255,78,255)');
   bx.filter = 'blur(' + (.18 * U).toFixed(1) + 'px)'; paintM(bx, () => 'rgb(52,52,52)'); bx.filter = 'none';
   return { col, orm, bmp };
@@ -650,15 +650,15 @@ function Engine(m) {
 
   /* ---------- סביבה ואור ---------- */
   {
-    const es = new T.Scene(), bx = new T.Mesh(new T.BoxGeometry(12, 12, 12), new T.MeshBasicMaterial({ color: 0x4a2c1a, side: T.BackSide })); es.add(bx);
+    const es = new T.Scene(), bx = new T.Mesh(new T.BoxGeometry(12, 12, 12), new T.MeshBasicMaterial({ color: 0x2b1d17, side: T.BackSide })); es.add(bx);
     const pan = (w, h, c, k, p) => { const q = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({ color: new T.Color(c).multiplyScalar(k), side: T.DoubleSide })); q.position.set(p[0], p[1], p[2]); q.lookAt(0, 0, 0); es.add(q); };
     pan(5, 3.4, 0xfff0dc, 4, [-2.6, 5, 2.2]); pan(3, 4, 0xffd8a2, 1.6, [5, 1.6, -1.4]); pan(7, 2.2, 0xfff4e6, 1.1, [0, 2.4, 5.4]); pan(4, 2, 0xffe2b8, 1.2, [-5, 1.2, -2]);
     pan(9, 9, 0xfff5ea, 1.1, [0, 5.8, -.4]); pan(7, 3, 0xfff0d8, 2.4, [-.6, 3.6, -5.2]); pan(4, 3, 0xffd9a8, 1.3, [4.6, 3.2, 3]);
-    const fl = new T.Mesh(new T.PlaneGeometry(12, 12), new T.MeshBasicMaterial({ color: 0x5c2e17 })); fl.rotation.x = -Math.PI / 2; fl.position.y = -1.2; es.add(fl);
+    const fl = new T.Mesh(new T.PlaneGeometry(12, 12), new T.MeshBasicMaterial({ color: 0x2b1d17 })); fl.rotation.x = -Math.PI / 2; fl.position.y = -1.2; es.add(fl);
     const pm = new T.PMREMGenerator(ren); const env = pm.fromScene(es, .04); scene.environment = keep(env.texture); pm.dispose();
     es.traverse(q => { if (q.geometry) q.geometry.dispose(); if (q.material) q.material.dispose(); });
   }
-  scene.add(new T.HemisphereLight(0xfffaf4, 0x5a2c16, .32));
+  scene.add(new T.HemisphereLight(0xfffaf4, 0x2b1d17, .32));
   const key = new T.SpotLight(0xfff8f0, 1.86, 0, .62, .9, 0);
   key.position.set(-1.9, 4.9, 2.5); key.target.position.set(.06, 0, -.08); key.castShadow = true; key.shadow.focus = .55;
   key.shadow.mapSize.set(m.ph ? 1024 : 2048, m.ph ? 1024 : 2048);
@@ -669,17 +669,17 @@ function Engine(m) {
   const tableM = keep(new T.ShadowMaterial({ color: 0x160601, opacity: .55 }));
   const table = new T.Mesh(keep(new T.PlaneGeometry(14, 14)), tableM); table.rotation.x = -Math.PI / 2; table.position.y = -.0006; table.receiveShadow = true; scene.add(table);
   const radial = (stops) => { const c = mk(256, 256), x = c.getContext('2d'), gr = x.createRadialGradient(128, 128, 0, 128, 128, 128); stops.forEach(s => gr.addColorStop(s[0], s[1])); x.fillStyle = gr; x.fillRect(0, 0, 256, 256); const t = keep(new T.CanvasTexture(c)); t.colorSpace = T.SRGBColorSpace; return t; };
-  const pool = new T.Mesh(keep(new T.PlaneGeometry(1, 1)), keep(new T.MeshBasicMaterial({ map: radial([[0, 'rgba(255,226,180,.13)'], [.5, 'rgba(255,214,160,.05)'], [1, 'rgba(255,214,160,0)']]), transparent: true, depthWrite: false })));
+  const pool = new T.Mesh(keep(new T.PlaneGeometry(1, 1)), keep(new T.MeshBasicMaterial({ map: radial([[0, 'rgba(234,215,180,.1)'], [.5, 'rgba(234,215,180,.04)'], [1, 'rgba(234,215,180,0)']]), transparent: true, depthWrite: false })));
   pool.rotation.x = -Math.PI / 2; pool.position.y = -.002; pool.renderOrder = -2; scene.add(pool);
   const blob = new T.Mesh(keep(new T.PlaneGeometry(1, 1)), keep(new T.MeshBasicMaterial({ map: radial([[0, 'rgba(16,5,1,.62)'], [.5, 'rgba(16,5,1,.4)'], [1, 'rgba(16,5,1,0)']]), transparent: true, depthWrite: false })));
   blob.rotation.x = -Math.PI / 2; blob.position.y = -.001; blob.renderOrder = -1;
 
   /* ---------- חומרים ---------- */
   const tex = (c, srgb) => { const t = new T.CanvasTexture(c); if (srgb !== false) t.colorSpace = T.SRGBColorSpace; t.anisotropy = aniso; return t; };
-    const edgeM = keep(new T.MeshStandardMaterial({ color: 0x6a3d25, roughness: .88, metalness: 0, envMapIntensity: .8 }));
-  const gl = mk(4, 16), glx = gl.getContext('2d'); glx.fillStyle = '#fff'; glx.fillRect(0, 0, 4, 16); glx.fillStyle = '#7a6040'; glx.fillRect(0, 0, 4, 3);
+    const edgeM = keep(new T.MeshStandardMaterial({ color: 0x3a2c24, roughness: .88, metalness: 0, envMapIntensity: .8 }));
+  const gl = mk(4, 16), glx = gl.getContext('2d'); glx.fillStyle = '#fff'; glx.fillRect(0, 0, 4, 16); glx.fillStyle = '#9C7430'; glx.fillRect(0, 0, 4, 3);
   const glT = keep(tex(gl)); glT.anisotropy = 1;
-  const gildM = keep(new T.MeshStandardMaterial({ map: glT, color: 0xDDB462, metalness: .8, roughness: .34, envMapIntensity: 1.15 }));
+  const gildM = keep(new T.MeshStandardMaterial({ map: glT, color: 0xD9B666, metalness: .8, roughness: .34, envMapIntensity: 1.15 }));
   // מימדי הכריכה לפי הדפים (חישוב מדויק אחרי בניית צורת המנוחה, ראו למטה)
   let Wb = W + o, Hb = H + 2 * o;
 
@@ -799,10 +799,10 @@ function Engine(m) {
   const ss = coverSet(256, Math.round(256 * Hb / (Sw * 1.25)), 'sp');
   const spM = keep(new T.MeshStandardMaterial({ map: keep(tex(ss.col)), roughnessMap: keep(tex(ss.orm, false)), metalnessMap: keep(tex(ss.orm, false)), bumpMap: keep(tex(ss.bmp, false)), bumpScale: 1, roughness: 1, metalness: 1, envMapIntensity: 1.2 }));
   const spine = new T.Mesh(spGeo, spM); spine.castShadow = true; spine.frustumCulled = false; book.add(spine);
-  const spIn = new T.Mesh(spGeo, keep(new T.MeshStandardMaterial({ color: 0x2c1408, roughness: .95, metalness: 0, side: T.BackSide }))); spIn.frustumCulled = false; book.add(spIn);
+  const spIn = new T.Mesh(spGeo, keep(new T.MeshStandardMaterial({ color: 0x2b1d17, roughness: .95, metalness: 0, side: T.BackSide }))); spIn.frustumCulled = false; book.add(spIn);
 
   // קפיטל: רצועה קטנה בפסים של זהב ושוקולד בראש ובתחתית הגב של הדפים
-  const hbC = mk(64, 8), hbx = hbC.getContext('2d'); for (let i = 0; i < 16; i++) { hbx.fillStyle = i % 2 ? '#E2C276' : '#5A2C16'; hbx.fillRect(i * 4, 0, 4, 8); }
+  const hbC = mk(64, 8), hbx = hbC.getContext('2d'); for (let i = 0; i < 16; i++) { hbx.fillStyle = i % 2 ? '#D9B666' : '#2B1D17'; hbx.fillRect(i * 4, 0, 4, 8); }
   const hbT = keep(tex(hbC)); hbT.wrapS = T.RepeatWrapping; hbT.repeat.set(3, 1);
   const hbM = keep(new T.MeshStandardMaterial({ map: hbT, roughness: .5, metalness: .25, envMapIntensity: .9 }));
   const hbG = keep(new T.CylinderGeometry(.0062, .0062, 1, 10, 1)); hbG.rotateZ(Math.PI / 2);

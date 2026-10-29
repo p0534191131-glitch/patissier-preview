@@ -41,7 +41,7 @@
   })();
 
   /* ---------- הלוגו בזהב כ-SVG (לאווטאר בחלון השיחה) ---------- */
-  var GOLD = '<stop offset="0" stop-color="#FFF3CC"/><stop offset=".28" stop-color="#F3D894"/><stop offset=".5" stop-color="#DDB766"/><stop offset=".66" stop-color="#C79A4A"/><stop offset=".82" stop-color="#E7C77D"/><stop offset="1" stop-color="#B98B3E"/>';
+  var GOLD = '<stop offset="0" stop-color="#E2C47A"/><stop offset=".22" stop-color="#A07834"/><stop offset=".45" stop-color="#D3AE5C"/><stop offset=".58" stop-color="#F7E7B0"/><stop offset=".78" stop-color="#D9B666"/><stop offset="1" stop-color="#9C7430"/>';
   var lgn = 0;
   function logoSVG() {
     var id = 'lgc' + (lgn++);
@@ -86,22 +86,31 @@
       var g = vert ? 'x1="0" y1="0" x2="0" y2="' + f1(h) + '"' : 'x1="' + f1(w) + '" y1="0" x2="0" y2="0"';
       svg.setAttribute('viewBox', '0 0 ' + f1(w) + ' ' + f1(h));
       svg.innerHTML = '<defs><linearGradient id="rbg" gradientUnits="userSpaceOnUse" ' + g + '>' +
-        '<stop offset="0" stop-color="#B98B3C"/><stop offset=".14" stop-color="#F3DA98"/><stop offset=".3" stop-color="#C9A04A"/><stop offset=".48" stop-color="#E9CC80"/><stop offset=".64" stop-color="#B88A3A"/><stop offset=".82" stop-color="#F2D995"/><stop offset="1" stop-color="#C29540"/></linearGradient>' +
+        '<stop offset="0" stop-color="#9C7430"/><stop offset=".22" stop-color="#D9B666"/><stop offset=".42" stop-color="#F7E7B0"/><stop offset=".55" stop-color="#D3AE5C"/><stop offset=".78" stop-color="#A07834"/><stop offset="1" stop-color="#E2C47A"/></linearGradient>' +
         '<filter id="rbs" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="2.4"/></filter>' +
         '<mask id="rbm" maskUnits="userSpaceOnUse" x="-80" y="-80" width="' + f1(w + 160) + '" height="' + f1(h + 160) + '"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round" stroke-dasharray="' + f1(len + 2) + ' ' + f1(len + 2) + '"/></mask></defs>' +
         '<g mask="url(#rbm)" fill="none" stroke-linecap="round">' +
         '<path d="' + d + '" stroke="rgba(59,26,16,.22)" stroke-width="12" filter="url(#rbs)" transform="' + off(3) + '"/>' +
         '<path d="' + d + '" stroke="url(#rbg)" stroke-width="12"/>' +
-        '<path d="' + d + '" stroke="rgba(255,248,222,.55)" stroke-width="2.4" transform="' + off(-2.6) + '"/>' +
-        '<path d="' + d + '" stroke="rgba(74,40,12,.42)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(-3.6) + '"/>' +
-        '<path d="' + d + '" stroke="rgba(74,40,12,.42)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(3.6) + '"/></g>';
+        '<path d="' + d + '" stroke="rgba(247,231,176,.55)" stroke-width="2.4" transform="' + off(-2.6) + '"/>' +
+        '<path d="' + d + '" stroke="rgba(43,29,23,.45)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(-3.6) + '"/>' +
+        '<path d="' + d + '" stroke="rgba(43,29,23,.45)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(3.6) + '"/></g>';
       mk = svg.querySelector('mask path');
       paint();
     }
     // כמה מהסרט כבר נמתח: במחשב לפי מיקום השורה במסך, בטלפון לפי קו בשלושה רבעים מגובה המסך
+    // במחשב החלק ננעץ: הסרט מתקדם לאורך מרווח הנעיצה, ונגמר קצת לפני השחרור כדי שרואים את כל השישה
+    var sec = W.closest('.proc'), pin = $('.proc-pin', sec), wide = matchMedia('(min-width:1180px)');
+    function pinMode() { if (sec) sec.classList.toggle('pin', wide.matches && !calm()); }
     function reach() {
       if (calm()) return len;
       var b = W.getBoundingClientRect(), vh = innerHeight;
+      if (!vert && sec && sec.classList.contains('pin')) {
+        var r = sec.getBoundingClientRect(), pad = parseFloat(getComputedStyle(sec).paddingTop) || 0;
+        var run = sec.offsetHeight - pad - (parseFloat(getComputedStyle(sec).paddingBottom) || 0) - pin.offsetHeight;
+        var lead = vh * .3, s = 72 - (r.top + pad) + lead;   // כמה נגלל מאז שהחלק התחיל להיכנס, כולל קצת לפני הנעיצה
+        return Math.max(0, Math.min(1, s / (run * .82 + lead))) * len;
+      }
       if (!vert) return Math.max(0, Math.min(1, (vh * .9 - b.top - P[0][1]) / (vh * .48))) * len;
       var y = vh * .74 - b.top, pts = [0].concat(at); // ys[0] = תחילת הסרט, ys[i+1] = נקודה i
       if (y <= ys[0]) return 0;
@@ -116,7 +125,8 @@
     }
     var rq = 0, rt = 0;
     addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(function () { rq = 0; paint(); }); }, { passive: true });
-    addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(build, 120); });
+    addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { pinMode(); build(); }, 120); });
+    pinMode();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
     addEventListener('load', build);
     build();
@@ -183,13 +193,13 @@
       d += k === 0 ? 'M' + x + ' ' + y : ' A' + r + ' ' + r + ' 0 0 1 ' + x + ' ' + y;
     }
     return '<svg viewBox="-52 -52 104 104" aria-hidden="true"><defs>' +
-      '<radialGradient id="' + id + 'a" cx="34%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF6D8"/><stop offset=".3" stop-color="#EACB7E"/><stop offset=".66" stop-color="#C29540"/><stop offset="1" stop-color="#7E5818"/></radialGradient>' +
-      '<radialGradient id="' + id + 'b" cx="62%" cy="70%" r="75%"><stop offset="0" stop-color="#F5DE9C"/><stop offset=".55" stop-color="#C9A04A"/><stop offset="1" stop-color="#9C722B"/></radialGradient></defs>' +
+      '<radialGradient id="' + id + 'a" cx="34%" cy="28%" r="80%"><stop offset="0" stop-color="#F7E7B0"/><stop offset=".3" stop-color="#E2C47A"/><stop offset=".66" stop-color="#D3AE5C"/><stop offset="1" stop-color="#9C7430"/></radialGradient>' +
+      '<radialGradient id="' + id + 'b" cx="62%" cy="70%" r="75%"><stop offset="0" stop-color="#F7E7B0"/><stop offset=".55" stop-color="#D9B666"/><stop offset="1" stop-color="#A07834"/></radialGradient></defs>' +
       '<path d="' + d + 'Z" fill="url(#' + id + 'a)"/>' +
-      '<circle r="37" fill="url(#' + id + 'b)" stroke="rgba(110,74,20,.55)" stroke-width="1.2"/>' +
-      '<circle r="33" fill="none" stroke="rgba(90,58,14,.55)" stroke-width="1.1" stroke-dasharray="2.4 2.6"/>' +
-      '<circle r="37" fill="none" stroke="rgba(255,246,216,.55)" stroke-width=".8" transform="translate(-.8 -.8)"/>' +
-      '<ellipse cx="-14" cy="-20" rx="14" ry="6" fill="rgba(255,250,232,.35)" transform="rotate(-30 -14 -20)"/></svg>';
+      '<circle r="37" fill="url(#' + id + 'b)" stroke="rgba(156,116,48,.6)" stroke-width="1.2"/>' +
+      '<circle r="33" fill="none" stroke="rgba(156,116,48,.6)" stroke-width="1.1" stroke-dasharray="2.4 2.6"/>' +
+      '<circle r="37" fill="none" stroke="rgba(247,231,176,.55)" stroke-width=".8" transform="translate(-.8 -.8)"/>' +
+      '<ellipse cx="-14" cy="-20" rx="14" ry="6" fill="rgba(247,231,176,.35)" transform="rotate(-30 -14 -20)"/></svg>';
   }
   function seals(r) { $$('.seal', r).forEach(function (el) { if (el.__s) return; el.__s = 1; el.insertAdjacentHTML('afterbegin', sealSVG()); if (el.hasAttribute('data-logo')) el.insertAdjacentHTML('beforeend', '<span class="logo" data-tone="ink"></span>'); }); }
 
@@ -227,7 +237,7 @@
       var g = svg.querySelector('linearGradient'); if (!g) return;
       g.setAttribute('gradientUnits', 'userSpaceOnUse');
       g.setAttribute('x1', '0'); g.setAttribute('y1', '92'); g.setAttribute('x2', '140'); g.setAttribute('y2', '480');
-      g.innerHTML = '<stop offset="0" stop-color="#FFF3CC"/><stop offset=".28" stop-color="#F3D894"/><stop offset=".5" stop-color="#DDB766"/><stop offset=".66" stop-color="#C79A4A"/><stop offset=".82" stop-color="#E7C77D"/><stop offset="1" stop-color="#B98B3E"/>';
+      g.innerHTML = '<stop offset="0" stop-color="#E2C47A"/><stop offset=".22" stop-color="#A07834"/><stop offset=".45" stop-color="#D3AE5C"/><stop offset=".58" stop-color="#F7E7B0"/><stop offset=".78" stop-color="#D9B666"/><stop offset="1" stop-color="#9C7430"/>';
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', goldLogos); else goldLogos();
@@ -248,7 +258,7 @@
         if (!calm()) { p.y -= p.v; p.x += p.d; p.t += .02; if (p.y < -5) { p.y = h + 5; p.x = Math.random() * w; } }
         var a = .25 + .45 * (.5 + .5 * Math.sin(p.t));
         var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
-        g.addColorStop(0, 'rgba(255,236,170,' + a + ')'); g.addColorStop(1, 'rgba(201,160,74,0)');
+        g.addColorStop(0, 'rgba(247,231,176,' + a + ')'); g.addColorStop(1, 'rgba(217,182,102,0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, 6.29); ctx.fill();
       });
       requestAnimationFrame(draw);

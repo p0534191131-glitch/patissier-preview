@@ -1,0 +1,62 @@
+/* article-live.css: תוספות לעמוד המאמר כשהוא בנוי ממאמר אמיתי של האתר החי (html.ar-live, article-live.js).
+   משפטים מודגשים עם קו זהב, רשימות ממוספרות כשלבים, טבלה כדף תפריט, שאלות נפוצות ככרטיסים שנפתחים, הזמנה בסוף. */
+
+/* כותרת ארוכה יותר מהמאמר לדוגמה: קצת יותר קטנה */
+.ar-live .ar-l1{font-size:calc(clamp(36px,4.4vw,64px) * var(--fs));line-height:1.12;text-wrap:balance}
+.ar-live .ar-lead{max-width:34em}
+
+/* המשפט המודגש: קו זהב רך מתחת, כמו סימון בעט */
+.ar-live .ar-sec b{font-weight:700;color:var(--ink);background:linear-gradient(transparent 62%,color-mix(in srgb,var(--gold-l) 70%,transparent) 62%,color-mix(in srgb,var(--gold-l) 70%,transparent) 92%,transparent 92%);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding-inline:2px}
+.ar-live .ar-sec a{color:var(--ruby-d);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--gold) 70%,transparent);text-decoration-thickness:1.5px;text-underline-offset:4px}
+.ar-live .ar-sec a:hover{color:var(--ink);text-decoration-color:var(--gold-d)}
+.ar-live .ar-sec h2{font-size:calc(clamp(26px,2.3vw,34px) * var(--fs))}
+.ar-live .ar-toc-l a{text-wrap:balance}
+
+/* רשימה ממוספרת: שלבים עם ספרה בעיגול זהב */
+.ar-steps{list-style:none;counter-reset:st;margin:26px 0 30px;padding:0;display:grid;gap:14px}
+.ar-steps li{counter-increment:st;position:relative;padding:18px 22px;padding-inline-start:74px;border-radius:14px;background:var(--grain),var(--paper);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 10px 24px -14px rgba(59,26,16,.35),0 0 0 1px color-mix(in srgb,var(--gold) 26%,transparent);font:400 calc(18px * var(--fs))/1.7 var(--font);color:var(--ink);text-wrap:pretty}
+.ar-steps li::before{content:counter(st);position:absolute;inset-inline-start:20px;top:16px;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:0 0 0 1.5px var(--gold-d),0 3px 8px rgba(59,26,16,.28);font:700 calc(18px * var(--fs))/1 var(--font);color:var(--choc-d)}
+.ar-dots{margin:22px 0 26px;padding-inline-start:1.2em;display:grid;gap:10px;font:400 calc(18px * var(--fs))/1.7 var(--font);color:var(--ink)}
+.ar-dots li::marker{color:var(--gold-d)}
+
+/* טבלה: דף תפריט, שורת כותרת בשוקולד עם זהב */
+.ar-table{margin:34px 0 36px;padding:0;overflow-x:auto;rotate:-.4deg}
+.ar-table:focus-visible{outline:2px solid var(--gold-d);outline-offset:4px}
+.ar-table table{width:100%;min-width:520px;border-collapse:separate;border-spacing:0;font:400 calc(17px * var(--fs))/1.5 var(--font);color:var(--ink)}
+.ar-table th{padding:16px 20px;text-align:start;font-weight:700;color:var(--gold-l);background:var(--grain-l),var(--choc)}
+.ar-table th:first-child{border-start-start-radius:14px}
+.ar-table th:last-child{border-start-end-radius:14px}
+.ar-table td{padding:15px 20px;border-top:1px solid color-mix(in srgb,var(--gold) 28%,transparent);vertical-align:top}
+.ar-table td:first-child{font-weight:700;color:var(--choc-2)}
+.ar-table tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--cream-2) 55%,transparent)}
+.ar-table td:last-child{color:var(--ink);font-weight:500}
+.ar-table th:last-child::after{content:' ✦';color:var(--gold)}
+
+/* שאלות נפוצות: כרטיסי נייר שנפתחים, פלוס זהב שהופך למינוס */
+.ar-faq .ar-n{letter-spacing:.04em}
+.ar-qa{display:grid;gap:14px;margin-top:8px}
+.ar-q{border-radius:14px;background:var(--grain),var(--paper);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 10px 24px -14px rgba(59,26,16,.35),0 0 0 1px color-mix(in srgb,var(--gold) 26%,transparent);transition:box-shadow .3s var(--ease)}
+.ar-q[open]{box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 16px 34px -16px rgba(59,26,16,.45),0 0 0 1.5px color-mix(in srgb,var(--gold) 60%,transparent)}
+.ar-q summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:20px 24px;cursor:pointer;font:700 calc(19px * var(--fs))/1.4 var(--font);color:var(--ink)}
+.ar-q summary::-webkit-details-marker{display:none}
+.ar-q summary:focus-visible{outline:2px solid var(--gold-d);outline-offset:-4px;border-radius:14px}
+.ar-plus{position:relative;flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:0 0 0 1.5px var(--gold-d)}
+.ar-plus::before,.ar-plus::after{content:'';position:absolute;inset:50% auto auto 50%;width:12px;height:2px;margin:-1px 0 0 -6px;border-radius:2px;background:var(--choc-d);transition:transform .35s var(--ease)}
+.ar-plus::after{transform:rotate(90deg)}
+.ar-q[open] .ar-plus::after{transform:rotate(0)}
+.ar-qb{padding:0 24px 22px}
+.ar-qb p{font:400 calc(18px * var(--fs))/1.75 var(--font);color:color-mix(in srgb,var(--ink) 86%,var(--cream));text-wrap:pretty}
+
+/* סוף המאמר: דף עם חותם, הזמנה רכה להצעת מחיר */
+.ar-end{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-top:clamp(50px,5vw,70px);padding:clamp(30px,3vw,42px);padding-inline-end:clamp(30px,3vw,42px);rotate:.5deg}
+.ar-end .seal{top:-22px;left:24px;--sz:72px;--tr:-10deg}
+.ar-end .btn{margin-top:6px}
+
+@media (max-width:820px){
+  .ar-steps li{padding:16px 18px;padding-inline-start:64px;font-size:calc(17px * var(--fs))}
+  .ar-steps li::before{inset-inline-start:16px;width:34px;height:34px}
+  .ar-q summary{padding:18px;font-size:calc(17px * var(--fs))}
+  .ar-qb{padding:0 18px 18px}
+  .ar-table,.ar-end{rotate:none}
+  .ar-end .seal{--sz:58px;top:-18px;left:16px}
+}

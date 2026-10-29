@@ -1,0 +1,115 @@
+/* blog.css: עמודי הבלוג של פטיסייר. נטען אחרי site.css, ומשתמש באותם חומרים (שוקולד, שמנת, זהב, נייר והדפסות).
+   חלק א: משותף לעמוד המאמרים ולעמוד המאמר (הדר, כתב זהב תלת ממדי, פס הסיום).
+   חלק ב: עמוד המאמרים (blog.html). עמוד המאמר מוסיף את שלו ב-article.css. */
+
+/* =====================================================================
+   א. משותף
+   ===================================================================== */
+.nav a[aria-current="page"]{color:var(--cream)}
+.nav a[aria-current="page"]::after{transform:none}
+.drawer a[aria-current="page"]{color:var(--gold-l)}
+
+/* כתב זהב תלת ממדי, כמו "בלתי נשכחת" בפתיחה של דף הבית, במידות יחסיות לגודל הגופן.
+   שימוש: <span class="g3d" data-t="המילה"><span>המילה</span></span> */
+.g3d{position:relative;display:inline-block;letter-spacing:0;white-space:nowrap}
+.g3d::before{content:attr(data-t);position:absolute;inset:0;z-index:0;color:#3B1A0B;-webkit-text-stroke:.095em #3B1A0B;
+  text-shadow:0 .01em 0 #2E1408,0 .02em 0 #2E1408,0 .03em 0 #2E1408,0 .04em 0 #2E1408,0 .05em 0 #2E1408,0 .06em 0 #2E1408,0 .07em 0 #2E1408,0 .08em 0 #2E1408,0 .12em .16em rgba(12,4,0,.55)}
+.g3d::after{content:attr(data-t);position:absolute;inset:0;z-index:0;color:#C49A48;-webkit-text-stroke:.047em #C49A48}
+.g3d > span{position:relative;z-index:1;background:linear-gradient(90deg,rgba(246,234,208,0) 84%,rgba(246,234,208,.42) 97%),linear-gradient(180deg,#F6E2A8 0%,#F2DA9A 31%,#EDD28C 40%,#DDBB6C 48%,#D2AC5A 56%,#C39C4C 64%,#B58C3E 72%,#AC8335 80%,#A27A2F 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* פס הסיום (שוקולד): גל הפוך למעלה, שאלה, שני כפתורים, ואחריו הפוטר */
+.bend{z-index:1;padding-top:clamp(160px,14.5vw,215px)}
+.bend-in{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:clamp(30px,5vw,90px);align-items:end}
+.bend-t{display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+.bend h2{font:700 calc(clamp(38px,4.2vw,64px) * var(--fs))/1.12 var(--font-d);color:var(--cream)}
+.bend h2 .ln{display:block}
+.bend h2 em{font-style:normal;color:var(--gold-l)}
+.bend-t > p{font:400 calc(19px * var(--fs))/1.65 var(--font);color:var(--c2);max-width:520px}
+.bend-cta{display:flex;flex-direction:column;align-items:stretch;gap:14px;width:min(100%,320px);justify-self:end}
+
+/* =====================================================================
+   ב. עמוד המאמרים
+   ===================================================================== */
+/* ---------- 1. פתיחה (שוקולד): כותרת עם זהב תלת ממדי מימין, ערימת הדפסות של ברים אמיתיים משמאל, והגל של דף הבית למטה ---------- */
+.bhero{position:relative;z-index:2;padding:clamp(150px,12.5vw,186px) 0 clamp(150px,13vw,200px);overflow-x:clip;color:#F2E3C6}
+.bhero .dust{z-index:0}
+.bh-in{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(36px,5vw,80px);align-items:center}
+.bh-txt{display:flex;flex-direction:column;align-items:flex-start;gap:26px}
+.bh-h1{display:flex;flex-direction:column;align-items:flex-start;margin:0;font-weight:900}
+.bh-l1{font:900 calc(clamp(44px,5vw,74px) * var(--fs))/1.1 var(--font-d);color:#F2E3C6;margin-inline-start:-.02em}
+.bh-l2{font:900 calc(clamp(60px,7.6vw,116px) * var(--fs))/1.16 var(--font-d);margin-inline-start:-.05em} /* הזהב הבהיר של ה-ש' על אותו קו של שאר השורות */
+.bh-sub{font:400 calc(clamp(19px,1.5vw,22px) * var(--fs))/1.6 var(--font);color:#F4DBCA;max-width:28em;text-wrap:pretty}
+.bh-go{display:inline-flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:2px solid var(--gold);font:500 calc(18px * var(--fs))/1 var(--font);color:#F2E3C6;text-decoration:none;transition:color .25s}
+.bh-go .i{width:18px;height:18px;transition:transform .35s var(--ease)}
+.bh-go:hover{color:var(--gold-l)}.bh-go:hover .i{transform:translateY(3px)}
+.bh-txt > .label,.bh-l1,.bh-l2,.bh-sub,.bh-go{animation:hUp .9s var(--ease) both}
+.bh-l1{animation-delay:.08s}.bh-l2{animation-delay:.2s}.bh-sub{animation-delay:.36s}.bh-go{animation-delay:.5s}
+
+/* מאמר בפתיחה: אותו כרטיס מאמר של הרשימה (.pcard). --cw = הרוחב של כרטיס בשורה של ארבעה */
+.bh-cards{--cw:calc((min(var(--w), 100vw - var(--pad) * 2) - 3 * clamp(18px,2.2vw,32px)) / 4);display:flex;align-items:flex-start;justify-content:center;gap:clamp(18px,2.2vw,32px);padding:34px 0 30px}
+.bh-cards .pcard{flex:none;width:var(--cw);margin-top:clamp(60px,7vw,110px)}
+/* המאמר בפתיחה: כרטיס מאמר גדול פי 1.3 מכרטיס ברשימה, עם כותרת ושורה גדולות יותר */
+.bh-cards .pcard.big{width:calc(var(--cw) * 1.3);margin-top:0}
+.bh-cards .pcard.big h3{font-size:calc(clamp(22px,1.9vw,28px) * var(--fs))}
+.bh-cards .pcard.big > p{font-size:calc(17.5px * var(--fs))}
+
+/* ---------- 2. כל המאמרים (שמנת), ישר אחרי הפתיחה ---------- */
+.blg-list{padding:clamp(150px,12.5vw,190px) 0 clamp(170px,15vw,230px);scroll-margin-top:-40px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.blg-top{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:26px 50px;margin-bottom:clamp(34px,3.8vw,54px)}
+.blg-top .head{margin:0}
+.blg-top .head h2{font-size:calc(clamp(34px,3.6vw,54px) * var(--fs))}
+.blg-top .head h2 em{font-style:normal;color:var(--ruby)}
+
+/* הנושאים, באותה שורה של הכותרת (משמאל): פס שוקולד מבריק, והבורר בזהב מחליק אל הנושא שנבחר */
+/* במחשב בלי גלילה, כדי שהצל של הפס לא ייחתך. בטלפון הפס נגלל לרוחב, עם מקום לצל מתחת */
+.blg-seg-w{max-width:100%}
+.blg-seg{position:relative;display:inline-flex;gap:2px;padding:6px;border-radius:var(--pill);
+  background:var(--grain),radial-gradient(80% 140% at 85% 0%,rgba(150,96,54,.45),transparent 60%),linear-gradient(180deg,#6A381D,#55291A);
+  box-shadow:0 0 0 1px rgba(201,160,74,.55),inset 0 1px 0 rgba(255,230,190,.16),0 16px 28px -18px rgba(40,16,6,.75)}
+.sg{position:relative;z-index:1;display:inline-flex;align-items:center;gap:9px;min-height:50px;padding:0 20px;border-radius:var(--pill);font:500 calc(16.5px * var(--fs))/1 var(--font);color:#F2E3C6;white-space:nowrap;transition:color .35s,opacity .35s}
+.sg:hover{color:#FFF6E6}
+.sg[aria-pressed="true"]{color:#3F1E0E;opacity:1}
+.sg:focus-visible{outline:2px solid var(--gold-l);outline-offset:2px}
+.sg-ind{position:absolute;z-index:0;top:6px;bottom:6px;left:0;width:0;border-radius:var(--pill);
+  background:linear-gradient(90deg,#CDA757 0%,#DCBE6F 21%,#F2DA97 47%,#F4E2A0 54%,#ECD38C 72%,#DAB96D 94%,#D2AF62 100%);
+  box-shadow:inset 0 1px 0 rgba(255,250,228,.85),inset 0 -2px 0 rgba(150,105,35,.35),0 0 0 1px #8C6430,0 6px 12px -4px rgba(20,7,1,.55);transition:transform .6s var(--spring),width .6s var(--spring)}
+
+/* הכרטיסים: אותם כרטיסי נייר של הבלוג בדף הבית, ארבעה בשורה (.pcards.four: בטאבלט שניים, בטלפון אחד) */
+.blg-grid{padding-top:30px}
+.pcard.drop{opacity:0;transform:translateY(-26px) rotate(-1.5deg);transition:opacity .6s var(--ease),transform .95s var(--spring),translate .5s var(--ease),box-shadow .5s;transition-delay:var(--d,0ms),var(--d,0ms),0ms,0ms}
+.pcard.drop.on{opacity:1;transform:none}
+.pcard .pc-ph img[src*="poster"]{object-position:50% 40%}
+
+/* ---------- טאבלט ---------- */
+@media (max-width:980px){
+  .bh-in{grid-template-columns:1fr}
+  .bh-cards{justify-content:center;margin-top:20px}
+  .bh-cards .pcard.big{width:min(100%,420px)}
+  .bend-in{grid-template-columns:1fr;align-items:start}
+  .bend-cta{justify-self:start}
+}
+/* ---------- טלפון ---------- */
+@media (max-width:820px){
+  .bhero{padding:112px 0 118px}
+  .bh-txt{gap:20px}
+  .bh-l1{font-size:calc(40px * var(--fs))}
+  .bh-l2{font-size:min(calc(64px * var(--fs)),16.5vw)}
+  .bh-sub{font-size:calc(18px * var(--fs))}
+  /* בטלפון: שורה שנגללת לרוחב, כרטיס ליד כרטיס. מקום גדול מתחת, כדי שהצל של הכרטיסים לא ייחתך */
+  .bh-cards{gap:16px;justify-content:flex-start;margin:34px calc(var(--pad) * -1) -64px;padding:34px var(--pad) 90px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .bh-cards::-webkit-scrollbar{display:none}
+  .bh-cards .pcard,.bh-cards .pcard.big{width:min(100%,440px);margin-top:0;scroll-snap-align:center}
+  .blg-list{padding:118px 0 130px}
+  .blg-top{gap:22px}
+  .blg-seg-w{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;margin:-8px calc(var(--pad) * -1) -34px;padding:8px var(--pad) 34px;max-width:none;width:calc(100% + var(--pad) * 2)}
+  .blg-seg-w::-webkit-scrollbar{display:none}
+  .sg{min-height:46px;padding:0 16px;gap:7px}
+  .bend{padding-top:120px}
+  .bend h2{font-size:calc(36px * var(--fs))}
+  .bend-cta{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  .pcard.drop{opacity:1;transform:none}
+  .sg-ind{transition:none}
+}

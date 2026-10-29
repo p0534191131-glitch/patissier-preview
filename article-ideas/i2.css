@@ -1,0 +1,187 @@
+/* i2.css · רעיון 2: המגזין. המאמר ככתבה במגזין יוקרה מודפס. הכול תחת html.idea-2 (המבנה נבנה ב-i2.js).
+   הרגע החתום: כפולת עמודים אמיתית, מונחת בזווית על שולחן השוקולד. בגלילה היא ננעלת, עולה מהשולחן ומתיישרת אל הקורא. */
+
+/* =====================================================================
+   1. הפתיחה: כפולת המגזין על שולחן השוקולד
+   ===================================================================== */
+html.idea-2 .ar-hero{padding:clamp(118px,9.4vw,136px) 0 clamp(150px,12.4vw,184px)}
+html.idea-2 .ar-shot{display:none}
+html.idea-2 .i2-top{position:relative;z-index:3;margin-bottom:clamp(18px,2vw,28px)}
+
+/* הבמה: נעוצה מתחת להדר בזמן שהמגזין מתיישר. --p (0 עד 1) מגיע מ-i2.js */
+html.idea-2 .i2-stage{position:sticky;top:100px;z-index:6;display:flex;justify-content:center;perspective:2400px;perspective-origin:50% 30%;animation:i2Fade .8s ease both}
+html.idea-2 .i2-pinsp{height:clamp(380px,46vh,460px)}
+html.idea-2 .i2-lift{display:flex;justify-content:center;width:100%;transform-style:preserve-3d;animation:i2Lift 1.6s var(--ease) .05s both}
+html.idea-2 .i2-mag{--p:0;--q:calc(1 - var(--p));--v:calc(.8deg + 2.6deg * var(--q));--gx:calc(18% + 50% * var(--p));
+  position:relative;width:min(1180px,100% - var(--pad) * 2,(100svh - 140px) * 1.56);aspect-ratio:1.56;transform-style:preserve-3d;transform-origin:50% 34%;
+  transform:rotateX(calc(26deg * var(--q))) rotateZ(calc(-1.8deg * var(--q))) scale(calc(.9 + .1 * var(--p)))}
+/* הצל על השולחן ועובי הדפים מתחת לכפולה */
+html.idea-2 .i2-mag::before{content:'';position:absolute;inset:0 -.4% -1% -.4%;border-radius:6px;transform:translateZ(-2px);
+  background:repeating-linear-gradient(180deg,#E7D8BC 0 1px,#F6EEDD 1px 2.2px),#EADCC2;
+  box-shadow:0 2px 0 #D9C6A4,0 calc(18px + 30px * var(--q)) calc(40px + 50px * var(--q)) -8px rgba(20,6,2,calc(.42 + .2 * var(--q))),0 6px 14px rgba(20,6,2,.35)}
+
+/* העמודים: נייר כרומו שנהב עם גרעיניות. כל עמוד עולה קצת מהשדרה (צורת V עדינה) */
+html.idea-2 .i2-pg{position:absolute;top:0;bottom:0;width:50%;container-type:inline-size;background:var(--grain),linear-gradient(180deg,#FDF9F1 0%,#F8F0E1 100%)}
+html.idea-2 .i2-pr{right:0;transform-origin:0 50%;transform:rotateY(calc(var(--v) * -1));border-radius:2px 5px 5px 2px;display:flex;flex-direction:column;padding:3.4% 4.4% 3% 5.6%;
+  box-shadow:1px 1px 0 #E3D2B4,2px 2px 0 #F5ECDA,3px 3px 0 #DDC9A8,4px 3px 0 #F2E8D4,5px 4px 0 #D6C09C}
+html.idea-2 .i2-pl{left:0;transform-origin:100% 50%;transform:rotateY(var(--v));border-radius:5px 2px 2px 5px;overflow:hidden;
+  box-shadow:-1px 1px 0 #E3D2B4,-2px 2px 0 #F5ECDA,-3px 3px 0 #DDC9A8,-4px 3px 0 #F2E8D4,-5px 4px 0 #D6C09C}
+/* ברק שזז עם האור, והצל של השדרה (הדפים נכנסים לתפר) */
+html.idea-2 .i2-pg::before,html.idea-2 .i2-pg::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+html.idea-2 .i2-pg::before{z-index:3;background:linear-gradient(112deg,rgba(255,255,255,0) calc(var(--gx) - 26%),rgba(255,252,240,.22) var(--gx),rgba(255,255,255,0) calc(var(--gx) + 22%))}
+html.idea-2 .i2-pr::after{z-index:4;background:linear-gradient(to right,rgba(70,34,12,.30),rgba(70,34,12,.12) 2.4%,rgba(255,250,236,.22) 4.2%,rgba(70,34,12,.04) 7%,rgba(70,34,12,0) 13%)}
+html.idea-2 .i2-pl::after{z-index:4;background:linear-gradient(to left,rgba(70,34,12,.30),rgba(70,34,12,.1) 2.4%,rgba(255,250,236,.16) 4.2%,rgba(70,34,12,0) 8%)}
+
+/* כותרת רצה ומספרי עמודים */
+html.idea-2 .i2-rh{display:flex;align-items:center;gap:12px;margin:0;font:500 max(13px,2.9cqw)/1 var(--font);letter-spacing:.14em;color:#9A8670;white-space:nowrap}
+html.idea-2 .i2-rh i{width:4px;height:4px;border-radius:50%;background:var(--gold)}
+html.idea-2 .i2-pr > .i2-rh{padding-bottom:3.4cqw;border-bottom:1px solid rgba(59,26,16,.16)}
+html.idea-2 .i2-fo{display:flex;align-items:center;gap:12px;margin:0;font:700 max(14px,3cqw)/1 var(--font);color:var(--gold-d);font-variant-numeric:tabular-nums}
+html.idea-2 .i2-fo::after{content:'';width:5cqw;height:1.5px;background:linear-gradient(90deg,#8A6220,#E9CC80,#C9A04A)}
+html.idea-2 .i2-pl .i2-fo{position:absolute;z-index:5;left:6.4cqw;bottom:5.6cqw;flex-direction:row-reverse;color:#FFF3D6;text-shadow:0 1px 2px rgba(30,12,4,.55),0 0 12px rgba(30,12,4,.3)}
+
+/* העמוד הימני: התווית, הכותרת (זהב תלת ממדי), שורת הפתיחה והפרטים */
+html.idea-2 .i2-pr .ar-hin{width:auto;margin:0;flex:1;justify-content:center;gap:4.2cqw;padding:4cqw 0}
+html.idea-2 .i2-pr .ar-h1{margin:.6cqw 0 0}
+html.idea-2 .i2-pr .ar-l1{font-size:calc(9.6cqw * var(--fs));line-height:1.14;color:var(--ink);text-wrap:balance}
+html.idea-2 .i2-pr .ar-l2{font-size:calc(20.4cqw * var(--fs));line-height:1.22}
+html.idea-2 .i2-pr .ar-lead{font-size:calc(max(18px,4.1cqw) * var(--fs));line-height:1.6;color:color-mix(in srgb,var(--ink) 80%,var(--cream));max-width:24em;text-wrap:pretty}
+html.idea-2 .i2-pr .ar-meta{color:var(--choc-2)}
+html.idea-2 .i2-pr .ar-meta .i{color:var(--gold-d)}
+html.idea-2 .i2-pr .ar-mi:not(:last-child)::after{margin-inline:4px 11px}
+/* עמוד צר: הפרטים בשורה אחת, בלי נקודה שנשארת תלויה בסוף שורה */
+@container (max-width:440px){
+  html.idea-2 .i2-pr .ar-mi:last-child{display:none}
+  html.idea-2 .i2-pr .ar-mi:nth-last-child(2)::after{display:none}
+}
+
+/* הצילום הראשי: עד הקצה של העמוד, בלי מסגרת */
+html.idea-2 .i2-ph{position:absolute;inset:0}
+html.idea-2 .i2-ph .print{position:absolute;inset:0;padding:0;border-radius:0;background:none;box-shadow:none}
+html.idea-2 .i2-ph .print .ph,html.idea-2 .i2-ph .print img{border-radius:0;box-shadow:none}
+html.idea-2 .i2-ph .ph::after{display:none}
+html.idea-2 .i2-ph img{object-position:60% 50%;filter:brightness(1.04) saturate(1.05)}
+/* חותמת הזהב: מודבקת על הפינה החיצונית של העמוד הימני */
+html.idea-2 .i2-pr > .seal{top:-24px;right:-20px;--sz:clamp(58px,5.4vw,78px);--tr:12deg}
+
+@keyframes i2Fade{from{opacity:0}}
+@keyframes i2Lift{from{transform:translate3d(0,90px,-60px) rotateX(16deg)}}
+
+/* =====================================================================
+   2. גוף המאמר: עמוד מגזין
+   ===================================================================== */
+html.idea-2 .ar-body{padding-top:clamp(104px,8.4vw,124px)}
+/* כותרת רצה בראש העמוד */
+html.idea-2 .i2-run{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:16px;margin-bottom:clamp(44px,4.6vw,70px);border-bottom:1px solid color-mix(in srgb,var(--ink) 16%,transparent)}
+html.idea-2 .i2-run .i2-rh{font-size:calc(14px * var(--fs))}
+html.idea-2 .i2-pn{font:700 calc(15px * var(--fs))/1 var(--font);color:var(--gold-d);font-variant-numeric:tabular-nums}
+
+/* תוכן הגיליון: קו דיו עבה למעלה, מספר לכל חלק, הנקודות והחוט נשארים */
+html.idea-2 .ar-toc-h{gap:0;margin-bottom:12px;padding-top:16px;border-top:3px solid var(--ink);font:700 calc(15px * var(--fs))/1 var(--font);letter-spacing:.16em;color:var(--ink)}
+html.idea-2 .ar-toc-h::before{display:none}
+html.idea-2 .ar-toc-l{counter-reset:i2t}
+html.idea-2 .ar-toc-l li{counter-increment:i2t}
+html.idea-2 .ar-toc-l a{padding-inline-end:34px}
+html.idea-2 .ar-toc-l a::after{content:counter(i2t,decimal-leading-zero);position:absolute;inset-inline-end:0;top:50%;translate:0 -50%;font:700 calc(14px * var(--fs))/1 var(--font);color:color-mix(in srgb,var(--gold-d) 70%,var(--cream));font-variant-numeric:tabular-nums;transition:color .3s}
+html.idea-2 .ar-toc-l li.on a::after{color:var(--gold-d)}
+
+/* פסקת הפתיחה: גדולה, עם אות פתיחה ענקית בזהב */
+html.idea-2 .ar-intro{font-size:calc(clamp(21px,1.75vw,25px) * var(--fs));line-height:1.66}
+html.idea-2 .i2-dc{float:right;margin:.06em 0 -.12em .1em;padding:.1em .02em 0;font:700 5.1em/.8 var(--font-d);
+  background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(120,80,20,.4)) drop-shadow(0 6px 8px rgba(59,26,16,.18))}
+
+/* החלקים: מספר גדול בקו מתאר זהב, והכותרת יושבת עליו */
+html.idea-2 .ar-sec{padding-top:clamp(56px,5.2vw,80px)}
+html.idea-2 .ar-n{display:flex;align-items:center;gap:clamp(18px,2vw,28px);margin:0 0 clamp(10px,1vw,16px);font:700 calc(clamp(72px,6.4vw,98px) * var(--fs))/.86 var(--font-d);letter-spacing:-.02em;color:transparent;-webkit-text-stroke:1.5px color-mix(in srgb,var(--gold) 82%,var(--gold-d))}
+html.idea-2 .ar-n::before{display:none}
+html.idea-2 .ar-n::after{content:'';flex:1;height:1px;margin-top:.28em;background:color-mix(in srgb,var(--ink) 16%,transparent)}
+html.idea-2 .ar-sec h2{margin-bottom:22px;font-size:calc(clamp(32px,3vw,44px) * var(--fs))}
+html.idea-2 .ar-sec > p.ar-last{font-size:calc(clamp(26px,2.3vw,32px) * var(--fs));color:var(--ink)}
+/* סימן סוף הכתבה, כמו במגזין */
+html.idea-2 .ar-sec > p.ar-last::after{content:'';display:inline-block;width:.36em;height:.36em;margin-inline-start:.32em;vertical-align:.04em;background:var(--foil);box-shadow:0 1px 0 rgba(120,80,20,.4)}
+
+/* ציטוט ענק בין קווי דיו */
+html.idea-2 .ar-quote{margin:clamp(50px,5vw,72px) 0 clamp(44px,4.4vw,62px);padding:clamp(54px,5vw,70px) 0 clamp(34px,3.4vw,46px);border-top:2px solid var(--ink);border-bottom:1px solid color-mix(in srgb,var(--ink) 22%,transparent)}
+html.idea-2 .ar-quote::before{display:none}
+html.idea-2 .ar-qm{top:-.06em;font-size:clamp(150px,13vw,200px)}
+html.idea-2 .ar-quote p{font-size:calc(clamp(36px,3.9vw,58px) * var(--fs));line-height:1.2;letter-spacing:-.02em;max-width:15.5em}
+html.idea-2 .ar-quote em{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+
+/* צילום עד קצה המסך, עם שורת כיתוב על קו הטור */
+html.idea-2 .ar-pic{margin-block:clamp(48px,4.6vw,66px) clamp(30px,3vw,42px);margin-inline:0 calc(var(--i2-bl,0px) * -1)}
+html.idea-2 .ar-pic .print{padding:0;border-radius:0;background:none;box-shadow:none;rotate:none;aspect-ratio:2.2/1}
+html.idea-2 .ar-pic .print .ph,html.idea-2 .ar-pic .print img{border-radius:0;box-shadow:none}
+html.idea-2 .ar-pic .ph::after{display:none}
+html.idea-2 .ar-pic .ph img{object-position:50% 58%}
+html.idea-2 .ar-pic figcaption{margin-inline-end:var(--i2-bl,0px);padding-top:14px;margin-top:0;border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent)}
+
+/* טיפ קטן: תיבת צד של מגזין */
+html.idea-2 .ar-tip{rotate:none;break-inside:avoid;border-radius:0;padding:26px 26px 24px;border-top:3px solid var(--gold);
+  background:var(--grain),color-mix(in srgb,var(--gold-l) 34%,var(--paper));box-shadow:none}
+html.idea-2 .ar-pin{display:none}
+
+/* הרשימה לסימון: תלוש לגזירה. קו מקווקו מסביב ומספריים עליו */
+html.idea-2 .ar-check{margin:clamp(44px,4vw,58px) 14px 14px;border-radius:6px;box-shadow:0 0 0 1px rgba(59,26,16,.07),inset 0 1px 0 rgba(255,250,240,.9)}
+html.idea-2 .ar-check::before{content:'';position:absolute;inset:-14px;border:2px dashed color-mix(in srgb,var(--ink) 34%,transparent);border-radius:12px;pointer-events:none}
+html.idea-2 .i2-sc{position:absolute;top:-27px;right:38px;display:grid;place-items:center;width:34px;height:26px;color:var(--gold-d);background:var(--grain),var(--cream)}
+html.idea-2 .i2-sc svg{width:22px;height:22px;transform:rotate(180deg)}
+
+/* ---------- מחשב רחב: שני טורים כמו בעיתון, ותוכן הגיליון מימין ---------- */
+@media (min-width:1081px){
+  html.idea-2 .ar-grid{grid-template-columns:clamp(200px,15.5vw,228px) minmax(0,1fr);column-gap:clamp(44px,5vw,80px)}
+  html.idea-2 .ar-art{max-width:none}
+  html.idea-2 .ar-sec{columns:2;column-gap:clamp(36px,3.4vw,52px);column-rule:1px solid color-mix(in srgb,var(--gold) 34%,transparent)}
+  html.idea-2 .ar-sec > :is(.ar-n,h2,.ar-quote,.ar-pic,.ar-check,.ar-last){column-span:all}
+  /* פסקה בודדת בין שני רכיבים רחבים לא נחתכת לשני טורים: היא נשארת בטור רחב אחד, מאותו קו */
+  html.idea-2 .ar-sec > :is(.ar-quote + p:last-child,h2 + p:has(+ :is(.ar-check,.ar-quote,.ar-pic))){column-span:all;max-width:34em}
+  html.idea-2 .ar-sec > p{break-inside:avoid-column}
+  html.idea-2 .ar-sec > p{font-size:calc(18.5px * var(--fs));line-height:1.78}
+  html.idea-2 .ar-sec > p + p{margin-top:.8em}
+  html.idea-2 .ar-sec > h2 + p{margin-top:0}
+  html.idea-2 .ar-tip{margin-top:.8em}
+}
+
+/* ---------- טלפון: עמוד מגזין אחד (צילום למעלה, הכותרת מתחת), שדרה בצד ימין ---------- */
+@media (max-width:820px){
+  html.idea-2 .ar-hero{padding:96px 0 clamp(110px,26vw,140px)}
+  html.idea-2 .i2-top{margin-bottom:16px}
+  html.idea-2 .i2-stage{top:72px;perspective:1500px}
+  html.idea-2 .i2-pinsp{height:240px}
+  html.idea-2 .i2-mag{width:calc(100% - var(--pad) * 2);aspect-ratio:auto;display:flex;flex-direction:column;transform-origin:50% 50%;
+    transform:rotateX(calc(18deg * var(--q))) rotateZ(calc(-1.6deg * var(--q))) scale(calc(.92 + .08 * var(--p)))}
+  html.idea-2 .i2-mag::before{inset:0 0 -1% -1.4%;border-radius:6px}
+  html.idea-2 .i2-pg{position:relative;top:auto;bottom:auto;width:100%;transform:none;box-shadow:none}
+  html.idea-2 .i2-pl{order:-1;aspect-ratio:1/.66;border-radius:3px 6px 0 0}
+  html.idea-2 .i2-pl .i2-fo{display:none}
+  html.idea-2 .i2-pr{border-radius:0 0 6px 3px;padding:5.4% 7.4% 5.4% 6.4%}
+  html.idea-2 .i2-pl::after,html.idea-2 .i2-pr::after{background:linear-gradient(to left,rgba(70,34,12,.26),rgba(70,34,12,.08) 2.6%,rgba(255,250,236,.18) 4.4%,rgba(70,34,12,0) 8%)}
+  html.idea-2 .i2-pr .ar-hin{gap:16px;padding:18px 0 20px}
+  html.idea-2 .i2-pr .ar-l1{font-size:calc(11.4cqw * var(--fs))}
+  html.idea-2 .i2-pr .ar-l2{font-size:calc(21cqw * var(--fs))}
+  html.idea-2 .i2-pr .ar-lead{font-size:calc(18px * var(--fs))}
+  html.idea-2 .i2-pr > .seal{top:-22px;right:-8px;--sz:52px}
+
+  html.idea-2 .ar-body{padding-top:64px}
+  html.idea-2 .i2-run{margin-bottom:30px}
+  html.idea-2 .i2-run .i2-rh{font-size:calc(13px * var(--fs));gap:9px}
+  html.idea-2 .i2-dc{font-size:4em}
+  html.idea-2 .ar-sec{padding-top:56px}
+  html.idea-2 .ar-n{font-size:calc(76px * var(--fs))}
+  html.idea-2 .ar-sec h2{font-size:calc(30px * var(--fs))}
+  html.idea-2 .ar-quote p{font-size:calc(32px * var(--fs))}
+  html.idea-2 .ar-qm{font-size:130px}
+  html.idea-2 .ar-pic{margin-inline:calc(var(--pad) * -1)}
+  html.idea-2 .ar-pic .print{aspect-ratio:4/3}
+  html.idea-2 .ar-pic figcaption{margin-inline:var(--pad)}
+  html.idea-2 .ar-check{margin-inline:10px}
+  html.idea-2 .ar-check::before{inset:-10px}
+  html.idea-2 .i2-sc{top:-23px;right:24px}
+}
+
+/* ---------- בלי תנועה: המגזין שטוח, בלי נעיצה ובלי כניסה ---------- */
+@media (prefers-reduced-motion:reduce){
+  html.idea-2 .i2-pinsp{height:0}
+  html.idea-2 .i2-stage,html.idea-2 .i2-lift{animation:none}
+}
+html.idea-2.still .i2-pinsp,html.idea-2.a11y-still .i2-pinsp{height:0}
+html.idea-2.still .i2-stage,html.idea-2.still .i2-lift,html.idea-2.a11y-still .i2-stage,html.idea-2.a11y-still .i2-lift{animation:none}

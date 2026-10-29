@@ -1,0 +1,213 @@
+/* article.css: עמוד המאמר (article.html). נטען אחרי site.css ו-blog.css, ומשתמש באותם חומרים:
+   שוקולד חלב, שמנת וניל, זהב פויל, נייר עם גרעיניות והדפסות צילום. כל ה-class-ים כאן מתחילים ב-ar-. */
+
+/* רוחב ההדפסה הראשית, וכמה ממנה עולה על השוקולד (בערך חצי מהגובה) */
+:root{--ar-sw:min(1000px,100% - 2 * var(--pad));--ar-k:.287}
+
+/* ---------- פס התקדמות קריאה: זהב דק, צמוד מתחת להדר כשהוא מלא ---------- */
+.ar-prog{position:fixed;top:72px;inset-inline:0;z-index:49;height:3px;pointer-events:none;opacity:0;transition:opacity .35s,top .4s var(--ease)}
+.ar-prog i{display:block;height:100%;transform:scaleX(var(--p,0));transform-origin:right;
+  background:linear-gradient(90deg,#8A6220,#C9A04A 22%,#F7E3A3 52%,#E3C27A 78%,#B98A45);box-shadow:0 0 10px rgba(247,227,163,.55)}
+.hdr.solid ~ .ar-prog{opacity:1}
+
+/* ---------- 1. פתיחה (שוקולד) ---------- */
+.ar-hero{position:relative;z-index:2;overflow-x:clip;color:#F2E3C6;
+  padding:clamp(138px,11.4vw,168px) 0 calc(var(--ar-sw) * var(--ar-k) + clamp(56px,5.4vw,84px))}
+.ar-hero .dust{z-index:0}
+.ar-hin{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;gap:22px}
+.ar-crumbs{display:flex;align-items:center;gap:8px;font:500 calc(16px * var(--fs))/1 var(--font);color:#DDBFA3}
+.ar-crumbs a{color:#F2E3C6;text-decoration:none;padding-bottom:4px;border-bottom:1px solid rgba(201,160,74,.7);transition:color .25s}
+.ar-crumbs a:hover{color:var(--gold-l)}
+.ar-crumbs .i{width:16px;height:16px;color:var(--gold)}
+.ar-h1{display:flex;flex-direction:column;align-items:flex-start;margin:4px 0 0;font-weight:900}
+.ar-l1{font:900 calc(clamp(40px,4.4vw,64px) * var(--fs))/1.12 var(--font-d);color:#F2E3C6;text-wrap:balance}
+.ar-l2{font:900 calc(clamp(62px,7.9vw,118px) * var(--fs))/1.2 var(--font-d);margin-inline-start:-.05em} /* הזהב הבהיר של ה-ל' על אותו קו של שאר השורות */
+.ar-lead{font:400 calc(clamp(19px,1.5vw,22px) * var(--fs))/1.6 var(--font);color:#F4DBCA;max-width:30em}
+.ar-meta{display:flex;flex-wrap:wrap;align-items:center;row-gap:8px;font:500 calc(16px * var(--fs))/1.3 var(--font);color:#E6CBB1}
+.ar-mi{display:inline-flex;align-items:center;gap:8px}
+.ar-mi .i{width:18px;height:18px;color:var(--gold)}
+.ar-mi:not(:last-child)::after{content:'';width:5px;height:5px;margin-inline:6px 14px;border-radius:50%;background:var(--gold)}
+.ar-crumbs,.ar-hin > .label,.ar-l1,.ar-l2,.ar-lead,.ar-meta{animation:hUp .9s var(--ease) both}
+.ar-hin > .label{animation-delay:.06s}.ar-l1{animation-delay:.12s}.ar-l2{animation-delay:.24s}.ar-lead{animation-delay:.38s}.ar-meta{animation-delay:.48s}
+
+/* הרגע החתום: ההדפסה הגדולה, חצי על השוקולד וחצי על השמנת, מעל הגל. נוחתת בנטייה קלה */
+.ar-shot{position:relative;z-index:3;width:min(var(--w),100% - var(--pad) * 2);margin:calc(var(--ar-sw) * var(--ar-k) * -1) auto 0}
+.ar-print{position:relative;width:min(1000px,100%);margin-inline-start:auto;rotate:-1.2deg;animation:arDrop 1.2s var(--spring) .32s both}
+.ar-print .print{--pp:clamp(10px,1.1vw,15px)}
+.ar-print .ph{aspect-ratio:16/9;height:auto}
+.ar-print .ph img{object-position:50% 58%}
+.ar-print .seal{top:-24px;right:-20px;--sz:66px;--tr:12deg}
+@keyframes arDrop{from{opacity:0;transform:translateY(-34px) rotate(-3deg) scale(1.03)}}
+
+/* ---------- 2. גוף המאמר (שמנת) ---------- */
+.ar-body{padding:clamp(72px,7vw,108px) 0 clamp(90px,8vw,120px)}
+.ar-grid{display:grid;grid-template-columns:clamp(200px,17vw,250px) minmax(0,680px);column-gap:clamp(48px,7vw,120px);justify-content:start;align-items:start}
+.ar-side{position:sticky;top:112px;align-self:start}
+
+/* תוכן העניינים: נקודות זהב על חוט, הנקודה של החלק שקוראים עכשיו נדלקת, והחוט מתמלא עד אליה */
+.ar-toc{--ar-tx:0px}
+.ar-toc-h{display:flex;align-items:center;gap:12px;margin-bottom:20px;font:500 calc(16px * var(--fs))/1.2 var(--font);letter-spacing:.04em;color:var(--gold-d)}
+.ar-toc-h::before{content:'';width:34px;height:3px;border-radius:2px;background:linear-gradient(90deg,#8A6220,#F7E3A3 30%,#C9A04A 55%,#F7E3A3 78%,#8A6220)}
+.ar-toc-t{display:none}
+.ar-toc-l{position:relative;list-style:none;margin:0;padding:0;--f:0}
+.ar-toc-l::before,.ar-toc-l::after{content:'';position:absolute;inset-inline-start:calc(var(--ar-tx) + 6px);top:22px;bottom:22px;width:1.5px;margin-inline-start:-.75px;border-radius:2px}
+.ar-toc-l::before{background:color-mix(in srgb,var(--gold) 34%,transparent)}
+.ar-toc-l::after{background:linear-gradient(180deg,#F7E3A3,#C9A04A 40%,#8A6220);transform:scaleY(var(--f));transform-origin:top;transition:transform .6s var(--ease)}
+.ar-toc-l a{position:relative;z-index:1;display:block;padding:10px 0;padding-inline-start:30px;font:500 calc(16px * var(--fs))/1.4 var(--font);color:var(--fade);text-decoration:none;transition:color .3s}
+.ar-toc-l a::before{content:'';position:absolute;inset-inline-start:0;top:50%;width:13px;height:13px;margin-top:-6.5px;border-radius:50%;background:var(--cream);box-shadow:inset 0 0 0 1.5px #C9A04A;transition:background .4s,box-shadow .4s,transform .4s var(--spring)}
+.ar-toc-l a:hover{color:var(--ink)}
+.ar-toc-l li.done a::before{background:linear-gradient(180deg,#F1D78F,#C9A04A);box-shadow:inset 0 0 0 1px rgba(138,98,32,.5)}
+.ar-toc-l li.on a{color:var(--ink);font-weight:700}
+.ar-toc-l li.on a::before{background:radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:0 0 0 1.5px var(--gold-d),0 0 0 6px color-mix(in srgb,var(--gold) 22%,transparent),0 2px 5px rgba(59,26,16,.25);transform:scale(1.12)}
+
+/* הטור הקריא */
+.ar-art{min-width:0;max-width:680px}
+.ar-intro{font:500 calc(clamp(20px,1.6vw,23px) * var(--fs))/1.7 var(--font);color:var(--ink);text-wrap:pretty}
+.ar-sec{padding-top:clamp(54px,5vw,74px);scroll-margin-top:24px}
+.ar-n{display:flex;align-items:center;gap:12px;margin-bottom:14px;font:500 calc(16px * var(--fs))/1 var(--font);letter-spacing:.12em;color:var(--gold-d)}
+.ar-n::before{content:'';width:28px;height:2px;border-radius:2px;background:linear-gradient(90deg,#8A6220,#F7E3A3 45%,#C9A04A)}
+.ar-sec h2{margin-bottom:18px;font:700 calc(clamp(30px,2.7vw,40px) * var(--fs))/1.2 var(--font-d);color:var(--ink);text-wrap:balance}
+.ar-sec h2:focus{outline:none}
+.ar-sec > p{font:400 calc(19px * var(--fs))/1.85 var(--font);color:color-mix(in srgb,var(--ink) 86%,var(--cream));text-wrap:pretty}
+.ar-sec > p + p{margin-top:.95em}
+.ar-sec > p b{font-weight:700;color:var(--ink)}
+.ar-sec > p.ar-last{margin-top:1.1em;font:700 calc(clamp(22px,1.9vw,26px) * var(--fs))/1.4 var(--font-d);color:var(--ruby)}
+
+/* ציטוט מודגש: מירכאות בפויל זהב, וקו זהב שתלוי בשוליים (הטקסט עצמו מתחיל באותו קו של הפסקאות) */
+.ar-quote{position:relative;margin:clamp(46px,4.4vw,62px) 0 clamp(40px,4vw,54px);padding-top:clamp(42px,3.6vw,54px)}
+.ar-quote::before{content:'';position:absolute;inset-inline-start:calc(clamp(22px,2.4vw,34px) * -1);top:clamp(50px,4.2vw,62px);bottom:8px;width:3px;border-radius:3px;background:linear-gradient(180deg,#F7E3A3,#C9A04A 40%,#8A6220)}
+.ar-qm{position:absolute;top:0;inset-inline-start:-.03em;height:.62em;overflow:visible;font:900 clamp(104px,8.4vw,128px)/1 var(--font-d);pointer-events:none;
+  background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 rgba(120,80,20,.45)) drop-shadow(0 8px 10px rgba(59,26,16,.2))}
+.ar-quote blockquote{margin:0}
+.ar-quote p{font:700 calc(clamp(27px,2.5vw,36px) * var(--fs))/1.4 var(--font-d);letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.ar-quote em{font-style:normal;color:var(--ruby)}
+
+/* צילום אמיתי נוסף: הדפסה שיוצאת קצת מהטור, עם כיתוב קטן */
+.ar-pic{margin-block:clamp(42px,4vw,58px) clamp(30px,3vw,40px);margin-inline:0 calc(clamp(0px,6vw,90px) * -1)}
+.ar-pic .print{--pp:clamp(9px,1vw,13px);aspect-ratio:3/2;rotate:.8deg}
+.ar-pic .ph img{object-position:50% 62%}
+.ar-pic figcaption{display:flex;align-items:center;gap:12px;margin-top:20px;font:500 calc(16px * var(--fs))/1.4 var(--font);color:var(--fade)}
+.ar-pic figcaption::before{content:'';flex:none;width:28px;height:2px;border-radius:2px;background:linear-gradient(90deg,#8A6220,#F7E3A3 45%,#C9A04A)}
+
+/* טיפ קטן: נייר קראפט נעוץ בסיכת זהב */
+.ar-tip{position:relative;margin:clamp(46px,4.4vw,60px) 0 clamp(6px,1vw,12px);padding:clamp(34px,3vw,42px) clamp(26px,3vw,40px) clamp(26px,2.6vw,34px);border-radius:6px;rotate:-1deg;
+  background:var(--grain),linear-gradient(170deg,#EEDBB3 0%,#E2C798 55%,#D8BA87 100%);
+  box-shadow:0 0 0 1px rgba(110,74,30,.12),inset 0 1px 0 rgba(255,246,226,.6),0 2px 3px rgba(40,16,6,.12),0 20px 36px -18px rgba(40,16,6,.45)}
+.ar-pin{position:absolute;top:-10px;left:50%;width:22px;height:22px;margin-left:-11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:inset 0 -2px 3px rgba(90,58,14,.35),0 3px 4px rgba(40,16,6,.35),0 8px 10px -4px rgba(40,16,6,.3)}
+.ar-tip-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;font:700 calc(17px * var(--fs))/1.2 var(--font);letter-spacing:.02em;color:var(--choc-2)}
+.ar-tip-h::after{content:'';flex:1;max-width:60px;height:1px;background:rgba(94,48,32,.35)}
+.ar-tip p:not(.ar-tip-h){font:400 calc(18px * var(--fs))/1.7 var(--font);color:var(--ink);text-wrap:pretty}
+
+/* הרשימה לסימון: דף נייר אחד (בלי ערימה מתחת), וי זהב שמצטייר, מונה ופס זהב שמתמלא */
+.ar-check{margin-top:clamp(30px,3vw,40px);padding:clamp(28px,3vw,40px) clamp(22px,3vw,40px) clamp(24px,2.6vw,34px);
+  box-shadow:0 0 0 1px rgba(59,26,16,.08),inset 0 1px 0 rgba(255,250,240,.9),0 2px 4px rgba(20,6,2,.1),0 30px 54px -28px rgba(20,6,2,.5)}
+.ar-ck-top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 20px}
+.ar-ck-h{font:700 calc(clamp(22px,1.9vw,26px) * var(--fs))/1.25 var(--font-d);color:var(--ink)}
+.ar-ck-n{font:500 calc(16px * var(--fs))/1 var(--font);color:var(--gold-d);white-space:nowrap}
+.ar-ck-n b{font-weight:700;color:var(--ink)}
+.ar-ck-bar{height:3px;margin:18px 0 6px;border-radius:3px;overflow:hidden;background:color-mix(in srgb,var(--gold) 22%,transparent)}
+.ar-ck-bar i{display:block;height:100%;transform:scaleX(var(--p,0));transform-origin:right;background:linear-gradient(90deg,#8A6220,#C9A04A 30%,#F7E3A3 60%,#C9A04A);transition:transform .6s var(--ease)}
+.ar-ck-l{list-style:none;margin:0;padding:0}
+.ar-ck-l li + li{border-top:1px dashed color-mix(in srgb,var(--ink) 16%,transparent)}
+.ar-ck-l label{position:relative;display:flex;align-items:center;gap:16px;min-height:62px;padding:12px 2px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ar-ck-l input{position:absolute;inset-inline-start:8px;top:50%;width:1px;height:1px;opacity:0;pointer-events:none}
+.ar-box{flex:none;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 34%,transparent);transition:background .35s,box-shadow .35s}
+.ar-box svg{width:18px;height:18px;fill:none;stroke:#3F1E0E;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:21;stroke-dashoffset:21;transition:stroke-dashoffset .45s var(--ease) .08s}
+.ar-ck-t{font:500 calc(18px * var(--fs))/1.4 var(--font);color:var(--ink);transition:color .35s}
+.ar-ck-l label:hover .ar-box{box-shadow:inset 0 0 0 1.5px var(--gold-d)}
+.ar-ck-l input:checked + .ar-box{background:radial-gradient(circle at 35% 30%,#FFF4D0,#E3C27A 45%,#A97C2E);box-shadow:0 0 0 1px #8C6430,0 3px 7px rgba(59,26,16,.28);animation:arPop .55s var(--spring)}
+.ar-ck-l input:checked + .ar-box svg{stroke-dashoffset:0}
+.ar-ck-l input:checked ~ .ar-ck-t{color:var(--fade)}
+.ar-ck-l input:focus-visible + .ar-box{outline:3px solid var(--gold);outline-offset:3px}
+@keyframes arPop{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+.ar-ready{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-top:20px;padding-top:28px;padding-inline-end:84px;border-top:1px solid color-mix(in srgb,var(--gold) 45%,transparent)}
+.ar-ready:not([hidden]){animation:arIn .8s var(--ease) both}
+.ar-ready .seal{top:26px;left:0;--sz:66px;--tr:-10deg}
+.ar-ready:not([hidden]) .seal{animation:okIn .8s var(--spring) .15s both}
+.ar-ready-h{font:700 calc(clamp(26px,2.4vw,32px) * var(--fs))/1.2 var(--font-d);color:var(--ink)}
+.ar-ready-p{font:400 calc(18px * var(--fs))/1.65 var(--font);color:color-mix(in srgb,var(--ink) 84%,var(--cream));max-width:28em}
+.ar-ready .btn{margin-top:6px}
+.ar-ck-reset{margin-top:18px;padding:4px 0;font:500 calc(16px * var(--fs))/1.3 var(--font);color:var(--fade);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--gold) 60%,transparent);text-underline-offset:5px}
+.ar-ck-reset:hover{color:var(--ink)}
+@keyframes arIn{from{opacity:0;transform:translateY(12px)}}
+.ar-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* סוף המאמר: שיתוף */
+.ar-share{display:flex;flex-direction:column;align-items:flex-start;gap:18px;margin-top:clamp(60px,5.6vw,80px);padding-top:clamp(26px,2.6vw,34px);border-top:1px dashed color-mix(in srgb,var(--ink) 22%,transparent)}
+.ar-share-t{font:500 calc(18px * var(--fs))/1.5 var(--font);color:var(--ink)}
+.ar-share-b{display:flex;flex-wrap:wrap;gap:12px}
+.ar-sb{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 22px;border-radius:var(--pill);font:700 calc(16px * var(--fs))/1 var(--font);color:var(--ink);text-decoration:none;white-space:nowrap;
+  box-shadow:inset 0 0 0 1.5px var(--ink);transition:background .3s,box-shadow .3s}
+.ar-sb svg,.ar-sb .i{width:20px;height:20px;flex:none}
+.ar-sb-wa svg{color:#1DAF55}
+.ar-sb:hover{background:linear-gradient(180deg,#FBEBB8 0%,#E9C878 38%,#C9A04A 78%,#B88C3A 100%);box-shadow:inset 0 1px 0 rgba(255,250,225,.75),0 0 0 1px rgba(138,98,32,.55)}
+
+/* ---------- 3. עוד מאמרים ---------- */
+.ar-more{padding-top:clamp(64px,6vw,92px)}
+.ar-more .bl-head{margin-bottom:clamp(14px,2vw,26px)}
+
+/* ---------- טאבלט: טור אחד, תוכן העניינים נפתח ונסגר בראש המאמר ---------- */
+@media (max-width:1080px){
+  .ar-grid{grid-template-columns:minmax(0,680px)}
+  .ar-side{position:static;margin-bottom:clamp(18px,3vw,30px)}
+  .ar-toc{--ar-tx:22px;border-radius:14px;background:var(--grain),var(--paper);box-shadow:0 0 0 1px rgba(59,26,16,.08),inset 0 1px 0 rgba(255,250,240,.9),0 2px 4px rgba(20,6,2,.08),0 20px 34px -24px rgba(20,6,2,.5)}
+  .ar-toc-h{display:none}
+  .ar-toc-t{display:flex;align-items:center;gap:12px;width:100%;min-height:62px;padding:0 22px;font:700 calc(17px * var(--fs))/1 var(--font);color:var(--ink);text-align:start}
+  .ar-toc-t small{font:500 calc(16px * var(--fs))/1 var(--font);color:var(--gold-d)}
+  .ar-toc-t .i{margin-inline-start:auto;width:20px;height:20px;color:var(--gold-d);transform:rotate(-90deg);transition:transform .4s var(--ease)}
+  .ar-toc.open .ar-toc-t .i{transform:rotate(90deg)}
+  .ar-toc-w{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .45s var(--ease),visibility 0s linear .45s}
+  .ar-toc.open .ar-toc-w{grid-template-rows:1fr;visibility:visible;transition-delay:0s}
+  .ar-toc.snap .ar-toc-w{transition:none}
+  .ar-toc-l{min-height:0;overflow:hidden;padding:0 22px}
+  .ar-toc-l li:first-child{margin-top:2px}
+  .ar-toc-l li:last-child{margin-bottom:14px}
+  .ar-toc-l::before,.ar-toc-l::after{top:24px;bottom:36px}
+}
+/* ---------- טלפון ---------- */
+@media (max-width:820px){
+  :root{--ar-k:.385}
+  .ar-prog{top:60px}
+  .ar-hero{padding-top:108px}
+  .ar-hin{gap:18px}
+  .ar-l1{font-size:calc(36px * var(--fs))}
+  .ar-l2{font-size:min(calc(58px * var(--fs)),15vw)}
+  .ar-lead{font-size:calc(18px * var(--fs))}
+  .ar-print .ph{aspect-ratio:4/3}
+  .ar-print{rotate:-1deg}
+  .ar-print .seal{top:-18px;right:-6px;--sz:50px}
+  .ar-body{padding-top:52px}
+  .ar-side{margin-bottom:34px}
+  .ar-intro{font-size:calc(20px * var(--fs))}
+  .ar-sec{padding-top:48px}
+  .ar-sec h2{font-size:calc(29px * var(--fs))}
+  .ar-sec > p{font-size:calc(18px * var(--fs));line-height:1.8}
+  .ar-quote::before{display:none}
+  .ar-qm{font-size:96px}
+  .ar-quote p{font-size:calc(25px * var(--fs))}
+  .ar-pic{margin-inline:0}
+  .ar-pic .print{rotate:.6deg}
+  .ar-tip{rotate:-.6deg}
+  .ar-check{padding:26px 18px 22px}
+  .ar-ck-l label{gap:14px}
+  .ar-ready{padding-inline-end:0}
+  .ar-ready .seal{top:22px;--sz:52px}
+  .ar-ready-h{padding-inline-end:64px}
+  .ar-ready .btn{width:100%}
+  .ar-share{align-items:stretch}
+  .ar-share-b{flex-direction:column}
+  .ar-sb{width:100%}
+}
+
+@media (max-width:440px){.ar-mi:last-child{display:none}.ar-mi:nth-last-child(2)::after{display:none}}
+
+/* ---------- בלי תנועה ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ar-print{animation:none}
+}
+html.a11y-still .ar-crumbs,html.a11y-still .ar-hin > .label,html.a11y-still .ar-l1,html.a11y-still .ar-l2,html.a11y-still .ar-lead,html.a11y-still .ar-meta,
+html.a11y-still .ar-print,html.a11y-still .ar-ready,html.a11y-still .ar-ready .seal,html.a11y-still .ar-box{animation:none!important}
+html.a11y-still .ar-box svg,html.a11y-still .ar-ck-bar i,html.a11y-still .ar-toc-l::after,html.a11y-still .ar-toc-w{transition:none}
+html.still{scroll-behavior:auto}

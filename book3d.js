@@ -50,7 +50,9 @@ var BOOK = {
 /* ===================================================================================== */
 const CDN = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js';
 const FONT = '"Google Sans","Rubik Local","Segoe UI",system-ui,sans-serif';
-const C = { paper: '#3A2C24', ink: '#EAD7B4', body: 'rgba(234,215,180,.9)', fade: 'rgba(234,215,180,.72)', gd: '#D9B666', g: '#D9B666' }; // אספרסו (29.10.2026): paper = color-mix(#2B1D17 92%, #EAD7B4)
+// ספר בשמנת (1.11.2026, אפרים: "את האלבום עצמו"): נייר שמנת, טקסט באספרסו, והדגשות בזהב כהה
+// (אותו זהב, כהה מספיק לניגוד על השמנת: gd לטקסט קטן 5.2:1, g לקווים ולקישוטים 3.75:1)
+const C = { paper: '#EAD7B4', ink: '#2B1D17', body: 'rgba(43,29,23,.88)', fade: 'rgba(43,29,23,.74)', gd: '#6E5120', g: '#8A6526' };
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
@@ -168,6 +170,7 @@ function logo(tone) {
   const g = x.createLinearGradient(0, 0, 0, 204);
   if (tone === 'w') { g.addColorStop(0, '#fff'); g.addColorStop(1, '#fff'); }
   else if (tone === 'l') { g.addColorStop(0, '#F7E7B0'); g.addColorStop(.5, '#D9B666'); g.addColorStop(1, '#D3AE5C'); }
+  else if (tone === 'k') { g.addColorStop(0, '#8A6526'); g.addColorStop(.5, '#6E5120'); g.addColorStop(1, '#5A4216'); }   // זהב כהה, לנייר השמנת
   else { g.addColorStop(0, '#F7E7B0'); g.addColorStop(.5, '#D9B666'); g.addColorStop(1, '#A07834'); }
   x.fillStyle = g; x.fillRect(0, 0, 620, 204);
   return LG[tone] = c;
@@ -195,7 +198,7 @@ function put(x, U, L, box, R, m) {
     const it = o.it, top = box.t + o.y;
     if (it.t === 'tx') {
       x.font = ff(it.w || 400, o.z); setLS(x, (it.ls || 0) * o.z); x.textAlign = ctr ? 'center' : 'right';
-      if (it.gold) { const g = x.createLinearGradient(0, top, 0, top + o.h); g.addColorStop(0, '#D9B666'); g.addColorStop(.42, '#F7E7B0'); g.addColorStop(.55, '#D3AE5C'); g.addColorStop(1, '#A07834'); x.fillStyle = g; }
+      if (it.gold) { const g = x.createLinearGradient(0, top, 0, top + o.h); g.addColorStop(0, '#7A5A22'); g.addColorStop(.42, '#8A6526'); g.addColorStop(.55, '#765520'); g.addColorStop(1, '#5A4216'); x.fillStyle = g; }
       else x.fillStyle = it.c || C.body;
       o.lines.forEach((ln, i) => x.fillText(ln, ctr ? mid : box.r, top + i * o.lh + o.lh / 2 + o.z * .04));
       setLS(x, 0);
@@ -231,10 +234,10 @@ function flow(x, m, items, box, va, R) {
 }
 function folio(x, m, side, n, light) {
   const U = m.U; x.font = ff(700, 3 * U); x.textBaseline = 'middle'; x.direction = 'ltr';
-  x.fillStyle = light ? 'rgba(234,215,180,.9)' : C.gd; x.textAlign = side === 'L' ? 'left' : 'right';
+  x.fillStyle = light ? 'rgba(43,29,23,.88)' : C.gd; x.textAlign = side === 'L' ? 'left' : 'right';
   x.fillText(String(n), side === 'L' ? 8 * U : m.cw - 8 * U, m.ch - 5.4 * U); x.direction = 'rtl';
 }
-function frame(x, X, Y, W, H) { x.strokeStyle = 'rgba(234,215,180,.18)'; x.lineWidth = 1.4; x.strokeRect(X + .7, Y + .7, W - 1.4, H - 1.4); }
+function frame(x, X, Y, W, H) { x.strokeStyle = 'rgba(110,81,32,.35)'; x.lineWidth = 1.4; x.strokeRect(X + .7, Y + .7, W - 1.4, H - 1.4); }
 const reg = (R, m, X, Y, W, H, a) => R.push({ x0: X / m.cw, y0: Y / m.ch, x1: (X + W) / m.cw, y1: (Y + H) / m.ch, a });
 
 // ציור צד אחד. מחזיר את הקנבס ואת האזורים הלחיצים בו (בקואורדינטות 0..1)
@@ -244,7 +247,7 @@ function paint(sp, m) {
   const b = sp.b != null ? BARS[sp.b] : null;
   if (sp.k === 'title') {
     const top = m.ph ? 12 : 9, tb = m.ph ? 84 : 66;
-    flow(x, m, [{ t: 'img', im: logo('d'), w: m.ph ? 34 : 30 },
+    flow(x, m, [{ t: 'img', im: logo('k'), w: m.ph ? 34 : 30 },
       { t: 'tx', s: BOOK.title, z: m.ph ? 9.4 : 8.4, w: 700, gold: 1, gap: 6, one: 1 },
       { t: 'tx', s: BOOK.sub, z: m.ph ? 4.4 : 3.9, w: 500, c: C.ink, gap: 2, ls: .12, one: 1 },
       { t: 'orn', w: 26, gap: 4.6 },
@@ -255,17 +258,17 @@ function paint(sp, m) {
     let y = (m.ph ? 98 : 76) * U;
     x.font = ff(700, 3.7 * U); setLS(x, .1 * 3.7 * U); x.fillStyle = C.gd; x.textAlign = 'right'; x.textBaseline = 'middle';
     x.fillText(BOOK.toc, r, y); setLS(x, 0); y += 4.6 * U;
-    x.fillStyle = 'rgba(234,215,180,.5)'; x.fillRect(l, y, r - l, Math.max(1.5, .22 * U)); y += 1.2 * U;
+    x.fillStyle = 'rgba(110,81,32,.55)'; x.fillRect(l, y, r - l, Math.max(1.5, .22 * U)); y += 1.2 * U;
     BARS.forEach((bar, i) => {
       const cy = y + rowH / 2, pg = m.ph ? 2 + 2 * i : 4 * i + 2;
       x.font = ff(500, z); x.fillStyle = C.ink; x.textAlign = 'right'; x.direction = 'rtl'; x.fillText(bar.title, r, cy);
       const tw = x.measureText(bar.title).width;
       x.font = ff(700, z * .92); x.fillStyle = C.gd; x.textAlign = 'left'; x.direction = 'ltr'; x.fillText(String(pg), l, cy);
       const nw = x.measureText(String(pg)).width; x.direction = 'rtl';
-      x.fillStyle = 'rgba(217,182,102,.55)';
+      x.fillStyle = 'rgba(110,81,32,.55)';
       for (let d = r - tw - 2.4 * U; d > l + nw + 2.4 * U; d -= 1.7 * U) x.fillRect(d - .2 * U, cy + z * .22, .4 * U, .4 * U);
       reg(R, m, l - U, y, r - l + 2 * U, rowH, { t: 'go', to: 2 + 2 * i });
-      y += rowH; x.fillStyle = 'rgba(234,215,180,.14)'; x.fillRect(l, y - 1, r - l, 1.2);
+      y += rowH; x.fillStyle = 'rgba(43,29,23,.13)'; x.fillRect(l, y - 1, r - l, 1.2);
     });
     gutter(x, W, H, side, 1);
   } else if (sp.k === 'A' && !m.ph) {
@@ -293,7 +296,7 @@ function paint(sp, m) {
       { t: 'tx', s: b.title, z: 8.4, w: 700, c: C.ink, lh: 1.1, gap: 2.2 },
       { t: 'rule', w: 12, gap: 3.8 },
       { t: 'tx', s: b.story, z: 5.3, c: C.body, lh: 1.62, gap: 4.2 }], box, 'center', R);
-    const lw = 13 * U, lg = logo('d'); x.globalAlpha = .9; x.drawImage(lg, (W - lw) / 2 + 3 * U, H - 13.5 * U, lw, lw * lg.height / lg.width); x.globalAlpha = 1;
+    const lw = 13 * U, lg = logo('k'); x.globalAlpha = .9; x.drawImage(lg, (W - lw) / 2 + 3 * U, H - 13.5 * U, lw, lw * lg.height / lg.width); x.globalAlpha = 1;
     folio(x, m, side, sp.n); gutter(x, W, H, side, 1);
   } else if (sp.k === 'B' && !m.ph) {
     // כפולה ב, שמאל: עוד צילומים
@@ -325,7 +328,7 @@ function paint(sp, m) {
     { l: 7 * U, r: 91 * U, t: 8 * U, b: y0 - 5 * U, al: 'right' }, 'center', R);
     folio(x, m, side, sp.n); gutter(x, W, H, side, 1);
   } else if (sp.k === 'end') {
-    const f = flow(x, m, [{ t: 'img', im: logo('d'), w: 26 },
+    const f = flow(x, m, [{ t: 'img', im: logo('k'), w: 26 },
       { t: 'tx', s: BOOK.endH[0], z: m.ph ? 10 : 9, w: 700, c: C.ink, gap: 8, one: 1, lh: 1.16 },
       { t: 'tx', s: BOOK.endH[1], z: m.ph ? 10 : 9, w: 700, c: C.ink, one: 1, lh: 1.16 },
       { t: 'orn', w: 22, gap: 4.4 },
@@ -337,24 +340,24 @@ function paint(sp, m) {
   } else gutter(x, W, H, side, 1);                                   // גב ריק (בטלפון)
   return { c, R };
 }
-// נייר הפורזץ בפנים הכריכות: שוקולד עם נקודות זהב ומסגרת עם הלוגו
+// נייר הפורזץ בפנים הכריכות: שמנת עם נקודות בזהב כהה ומסגרת כפולה עם הלוגו
 function endpaper(w, h, which, fx, fy) {
   const c = mk(w, h), x = c.getContext('2d'), U = w / 100;
   fx = fx || 0; fy = fy || 0;
-  x.fillStyle = '#2B1D17'; x.fillRect(0, 0, w, h);
-  x.fillStyle = 'rgba(217,182,102,.42)'; const s = 4.4 * U;
+  x.fillStyle = '#EAD7B4'; x.fillRect(0, 0, w, h);
+  x.fillStyle = 'rgba(110,81,32,.34)'; const s = 4.4 * U;
   for (let yy = s / 2; yy < h; yy += s) for (let xx = s / 2 + ((Math.round(yy / s) % 2) * s / 2); xx < w; xx += s) { x.beginPath(); x.arc(xx, yy, .2 * U, 0, 7); x.fill(); }
   const bw = 54 * U, bh = 36 * U, bl = (w - bw) / 2, bt = (h - bh) / 2;
-  x.fillStyle = '#3A2C24'; x.fillRect(bl - 2 * U, bt - 2 * U, bw + 4 * U, bh + 4 * U);
-  x.strokeStyle = 'rgba(217,182,102,.55)'; x.lineWidth = .3 * U; x.strokeRect(bl, bt, bw, bh); x.strokeRect(bl - 1.1 * U, bt - 1.1 * U, bw + 2.2 * U, bh + 2.2 * U);
-  const lg = logo('l'), lw = 36 * U; x.drawImage(lg, (w - lw) / 2, bt + 6 * U, lw, lw * lg.height / lg.width);
-  x.font = ff(500, 3.2 * U); setLS(x, .5 * U); x.fillStyle = '#D9B666'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.direction = 'rtl';
+  x.fillStyle = '#EAD7B4'; x.fillRect(bl - 2 * U, bt - 2 * U, bw + 4 * U, bh + 4 * U);
+  x.strokeStyle = 'rgba(110,81,32,.7)'; x.lineWidth = .3 * U; x.strokeRect(bl, bt, bw, bh); x.strokeRect(bl - 1.1 * U, bt - 1.1 * U, bw + 2.2 * U, bh + 2.2 * U);
+  const lg = logo('k'), lw = 36 * U; x.drawImage(lg, (w - lw) / 2, bt + 6 * U, lw, lw * lg.height / lg.width);
+  x.font = ff(500, 3.2 * U); setLS(x, .5 * U); x.fillStyle = '#6E5120'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.direction = 'rtl';
   x.fillText(which === 'f' ? BOOK.sub : BOOK.title, w / 2, bt + bh - 7 * U); setLS(x, 0);
   if (fx || fy) {
     const tw = fx * w, th2 = fy * h, l = which === 'f' ? 0 : tw, r = which === 'f' ? w - tw : w, pat = x.createPattern(linen().c, 'repeat');
     x.save(); x.beginPath(); x.rect(0, 0, w, h); x.rect(l, th2, r - l, h - 2 * th2); x.clip('evenodd');
     x.save(); x.scale(2, 2); x.fillStyle = pat; x.fillRect(0, 0, w, h); x.restore();
-    const sh = (x0, y0, x1, y1) => { const g2 = x.createLinearGradient(x0, y0, x1, y1); g2.addColorStop(0, 'rgba(20,6,1,.45)'); g2.addColorStop(1, 'rgba(20,6,1,0)'); return g2; };
+    const sh = (x0, y0, x1, y1) => { const g2 = x.createLinearGradient(x0, y0, x1, y1); g2.addColorStop(0, 'rgba(43,29,23,.3)'); g2.addColorStop(1, 'rgba(43,29,23,0)'); return g2; };
     x.fillStyle = sh(0, th2, 0, th2 - 1.4 * U); x.fillRect(0, 0, w, th2);
     x.fillStyle = sh(0, h - th2, 0, h - th2 + 1.4 * U); x.fillRect(0, h - th2, w, th2);
     if (which === 'f') { x.fillStyle = sh(w - tw, 0, w - tw + 1.4 * U, 0); x.fillRect(w - tw, 0, tw, h); } else { x.fillStyle = sh(tw, 0, tw - 1.4 * U, 0); x.fillRect(0, 0, tw, h); }
@@ -362,23 +365,23 @@ function endpaper(w, h, which, fx, fy) {
   }
   return c;
 }
-// בד הפשתן: חוטים לאורך ולרוחב, עם עיבויים קטנים כמו בפשתן אמיתי
+// בד הפשתן בשמנת (כמו כריכה של אלבום חתונה): חוטים לאורך ולרוחב, עם עיבויים קטנים כמו בפשתן אמיתי
 let LIN = null;
 function linen() {
   if (LIN) return LIN;
   const n = 256, c = mk(n, n), x = c.getContext('2d'), b = mk(n, n), y = b.getContext('2d');
-  x.fillStyle = '#3A2C24'; x.fillRect(0, 0, n, n); y.fillStyle = '#808080'; y.fillRect(0, 0, n, n);
+  x.fillStyle = '#EAD7B4'; x.fillRect(0, 0, n, n); y.fillStyle = '#808080'; y.fillRect(0, 0, n, n);
   for (let i = 0; i < n; i++) {
     const a = Math.random(), d = Math.random();
-    x.fillStyle = 'rgba(234,215,180,' + (a * .085).toFixed(3) + ')'; x.fillRect(0, i, n, 1);
-    x.fillStyle = 'rgba(43,29,23,' + (d * .13).toFixed(3) + ')'; x.fillRect(i, 0, 1, n);
+    x.fillStyle = 'rgba(247,231,176,' + (a * .3).toFixed(3) + ')'; x.fillRect(0, i, n, 1);
+    x.fillStyle = 'rgba(110,81,32,' + (d * .15).toFixed(3) + ')'; x.fillRect(i, 0, 1, n);
     y.fillStyle = 'rgba(255,255,255,' + (a * .35).toFixed(3) + ')'; y.fillRect(0, i, n, 1);
     y.fillStyle = 'rgba(0,0,0,' + (d * .35).toFixed(3) + ')'; y.fillRect(i, 0, 1, n);
     if (i % 2) { y.fillStyle = 'rgba(0,0,0,.12)'; y.fillRect(0, i, n, 1); y.fillRect(i, 0, 1, n); }
   }
   for (let k = 0; k < 120; k++) {
     const L = 6 + Math.random() * 26, X = Math.random() * n, Y = Math.random() * n, hz = Math.random() < .5, lt = Math.random() < .5;
-    x.fillStyle = lt ? 'rgba(234,215,180,.11)' : 'rgba(43,29,23,.15)'; y.fillStyle = lt ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.3)';
+    x.fillStyle = lt ? 'rgba(247,231,176,.45)' : 'rgba(110,81,32,.15)'; y.fillStyle = lt ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.3)';
     if (hz) { x.fillRect(X, Y, L, 1.4); y.fillRect(X, Y, L, 1.4); } else { x.fillRect(X, Y, 1.4, L); y.fillRect(X, Y, 1.4, L); }
   }
   return LIN = { c, b };
@@ -406,11 +409,13 @@ function coverSet(w, h, kind) {
     blind.push([w * .14, h * .035, 0, 0], [w * .14, h * .965, 0, 0]);
   }
   // הטבעה עיוורת (בלי זהב): מסגרת דקה
-  bx.strokeStyle = 'rgba(0,0,0,.55)'; bx.lineWidth = .55 * U; cx.strokeStyle = 'rgba(40,16,4,.28)'; cx.lineWidth = .55 * U;
-  blind.forEach(r => { if (r[2]) { bx.strokeRect(r[0], r[1], r[2], r[3]); cx.strokeRect(r[0], r[1], r[2], r[3]); } else { bx.fillStyle = cx.fillStyle = 'rgba(0,0,0,.4)'; bx.fillRect(r[0], r[1] - .3 * U, w - 2 * r[0], .6 * U); } });
+  bx.strokeStyle = 'rgba(0,0,0,.55)'; bx.lineWidth = .55 * U; cx.strokeStyle = 'rgba(110,92,40,.34)'; cx.lineWidth = .55 * U;
+  blind.forEach(r => { if (r[2]) { bx.strokeRect(r[0], r[1], r[2], r[3]); cx.strokeRect(r[0], r[1], r[2], r[3]); } else { bx.fillStyle = 'rgba(0,0,0,.4)'; bx.fillRect(r[0], r[1] - .3 * U, w - 2 * r[0], .6 * U); cx.fillStyle = 'rgba(110,92,40,.34)'; cx.fillRect(r[0], r[1] - .3 * U, w - 2 * r[0], .6 * U); } });
   const paintM = (c2, fill) => { const t = mk(w, h), tx = t.getContext('2d'); tx.drawImage(msk, 0, 0); tx.globalCompositeOperation = 'source-in'; tx.fillStyle = fill(tx); tx.fillRect(0, 0, w, h); c2.drawImage(t, 0, 0); };
-  paintM(cx, t => { const g = t.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#D9B666'); g.addColorStop(.5, '#F7E7B0'); g.addColorStop(1, '#D3AE5C'); return g; });
-  paintM(ox, () => 'rgb(255,78,255)');
+  // הטבעה עמוקה: צל רך מתחת לאותיות (על הבד), ואז הפויל בזהב כהה, כדי שיהיה קריא על השמנת
+  cx.save(); cx.filter = 'blur(' + (.22 * U).toFixed(1) + 'px)'; cx.translate(.1 * U, .2 * U); paintM(cx, () => 'rgba(43,29,23,.42)'); cx.restore();
+  paintM(cx, t => { const g = t.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#5E4318'); g.addColorStop(.5, '#6E5120'); g.addColorStop(1, '#5A4216'); return g; });
+  paintM(ox, () => 'rgb(255,110,190)');
   bx.filter = 'blur(' + (.18 * U).toFixed(1) + 'px)'; paintM(bx, () => 'rgb(52,52,52)'); bx.filter = 'none';
   return { col, orm, bmp };
 }
@@ -427,6 +432,7 @@ function init() {
     '<div class="b3-mid"><button type="button" class="btn btn-main b3-open">לפתוח את הספר</button><p class="b3-cnt"></p>' +
     '<div class="b3-dots" aria-hidden="true"><span class="b3-dl"><b></b><i></i><i></i><i></i></span><em>הגלילה מדפדפת</em></div></div>' +
     '<button type="button" class="b3-arr next" aria-label="לפתוח את הספר">' + chev(1) + '</button></div></div>' +
+    '<button type="button" class="b3-nb prev" aria-label="לסגור את הספר" disabled>' + chev(-1) + '</button><button type="button" class="b3-nb next" aria-label="לפתוח את הספר">' + chev(1) + '</button>' +
     '<div class="b3-stage" tabindex="0" role="group" aria-roledescription="ספר" aria-label="ספר הגלריה. החצים במקלדת מדפדפים, ואנטר מגדיל את הצילום שבעמוד.">' +
     '<p class="b3-load" aria-hidden="true">פותחים את הספר</p></div><canvas class="b3-cv" aria-hidden="true"></canvas>' +
     '<div class="b3-sr"><p class="b3-live" aria-live="polite"></p><ul>' +
@@ -434,10 +440,12 @@ function init() {
   const side = $('.b3-side', A);
   if (head) { side.insertBefore(head, side.firstChild); if (hw && hw !== A && !hw.children.length) hw.style.display = 'none'; }
   S = { cur: 0, mode: null, E: null, flat: null, vis: false, used: false, stage: $('.b3-stage', A), cv: $('.b3-cv', A),
-    prev: $('.b3-arr.prev', A), next: $('.b3-arr.next', A), open: $('.b3-open', A), cnt: $('.b3-cnt', A), dots: $('.b3-dots', A), live: $('.b3-live', A), btn: $$('.b3-sr button', A) };
+    prev: $('.b3-arr.prev', A), next: $('.b3-arr.next', A), nbp: $('.b3-nb.prev', A), nbn: $('.b3-nb.next', A), open: $('.b3-open', A), cnt: $('.b3-cnt', A), dots: $('.b3-dots', A), live: $('.b3-live', A), btn: $$('.b3-sr button', A) };
   lbInit();
   S.next.addEventListener('click', () => { S.used = true; go(S.cur + 1); });
   S.prev.addEventListener('click', () => { S.used = true; go(S.cur - 1); });
+  S.nbn.addEventListener('click', () => { S.used = true; go(S.cur + 1); });
+  S.nbp.addEventListener('click', () => { S.used = true; go(S.cur - 1); });
   S.open.addEventListener('click', () => { S.used = true; go(1); setTimeout(() => { if (document.activeElement === S.open || document.activeElement === document.body) S.next.focus({ preventScroll: true }); }, 400); });
   S.stage.addEventListener('keydown', e => {
     if (e.key !== 'Enter' && e.key !== ' ') return; e.preventDefault(); S.used = true;
@@ -462,7 +470,7 @@ function init() {
   S.sp = document.createElement('div'); S.sp.className = 'b3-spacer'; S.sp.setAttribute('aria-hidden', 'true'); S.pw.after(S.sp);
   S.pinOK = !calm() && webgl();
   S.scrub = { on: true, p: 0, ld: null };
-  const onScroll = () => { S.scrub.p = tl(); scrubSync(); };
+  const onScroll = () => { S.scrub.p = tl(); scrubSync(); centerSync(); };
   addEventListener('scroll', onScroll, { passive: true });
   layoutPin(); onScroll();
   new ResizeObserver(() => { layoutPin(); onScroll(); }).observe(S.pw);
@@ -476,8 +484,9 @@ function init() {
   if (TEST) window.__b3 = { S, go, BARS };
 }
 /* ציר הגלילה של הספר (T): 0..1 הכריכה נפתחת בדרך אל החלק, 1..3 בזמן הנעיצה שני דפים מתהפכים.
-   האורכים ביחידות של גובה מסך: עצירה קצרה על כל כפולה כדי שאפשר יהיה לראות אותה */
-const PIN = { d0: .18, flip: .46, dwell: .26 }, PIN_D = PIN.d0 + 2 * (PIN.flip + PIN.dwell);
+   האורכים ביחידות של גובה מסך: עצירה קצרה על כל כפולה כדי שאפשר יהיה לראות אותה.
+   אחרי הכפולה האחרונה (PIN_F, 1.11.2026): הספר זז לאמצע המסך וגדל מעט, עם כפתורים בשני צדדיו, ועוד קצת נעיצה (ctr) לפני שממשיכים */
+const PIN = { d0: .18, flip: .46, dwell: .26, ctr: .55 }, PIN_F = PIN.d0 + 2 * (PIN.flip + PIN.dwell), PIN_D = PIN_F + PIN.ctr;
 function layoutPin() {
   if (!S || !S.pw) return;
   const on = !S.flat && S.pinOK;
@@ -490,6 +499,34 @@ function layoutPin() {
   S.pin = { on, top, s1: top - nat, off: nat + stOff };
   S.pw.style.top = on ? top + 'px' : '';
   G.style.scrollMarginTop = on ? (top - nat) + 'px' : '';             // הקישור "גלריה" מביא בדיוק לתחילת הנעיצה
+  centerGeo();
+}
+/* הספר הממורכז: אחרי הדפדוף בגלילה (או ישר, בלי נעיצה: תנועה מופחתת או בלי תלת ממד).
+   b3c: במחשב רחב הספר זז לאמצע וגדל מעט, הטור בצד דוהה, וכפתורים בשני צדי הספר. בטלפון ובטאבלט החצים שמתחת לספר נשארים.
+   b3cs: בלי נעיצה, הכותרת מעל הספר והכפתורים בשני צדדיו, בלי אנימציה */
+function centerSync() {
+  const P = S.pin; if (!P) return;
+  const st = !P.on, c = !st && P.u >= PIN_F - .02;
+  if (st !== G.classList.contains('b3cs')) { G.classList.toggle('b3cs', st); requestAnimationFrame(centerGeo); }
+  if (c !== G.classList.contains('b3c')) G.classList.toggle('b3c', c);
+}
+// כמה להזיז ולהגדיל (סביב מרכז הספר הפתוח), ואיפה הכפתורים. הכול במידות הפריסה (בלי ההזזה עצמה), במשתנים על החלק
+function centerGeo() {
+  if (!S || !S.pw) return;
+  const st = S.stage, sx = st.offsetLeft, sy = st.offsetTop, sw = st.offsetWidth, sh = st.offsetHeight, cv = S.cv;
+  const b = (S.E && S.E.openRect && S.E.openRect()) || { l: sx + sw * .03, r: sx + sw * .97, t: sy + sh * .2, b: sy + sh * .86 };
+  const bx = (b.l + b.r) / 2, by = (b.t + b.b) / 2, cw = html.clientWidth, ar = A.getBoundingClientRect(), hh = phoneW() ? 60 : 72;
+  let dx = 0, dy = 0, s = 1;
+  if (innerWidth > 1100 && S.pin && S.pin.on) {
+    const pr = S.pw.getBoundingClientRect(), aTop = S.pin.top + (ar.top - pr.top);   // ראש A כשהבמה נעוצה
+    s = Math.max(1, Math.min(1.12, (cw - 2 * 140) / Math.max(1, b.r - b.l), (innerHeight - hh - 36) / Math.max(1, b.b - b.t)));
+    dx = cw / 2 - (ar.left + bx); dy = clamp((hh + innerHeight) / 2 - (aTop + by), -90, 60);
+  }
+  const set = (k, v) => G.style.setProperty(k, v), px = v => v.toFixed(1) + 'px';
+  set('--b3dx', px(dx)); set('--b3dy', px(dy)); set('--b3s', s.toFixed(3));
+  set('--b3os', px(bx - sx) + ' ' + px(by - sy)); set('--b3oc', px(bx - cv.offsetLeft) + ' ' + px(by - cv.offsetTop));
+  const hw = (b.r - b.l) / 2 * s, gap = 30 + 28;
+  set('--b3bl', px(Math.max(16 + 28 - ar.left, bx + dx - hw - gap))); set('--b3br', px(Math.min(cw - ar.left - 16 - 28, bx + dx + hw + gap))); set('--b3by', px(by + dy));
 }
 function tl() {
   const P = S.pin; if (!P) return 0;
@@ -518,7 +555,7 @@ function manual() { const sc = S.scrub; if (!sc) return; sc.on = false; sc.ld = 
 // המחוון: שלוש נקודות זהב (כפולה 1, 2, 3) עם קו שמתמלא, ומתחתיו "הגלילה מדפדפת". רק כשהגלילה שולטת
 function dots() {
   const d = S.dots; if (!d) return;
-  const T = S.scrub ? S.scrub.p : 0, show = !!(S.pin && S.pin.on && S.scrub && S.scrub.on && (S.E || !S.ready) && T > .55 && S.pin.u < PIN_D + .04);   // אחרי השחרור כבר לא מדפדפים
+  const T = S.scrub ? S.scrub.p : 0, show = !!(S.pin && S.pin.on && S.scrub && S.scrub.on && (S.E || !S.ready) && T > .55 && S.pin.u < PIN_F + .04);   // אחרי השחרור כבר לא מדפדפים
   d.classList.toggle('on', show);
   d.style.setProperty('--f', clamp((T - 1) / 2, 0, 1).toFixed(3));
   $$('i', d).forEach((x, k) => x.classList.toggle('on', T >= .55 + k));
@@ -542,13 +579,14 @@ function ui() {
   const cur = S.cur, ph = S.mode ? S.mode.ph : phoneW();
   A.classList.toggle('shut', !cur);
   S.cnt.textContent = cur ? (ph ? 'עמוד ' : 'כפולה ') + cur + ' מתוך ' + MAXC : '';
-  S.prev.disabled = !cur; S.next.disabled = cur >= MAXC;
+  S.prev.disabled = S.nbp.disabled = !cur; S.next.disabled = S.nbn.disabled = cur >= MAXC;
   S.prev.setAttribute('aria-label', cur === 1 ? 'לסגור את הספר' : ph ? 'לעמוד הקודם' : 'לכפולה הקודמת');
   S.next.setAttribute('aria-label', !cur ? 'לפתוח את הספר' : ph ? 'לעמוד הבא' : 'לכפולה הבאה');
+  S.nbp.setAttribute('aria-label', S.prev.getAttribute('aria-label')); S.nbn.setAttribute('aria-label', S.next.getAttribute('aria-label'));
   if (S.lastLive !== cur) { S.lastLive = cur; clearTimeout(S.lt); S.lt = setTimeout(() => { S.live.textContent = describe(S.cur, S.mode || MODES.D); }, 500); }
   dots();
   const f = document.activeElement;
-  if (f && A.contains(f) && f.disabled) (S.next.disabled ? S.prev : S.next).focus({ preventScroll: true });
+  if (f && A.contains(f) && f.disabled) (f.classList.contains('b3-nb') ? (S.nbn.disabled ? S.nbp : S.nbn) : (S.next.disabled ? S.prev : S.next)).focus({ preventScroll: true });
 }
 function go(to) {
   to = clamp(to, S.flat ? 1 : 0, MAXC); if (to === S.cur) return;
@@ -676,7 +714,7 @@ function Engine(m) {
 
   /* ---------- חומרים ---------- */
   const tex = (c, srgb) => { const t = new T.CanvasTexture(c); if (srgb !== false) t.colorSpace = T.SRGBColorSpace; t.anisotropy = aniso; return t; };
-    const edgeM = keep(new T.MeshStandardMaterial({ color: 0x3a2c24, roughness: .88, metalness: 0, envMapIntensity: .8 }));
+    const edgeM = keep(new T.MeshStandardMaterial({ color: 0xd2c8b4, roughness: .88, metalness: 0, envMapIntensity: .8 }));   // עובי הלוחות: הבד של הכריכה
   const gl = mk(4, 16), glx = gl.getContext('2d'); glx.fillStyle = '#fff'; glx.fillRect(0, 0, 4, 16); glx.fillStyle = '#9C7430'; glx.fillRect(0, 0, 4, 3);
   const glT = keep(tex(gl)); glT.anisotropy = 1;
   const gildM = keep(new T.MeshStandardMaterial({ map: glT, color: 0xD9B666, metalness: .8, roughness: .34, envMapIntensity: 1.15 }));
@@ -743,8 +781,10 @@ function Engine(m) {
     rest(L.aL, rx, ryF, hLj(L.j), -g * Math.sin(be), -1);
     rest(L.aR, rx, ryF, hRj(L.j), Sw + g, 1);
     const pk = it.p * .022, e = clamp(it.e + (it.target ? -pk : pk), 0, 1), b2 = sm(e);
+    // קימור שמוריד את הקצה לכיוון הערימה נחלש כשהעלה מתקרב לנחיתה, כדי שהקצה לא ייכנס מתחת לדף שמתחתיו (1.11.2026)
+    const dip = clamp((b2 > .5 ? 1 - b2 : b2) / .3, 0, 1);
     for (let r = 0; r <= MR; r++) {
-      const zn = r / MR * 2 - 1, A = L.ang[r], kk = it.k + it.tz * zn;
+      const zn = r / MR * 2 - 1, A = L.ang[r], k0 = it.k + it.tz * zn, kk = (b2 > .5 ? k0 < 0 : k0 > 0) ? k0 * dip : k0;
       for (let i = 0; i < N; i++) A[i] = L.aL[i] + (L.aR[i] - L.aL[i]) * b2 + kk * WC[i];
     }
     L.root = [rx, ryF];
@@ -783,9 +823,11 @@ function Engine(m) {
   };
   const cw = 1024, chh = Math.round(cw * Hb / Wb);
   const cs = coverSet(cw, chh, 'front');
-  const coverM = keep(new T.MeshStandardMaterial({ map: keep(tex(cs.col)), roughnessMap: keep(tex(cs.orm, false)), metalnessMap: keep(tex(cs.orm, false)), bumpMap: keep(tex(cs.bmp, false)), bumpScale: 1.2, roughness: 1, metalness: 1, envMapIntensity: 1.25 }));
+  // הבד בשמנת: האור של הסצנה חם, אז החומר מקבל מעט כחול (CLOTH) כדי שהתוצאה על המסך תהיה השמנת עצמה ולא חום-צהוב
+  const CLOTH = 0xeee3f5;
+  const coverM = keep(new T.MeshStandardMaterial({ color: CLOTH, map: keep(tex(cs.col)), roughnessMap: keep(tex(cs.orm, false)), metalnessMap: keep(tex(cs.orm, false)), bumpMap: keep(tex(cs.bmp, false)), bumpScale: 1.2, roughness: 1, metalness: 1, envMapIntensity: 1.25 }));
   const backCs = coverSet(512, Math.round(512 * Hb / Wb), 'back');
-  const backM = keep(new T.MeshStandardMaterial({ map: keep(tex(backCs.col)), roughness: .9, metalness: 0 }));
+  const backM = keep(new T.MeshStandardMaterial({ color: CLOTH, map: keep(tex(backCs.col)), roughness: .9, metalness: 0 }));
   const tfx = (o + .012) / Wb, tfy = (o + .012) / Hb;
   const epF = keep(new T.MeshStandardMaterial({ map: keep(tex(endpaper(m.cw, Math.round(m.cw * Hb / Wb), 'f', tfx, tfy))), roughness: .72, metalness: 0, envMapIntensity: .5 }));
   const epB = keep(new T.MeshStandardMaterial({ map: keep(tex(endpaper(m.cw, Math.round(m.cw * Hb / Wb), 'b', tfx, tfy))), roughness: .72, metalness: 0, envMapIntensity: .5 }));
@@ -797,7 +839,7 @@ function Engine(m) {
   for (let i = 0; i <= SN; i++) { spUV[4 * i] = i / SN; spUV[4 * i + 1] = 0; spUV[4 * i + 2] = i / SN; spUV[4 * i + 3] = 1; if (i < SN) { const a = 2 * i; spI.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); } }
   spGeo.setAttribute('position', new T.BufferAttribute(spPos, 3)); spGeo.setAttribute('normal', new T.BufferAttribute(spN, 3)); spGeo.setAttribute('uv', new T.BufferAttribute(spUV, 2)); spGeo.setIndex(spI); keep(spGeo);
   const ss = coverSet(256, Math.round(256 * Hb / (Sw * 1.25)), 'sp');
-  const spM = keep(new T.MeshStandardMaterial({ map: keep(tex(ss.col)), roughnessMap: keep(tex(ss.orm, false)), metalnessMap: keep(tex(ss.orm, false)), bumpMap: keep(tex(ss.bmp, false)), bumpScale: 1, roughness: 1, metalness: 1, envMapIntensity: 1.2 }));
+  const spM = keep(new T.MeshStandardMaterial({ color: CLOTH, map: keep(tex(ss.col)), roughnessMap: keep(tex(ss.orm, false)), metalnessMap: keep(tex(ss.orm, false)), bumpMap: keep(tex(ss.bmp, false)), bumpScale: 1, roughness: 1, metalness: 1, envMapIntensity: 1.2 }));
   const spine = new T.Mesh(spGeo, spM); spine.castShadow = true; spine.frustumCulled = false; book.add(spine);
   const spIn = new T.Mesh(spGeo, keep(new T.MeshStandardMaterial({ color: 0x2b1d17, roughness: .95, metalness: 0, side: T.BackSide }))); spIn.frustumCulled = false; book.add(spIn);
 
@@ -892,11 +934,14 @@ function Engine(m) {
   }
   function size() {
     // הקנבס: כל רוחב החלק ועוד שוליים, וגבוה מהבמה (מקום לדף שעומד באמצע ההיפוך ולצל שלו)
-    const ar = A.getBoundingClientRect(), r = S.stage.getBoundingClientRect(), px = ph ? (innerWidth - ar.width) / 2 : Math.min(44, (innerWidth - ar.width) / 2);
+    // במידות הפריסה ביחס ל-A (כשהספר ממורכז הבמה והקנבס מוזזים ומוגדלים, והמלבנים על המסך משתנים)
+    const aw = A.offsetWidth, st = S.stage, r = { left: st.offsetLeft, top: st.offsetTop, width: st.offsetWidth, height: st.offsetHeight };
+    r.right = r.left + r.width; r.bottom = r.top + r.height;
+    const px = ph ? (innerWidth - aw) / 2 : Math.min(44, (innerWidth - aw) / 2);
     // לא עולה מעל תחילת החלק (כדי לא לכסות לחיצות בחלק הקודם)
-    const top = r.top - ar.top - (ph ? .3 : .4) * r.height, bot = r.bottom - ar.top + (ph ? .05 : .14) * r.height;
-    Object.assign(cv.style, { left: -px + 'px', width: (ar.width + 2 * px) + 'px', top: top + 'px', height: (bot - top) + 'px' });
-    const cr = cv.getBoundingClientRect();
+    const top = r.top - (ph ? .3 : .4) * r.height, bot = r.bottom + (ph ? .05 : .14) * r.height;
+    Object.assign(cv.style, { left: -px + 'px', width: (aw + 2 * px) + 'px', top: top + 'px', height: (bot - top) + 'px' });
+    const cr = { left: -px, top, width: aw + 2 * px, height: bot - top }; cr.right = cr.left + cr.width; cr.bottom = cr.top + cr.height;
     vw = Math.max(50, Math.round(cr.width)); vh = Math.max(50, Math.round(cr.height));
     ren.setPixelRatio(Math.min(devicePixelRatio || 1, 2)); ren.setSize(vw, vh, false);
     // הקנבס גבוה מהבמה (מקום לדף שעומד באמצע ההיפוך): השוליים בתוך הבמה בלבד
@@ -905,6 +950,7 @@ function Engine(m) {
     fitC = fit(0, [-Wb - .01, .05 + .1 * Sw, 0, Sw + .01, -zz, zz], P0);
     fitO = fit(1, ph ? [-Wb + .012, Sw / 2 + .055, 0, .1, -zz, zz] : [-Wb - .01, Sw + Wb + .01, 0, .1, -zz, zz], P1);
     camPose(); wake();
+    centerGeo();
   }
   function camPose() {
     const q = sm(items[0].e);
@@ -1124,6 +1170,20 @@ function Engine(m) {
     size,
     vis: v => { vis = v; if (v) wake(); },
     scrub: p => { if (p !== scrubT) { scrubT = p; wake(); } },
+    // הספר הפתוח במנוחה (בלי ההטיה של העכבר), במידות של A: בשביל המרכוז והכפתורים שבצדדים
+    openRect: () => {
+      if (dead || !fitO) return null;
+      poseBook(1); placeCam(fitO.d, P1.el, P1.az);
+      cam.aspect = vw / vh; cam.setViewOffset(vw, vh, -fitO.sx * vw / 2, fitO.sy * vh / 2, vw, vh); cam.updateProjectionMatrix();
+      let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; const v = new T.Vector3();
+      [-Wb, Sw + Wb].forEach(x => [-Hb / 2, Hb / 2].forEach(z => {
+        v.set(x, bt, z).applyMatrix4(book.matrixWorld).project(cam);
+        const px = (v.x + 1) / 2 * vw, py = (1 - v.y) / 2 * vh; x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py);
+      }));
+      camPose();
+      const k = cv.offsetWidth / vw;
+      return { l: cv.offsetLeft + x0 * k, r: cv.offsetLeft + x1 * k, t: cv.offsetTop + y0 * k, b: cv.offsetTop + y1 * k };
+    },
     // מתחברים מחדש מהמקום שבו הספר נמצא עכשיו (בלי קפיצה)
     resync: () => { sT = items[0].e + (items[1] ? items[1].e : 0) + (items[2] ? items[2].e : 0); },
     // מתיישרים מיד למיקום הגלילה (רק כשהחלק מחוץ למסך)

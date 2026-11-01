@@ -50,83 +50,81 @@
       '<rect width="1376" height="768" fill="url(#' + id + 'g)" mask="url(#' + id + 'm)"/></svg>';
   }
 
-  /* ---------- 4. התהליך: סרט זהב גלי שעובר דרך שש הנקודות, ונמתח בגלילה. כל שלב נדלק כשהסרט מגיע אליו,
-     וכשגוללים חזרה הסרט מתקצר והשלבים כבים (לבקשת אפרים) ---------- */
+  /* ---------- 4. התהליך: סרט זהב שיורד מלמעלה דרך שלוש הנקודות, ונמתח בגלילה. כל שלב נדלק כשהסרט מגיע אליו,
+     וכשגוללים חזרה הסרט מתקצר והשלבים כבים (לבקשת אפרים). 1.11.2026: "אין קשר" בין השלבים לספר:
+     הסרט נשאר רק בתהליך, וממשיך קצת מתחת לשלב האחרון ונעלם בדהייה רכה ---------- */
   (function () {
-    var W = $('#stepsw'), S = $('#steps'); if (!W || !S) return;
+    var W = $('#stepsw'), S = $('#steps'), sec = $('#process'); if (!W || !S || !sec) return;
     var items = $$('.stp', S), dots = items.map(function (li) { return $('.stp-dot', li); });
-    var NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('class', 'ribbon'); svg.setAttribute('aria-hidden', 'true'); svg.setAttribute('focusable', 'false');
-    W.appendChild(svg); S.classList.add('js');
-    var len = 0, at = [], P = [], vert = false, best = 0, mk = null, ys = [];
+    var NS = 'http://www.w3.org/2000/svg';
+    var A = { svg: document.createElementNS(NS, 'svg'), len: 0, smp: [], mk: null };
+    A.svg.setAttribute('class', 'ribbon'); A.svg.setAttribute('aria-hidden', 'true'); A.svg.setAttribute('focusable', 'false'); W.appendChild(A.svg);
+    S.classList.add('js');
+    var at = [], LINE = .8;   // הקצה של הסרט תמיד בגובה 80% מהמסך
     var f1 = function (v) { return v.toFixed(1); };
-    function curve(p, q, s, A) { // קטע S רך בין שתי נקודות: הבקרה מוזזת לצד אחד, ובקטע הבא לצד השני
-      var dx = q[0] - p[0], dy = q[1] - p[1], L = Math.sqrt(dx * dx + dy * dy) || 1, nx = -dy / L * A * s, ny = dx / L * A * s;
+    function curve(p, q, s, a) { // קטע S רך בין שתי נקודות: הבקרה מוזזת לצד אחד, ובקטע הבא לצד השני
+      var dx = q[0] - p[0], dy = q[1] - p[1], L = Math.sqrt(dx * dx + dy * dy) || 1, nx = -dy / L * a * s, ny = dx / L * a * s;
       return ' C' + f1(p[0] + dx / 3 + nx) + ' ' + f1(p[1] + dy / 3 + ny) + ' ' + f1(q[0] - dx / 3 + nx) + ' ' + f1(q[1] - dy / 3 + ny) + ' ' + f1(q[0]) + ' ' + f1(q[1]);
     }
-    function build() {
-      var b = W.getBoundingClientRect(); if (!b.width) return;
-      P = dots.map(function (d) { var r = d.getBoundingClientRect(); return [r.left + r.width / 2 - b.left, r.top + r.height / 2 - b.top]; });
-      vert = Math.abs(P[1][1] - P[0][1]) > Math.abs(P[1][0] - P[0][0]);
-      var A = vert ? 12 : 30, k = P.length - 1;
-      var u0 = [P[1][0] - P[0][0], P[1][1] - P[0][1]], uN = [P[k][0] - P[k - 1][0], P[k][1] - P[k - 1][1]];
-      var n0 = Math.sqrt(u0[0] * u0[0] + u0[1] * u0[1]), nN = Math.sqrt(uN[0] * uN[0] + uN[1] * uN[1]);
-      // הסרט יוצא קצת מעבר לנקודה הראשונה והאחרונה, אבל לא עד קצה המסך
-      var lead = vert ? 26 : Math.max(0, Math.min(46, innerWidth - b.right - 14)), tail = vert ? 0 : Math.max(0, Math.min(54, b.left - 14));
-      var st = [P[0][0] - u0[0] / n0 * lead, P[0][1] - u0[1] / n0 * lead], en = [P[k][0] + uN[0] / nN * tail, P[k][1] + uN[1] / nN * tail];
-      var d = 'M' + f1(st[0]) + ' ' + f1(st[1]) + ' L' + f1(P[0][0]) + ' ' + f1(P[0][1]), parts = [d];
-      for (var i = 0; i < k; i++) { d += curve(P[i], P[i + 1], i % 2 ? -1 : 1, A); parts.push(d); }
-      if (tail) d += ' L' + f1(en[0]) + ' ' + f1(en[1]);
-      // אורך הסרט עד כל נקודה (בשביל ההדלקה)
-      var tmp = document.createElementNS(NS, 'path'); svg.appendChild(tmp);
-      at = parts.map(function (pd) { tmp.setAttribute('d', pd); return tmp.getTotalLength(); });
-      tmp.setAttribute('d', d); len = tmp.getTotalLength(); tmp.remove();
-      ys = [st[1]].concat(P.map(function (p) { return p[1]; }));
-      var w = b.width, h = b.height, off = vert ? function (v) { return 'translate(' + v + ' 0)'; } : function (v) { return 'translate(0 ' + v + ')'; };
-      var g = vert ? 'x1="0" y1="0" x2="0" y2="' + f1(h) + '"' : 'x1="' + f1(w) + '" y1="0" x2="0" y2="0"';
-      svg.setAttribute('viewBox', '0 0 ' + f1(w) + ' ' + f1(h));
-      svg.innerHTML = '<defs><linearGradient id="rbg" gradientUnits="userSpaceOnUse" ' + g + '>' +
-        '<stop offset="0" stop-color="#9C7430"/><stop offset=".22" stop-color="#D9B666"/><stop offset=".42" stop-color="#F7E7B0"/><stop offset=".55" stop-color="#D3AE5C"/><stop offset=".78" stop-color="#A07834"/><stop offset="1" stop-color="#E2C47A"/></linearGradient>' +
-        '<filter id="rbs" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="2.4"/></filter>' +
-        '<mask id="rbm" maskUnits="userSpaceOnUse" x="-80" y="-80" width="' + f1(w + 160) + '" height="' + f1(h + 160) + '"><path d="' + d + '" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round" stroke-dasharray="' + f1(len + 2) + ' ' + f1(len + 2) + '"/></mask></defs>' +
-        '<g mask="url(#rbm)" fill="none" stroke-linecap="round">' +
-        '<path d="' + d + '" stroke="rgba(59,26,16,.22)" stroke-width="12" filter="url(#rbs)" transform="' + off(3) + '"/>' +
-        '<path d="' + d + '" stroke="url(#rbg)" stroke-width="12"/>' +
+    var GA = '<stop offset="0" stop-color="#9C7430"/><stop offset=".22" stop-color="#D9B666"/><stop offset=".42" stop-color="#F7E7B0"/><stop offset=".55" stop-color="#D3AE5C"/><stop offset=".78" stop-color="#A07834"/><stop offset="1" stop-color="#E2C47A"/>';
+    // מצייר את הסרט (צל, זהב, ברק ושני תפרים) עם מסכה שחושפת אותו לפי הגלילה. f0..f1: הקטע בסוף שבו הוא דוהה
+    function draw(d, w, h, f0, fe) {
+      var id = 'rba';
+      A.svg.setAttribute('viewBox', '0 0 ' + f1(w) + ' ' + f1(h));
+      A.svg.style.width = w + 'px'; A.svg.style.height = h + 'px';   // אחד לאחד עם הפיקסלים של הדף
+      var off = function (v) { return 'translate(' + v + ' 0)'; };
+      A.svg.innerHTML = '<defs><linearGradient id="' + id + 'g" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="' + f1(h) + '">' + GA + '</linearGradient>' +
+        '<linearGradient id="' + id + 'f" gradientUnits="userSpaceOnUse" x1="0" y1="' + f1(f0) + '" x2="0" y2="' + f1(fe) + '"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>' +
+        '<filter id="' + id + 's" x="-20%" y="-5%" width="140%" height="110%"><feGaussianBlur stdDeviation="2.4"/></filter>' +
+        '<mask id="' + id + 'm" maskUnits="userSpaceOnUse" x="-80" y="-260" width="' + f1(w + 160) + '" height="' + f1(h + 340) + '"><path d="' + d + '" fill="none" stroke="url(#' + id + 'f)" stroke-width="46" stroke-linecap="round"/></mask></defs>' +
+        '<g mask="url(#' + id + 'm)" fill="none" stroke-linecap="round">' +
+        '<path d="' + d + '" stroke="rgba(59,26,16,.22)" stroke-width="12" filter="url(#' + id + 's)" transform="' + off(3) + '"/>' +
+        '<path class="rb-p" d="' + d + '" stroke="url(#' + id + 'g)" stroke-width="12"/>' +
         '<path d="' + d + '" stroke="rgba(247,231,176,.55)" stroke-width="2.4" transform="' + off(-2.6) + '"/>' +
         '<path d="' + d + '" stroke="rgba(43,29,23,.45)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(-3.6) + '"/>' +
         '<path d="' + d + '" stroke="rgba(43,29,23,.45)" stroke-width="1" stroke-dasharray="4 3.4" transform="' + off(3.6) + '"/></g>';
-      mk = svg.querySelector('mask path');
+      var p = A.svg.querySelector('.rb-p'); A.len = p.getTotalLength(); A.smp = [];
+      for (var s = 0; s < A.len; s += 6) A.smp.push([s, p.getPointAtLength(s).y]);
+      A.smp.push([A.len, p.getPointAtLength(A.len).y]);
+      A.mk = A.svg.querySelector('mask path');
+      A.mk.setAttribute('stroke-dasharray', f1(A.len + 2) + ' ' + f1(A.len + 2));
+    }
+    // כמה מהסרט כבר עבר את קו הגלילה
+    function reach() {
+      if (!A.mk) return 0;
+      if (calm()) return A.len;
+      var y = innerHeight * LINE - A.svg.getBoundingClientRect().top, sm = A.smp;
+      for (var i = 0; i < sm.length; i++) {
+        if (sm[i][1] > y) return i ? sm[i - 1][0] + (sm[i][0] - sm[i - 1][0]) * Math.max(0, Math.min(1, (y - sm[i - 1][1]) / ((sm[i][1] - sm[i - 1][1]) || 1))) : 0;
+      }
+      return A.len;
+    }
+    function build() {
+      var b = W.getBoundingClientRect(); if (!b.width) return;
+      var P = dots.map(function (d) { var r = d.getBoundingClientRect(); return [r.left + r.width / 2 - b.left, r.top + r.height / 2 - b.top]; });
+      var k = P.length - 1;
+      // מתחיל מתחת לכותרת שבאמצע (בטלפון קצת מעל השלב הראשון), עובר דרך הנקודות, ויורד ישר מתחת לשלב האחרון.
+      // הזנב נשאר בתוך החלק ונעלם בדהייה (בלי חיתוך חד)
+      var hd0 = $('.head', sec), y0 = P[0][1] - 26;
+      if (!mobile() && hd0) y0 = Math.min(y0, hd0.getBoundingClientRect().bottom - b.top + 18);
+      var tail = mobile() ? 120 : 170, yEnd = Math.min(P[k][1] + tail, sec.getBoundingClientRect().bottom - b.top - 30);
+      var d = 'M' + f1(P[0][0]) + ' ' + f1(y0) + ' L' + f1(P[0][0]) + ' ' + f1(P[0][1]), parts = [d];
+      for (var i = 0; i < k; i++) { d += curve(P[i], P[i + 1], i % 2 ? -1 : 1, 12); parts.push(d); }
+      d += ' L' + f1(P[k][0]) + ' ' + f1(yEnd);
+      var tmp = document.createElementNS(NS, 'path'); A.svg.appendChild(tmp);
+      at = parts.map(function (pd) { tmp.setAttribute('d', pd); return tmp.getTotalLength(); }); tmp.remove();
+      draw(d, b.width, Math.max(b.height, yEnd + 30), P[k][1] + (yEnd - P[k][1]) * .25, yEnd);
       paint();
     }
-    // כמה מהסרט כבר נמתח: במחשב לפי מיקום השורה במסך, בטלפון לפי קו בשלושה רבעים מגובה המסך
-    // במחשב החלק ננעץ: הסרט מתקדם לאורך מרווח הנעיצה, ונגמר קצת לפני השחרור כדי שרואים את כל השישה
-    var sec = W.closest('.proc'), pin = $('.proc-pin', sec), wide = matchMedia('(min-width:1180px)');
-    function pinMode() { if (sec) sec.classList.toggle('pin', wide.matches && !calm()); }
-    function reach() {
-      if (calm()) return len;
-      var b = W.getBoundingClientRect(), vh = innerHeight;
-      if (!vert && sec && sec.classList.contains('pin')) {
-        var r = sec.getBoundingClientRect(), pad = parseFloat(getComputedStyle(sec).paddingTop) || 0;
-        var run = sec.offsetHeight - pad - (parseFloat(getComputedStyle(sec).paddingBottom) || 0) - pin.offsetHeight;
-        var lead = vh * .3, s = 72 - (r.top + pad) + lead;   // כמה נגלל מאז שהחלק התחיל להיכנס, כולל קצת לפני הנעיצה
-        return Math.max(0, Math.min(1, s / (run * .82 + lead))) * len;
-      }
-      if (!vert) return Math.max(0, Math.min(1, (vh * .9 - b.top - P[0][1]) / (vh * .48))) * len;
-      var y = vh * .74 - b.top, pts = [0].concat(at); // ys[0] = תחילת הסרט, ys[i+1] = נקודה i
-      if (y <= ys[0]) return 0;
-      for (var i = 1; i < ys.length; i++) if (y < ys[i]) return pts[i - 1] + (pts[i] - pts[i - 1]) * (y - ys[i - 1]) / (ys[i] - ys[i - 1]);
-      return len;
-    }
     function paint() {
-      if (!mk) return;
-      best = reach();
-      mk.setAttribute('stroke-dashoffset', f1(len + 2 - best));
-      items.forEach(function (li, i) { li.classList.toggle('on', best >= at[i] - 3); });
+      var a = reach();
+      if (A.mk) A.mk.setAttribute('stroke-dashoffset', f1(A.len + 2 - a));
+      items.forEach(function (li, i) { li.classList.toggle('on', a >= at[i] - 3); });
     }
-    var rq = 0, rt = 0;
+    var rq = 0, rt = 0, again = function () { clearTimeout(rt); rt = setTimeout(build, 120); };
     addEventListener('scroll', function () { if (!rq) rq = requestAnimationFrame(function () { rq = 0; paint(); }); }, { passive: true });
-    addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { pinMode(); build(); }, 120); });
-    pinMode();
+    addEventListener('resize', again);
+    if (window.ResizeObserver) new ResizeObserver(again).observe(sec);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
     addEventListener('load', build);
     build();

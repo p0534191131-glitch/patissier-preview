@@ -27,29 +27,23 @@
       { k: 't1', l: 'כותרת, שורה 1', def: 'יש חלומות', s: '#storyTxt h2 .ln:nth-child(1)', lim: 30 },
       { k: 't2', l: 'כותרת, שורה 2', def: 'שיש להם טעם.', s: '#storyTxt h2 .ln:nth-child(2)', t: 'lastEm', lim: 30, r: 'המילה האחרונה יוצאת מודגשת.' },
       { k: 'text', l: 'הסיפור', def: 'הכול התחיל מנפש אומנית שחלמה אסתטיקה וראתה בכל קינוח יצירה. היום בפטיסייר אנחנו הופכים את החלומות האלה לברים של השמחות, בשילוב נדיר של מראה וואו וטעם איכותי ומפנק. וכל הטוב הזה בכשרות המהודרת של הרב לנדא.', s: '#storyTxt > p', lim: 400, rows: 6, r: 'הסיפור שלך, בפסקה אחת.' }] },
-    { id: 'bot', name: 'הצעת מחיר', root: '#bot', fixed: true, fields: [
-      { k: 'label', l: 'תווית', def: 'הצעת מחיר', s: '#bot .qt-t .label', lim: 24 },
-      { k: 't1', l: 'כותרת', def: 'ספרי לנו על השמחה.', s: '#bot .qt-t h2 .ln:nth-child(1)', lim: 34 },
-      { k: 'text', l: 'פסקה', def: 'יש לך מספיק החלטות על הראש. שיחה קצרה בטלפון, בלי טפסים ובלי לחכות שיחזרו אלייך, ובסוף הצעת מחיר מדויקת.', s: '#bot .qt-p p:not(.priv)', lim: 220, rows: 3, r: 'למה לדבר עם הבוט ולא למלא טופס.' },
-      { k: 'priv', l: 'שורת הפרטיות', def: 'הפרטים נשארים אצלנו, ורק אנחנו חוזרים אלייך.', s: '#bot .qt-p .priv', t: 'btn', lim: 60 }] },
     { id: 'process', name: 'התהליך', root: '#process', fields: [
       { k: 'label', l: 'תווית', def: 'התהליך', s: '#process .head .label', lim: 24 },
       { k: 't1', l: 'כותרת, שורה 1', def: 'מהשיחה הראשונה', s: '#process .head h2 .ln:nth-child(1)', lim: 30 },
       { k: 't2', l: 'כותרת, שורה 2', def: 'ועד השמחה.', s: '#process .head h2 .ln:nth-child(2)', t: 'allEm', lim: 30, r: 'השורה הזו יוצאת מודגשת.' },
       { k: 's1', l: 'שלב 1', def: 'מספרים לנו על השמחה.', s: '#steps > li:nth-child(1) h3', lim: 40 },
       { k: 's1p', l: 'שלב 1, הסבר', def: 'שיחה קצרה, בלי טפסים.', s: '#steps > li:nth-child(1) > p', lim: 70 },
-      { k: 's2', l: 'שלב 2', def: 'מקבלים הצעת מחיר מסודרת.', s: '#steps > li:nth-child(2) h3', lim: 40 },
+      { k: 's2', l: 'שלב 2', def: 'מקבלים הצעת מחיר.', s: '#steps > li:nth-child(2) h3', lim: 40 },
       { k: 's2p', l: 'שלב 2, הסבר', def: 'לפי מספר האורחים, לפני שמחליטים. בלי הפתעות.', s: '#steps > li:nth-child(2) > p', lim: 70 },
-      { k: 's3', l: 'שלב 3', def: 'מתאימים את הבר לאירוע שלך.', s: '#steps > li:nth-child(3) h3', lim: 40 },
-      { k: 's3p', l: 'שלב 3, הסבר', def: 'הקינוחים, העיצוב והצבעים.', s: '#steps > li:nth-child(3) > p', lim: 70 },
-      { k: 's4', l: 'שלב 4', def: 'מכינים אצלנו במטבח.', s: '#steps > li:nth-child(4) h3', lim: 40 },
-      { k: 's4p', l: 'שלב 4, הסבר', def: 'הכול בעבודת יד.', s: '#steps > li:nth-child(4) > p', lim: 70 },
-      { k: 's5', l: 'שלב 5', def: 'מגיעים ומקימים.', s: '#steps > li:nth-child(5) h3', lim: 40 },
-      { k: 's5p', l: 'שלב 5, הסבר', def: 'לפני שהאורחים נכנסים.', s: '#steps > li:nth-child(5) > p', lim: 70 },
-      { k: 's6', l: 'שלב 6, הסיום', def: 'ולכם נשאר רק לשמוח.', s: '#steps > li:nth-child(6) h3', lim: 40 }] },
+      { k: 'fin', l: 'שלב 3, הסיום', def: 'ולכם נשאר רק לארח בשמחה.', s: '#steps > li:nth-child(3) h3', t: 'lastEm', lim: 40, r: 'המילה האחרונה יוצאת בזהב.' }] },
+    { id: 'bot', name: 'הצעת מחיר', root: '#bot', fixed: true, fields: [
+      { k: 'label', l: 'תווית', def: 'הצעת מחיר', s: '#bot .qt-t .label', lim: 24 },
+      { k: 't1', l: 'כותרת', def: 'ספרי לנו על השמחה.', s: '#bot .qt-t h2 .ln:nth-child(1)', lim: 34 },
+      { k: 'text', l: 'פסקה', def: 'יש לך מספיק החלטות על הראש. שיחה קצרה בטלפון, בלי טפסים ובלי לחכות שיחזרו אלייך, ובסוף הצעת מחיר מדויקת.', s: '#bot .qt-p p:not(.priv)', lim: 220, rows: 3, r: 'למה לדבר עם הבוט ולא למלא טופס.' },
+      { k: 'priv', l: 'שורת הפרטיות', def: 'הפרטים נשארים אצלנו, ורק אנחנו חוזרים אלייך.', s: '#bot .qt-p .priv', t: 'btn', lim: 60 }] },
     { id: 'gallery', name: 'גלריה', root: '#gallery', fields: [
       { k: 'label', l: 'תווית', def: 'גלריה', s: '#gallery .head .label', lim: 24 },
-      { k: 'title', l: 'כותרת', def: 'מה שאת רואה, זה מה שמגיע.', s: '#gallery .head h2', lim: 50 },
+      { k: 'title', l: 'כותרת', def: 'ככה זה נראה.', s: '#gallery .head h2', lim: 50 },
       { k: 'text', l: 'משפט משנה', def: 'התמונות כאן הן של ברים אמיתיים שבנינו. לחיצה על תמונה מגדילה אותה.', s: '#gallery .head p', lim: 120, rows: 2, r: 'הברים עצמם בלשונית "ספר הגלריה".' }] },
     { id: 'stories', name: 'סיפורי הצלחה', root: '#stories', fields: [
       { k: 'label', l: 'תווית', def: 'סיפורי הצלחה', s: '#stories .head .label', lim: 24 },
@@ -123,6 +117,37 @@
     else if (t === 'allEm') el.innerHTML = '<em>' + esc(v) + '</em>';
     else el.textContent = v;
   }
+  /* ---------- המלצה = צילום מסך מלא של וואטסאפ באנדרואיד (1.11.2026, סבב 2) ----------
+     המסך בנוי בגודל של טלפון אמיתי (412 על 915) וה-CSS מקטין את כולו לרוחב הצילום (.wa-scr ב-site.css).
+     שיחה חדשה: ההודעה הצהובה על ההצפנה, התאריך וההודעות צמודים לתחתית, ומעליהם טפט ריק. למטה שורת הכתיבה ופס הניווט.
+     המילים של הלקוח נשארות מילה במילה. רק מחלקים אותן לבועות לפי משפטים (אחרי נקודה, סימן קריאה או שאלה, ובשורה חדשה).
+     השעות, היום והבועה שקיבלה לב משתנים לפי המקום ברשימה. רק בצילום השני יש תשובה קצרה של העסק (בועה ירוקה, וי כחול כפול).
+     index.html כתוב בדיוק עם מה שהפונקציה הזו בונה, כדי שהאתר ייראה אותו דבר גם בלי המערכת */
+  /* at = שעת ההודעה הראשונה · day = מה כתוב מעל ההודעות · now = השעה בפס הסטטוס כשהשיחה לא מהיום (בשיחה של היום: כמה דקות אחרי ההודעה האחרונה) */
+  var WA = { at: ['22:14', '21:36', '23:02', '20:48', '13:25', '22:41'], day: ['היום', 'אתמול', 'יום חמישי'], now: ['', '10:07', '12:31', '', '08:54', '19:12'],
+    reply: 'תודה רבה! שמחנו להיות חלק מהשמחה 💛', e2e: 'ההודעות והשיחות מוצפנות מקצה לקצה. רק האנשים בצ\'אט הזה יכולים לקרוא אותן, להאזין להן או לשתף אותן. מידע נוסף' };
+  function hhmm(s, add) { var p = s.split(':'), m = (+p[0] * 60 + +p[1] + add) % 1440; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); }
+  function waSplit(s) {
+    return String(s || '').split(/\n+/).reduce(function (a, l) { return a.concat(l.replace(/([.!?…]+)\s+/g, '$1\n').split('\n')); }, [])
+      .map(function (x) { return x.trim(); }).filter(Boolean);
+  }
+  function waShot(t, i, shown) {
+    var nm = String(t.name || '').trim(), parts = waSplit(t.text), k3 = i % 3, at = WA.at[i % WA.at.length];
+    var heart = k3 === 1 ? 0 : parts.length - 1, reply = i === 1, add = 0;
+    var meta = function (m) { return '<i class="wa-m" aria-hidden="true"><span>' + hhmm(at, m) + '</span></i>'; };
+    var bub = parts.map(function (p, k) {
+      add = Math.floor(k * .6);
+      return '<p class="wa-b' + (k ? '' : ' t') + (k === heart ? ' r' : '') + '">' + esc(p) + meta(add) +
+        (k === heart ? '<span class="wa-re" role="img" aria-label="תגובה: לב">❤️</span>' : '') + '</p>';
+    }).join('');
+    var last = add + (reply ? 4 : 0);
+    return '<figure class="wa rv' + (shown ? ' in' : '') + '"' + (i ? ' style="--d:' + Math.min(i, 5) * 120 + 'ms"' : '') + ' data-adm="' + esc(t.id) + '" aria-label="' + esc('צילום מסך מוואטסאפ: ' + (nm || 'לקוח')) + '"><div class="wa-scr">' +
+      '<div class="wa-sb" aria-hidden="true"><span>' + (WA.now[i % 6] || hhmm(at, last + 3)) + '</span><i></i></div>' +
+      '<div class="wa-top"><i class="wa-bk"></i><i class="wa-av"></i><b class="wa-nm">' + esc(nm) + '</b><i class="wa-ic"></i></div>' +
+      '<div class="wa-chat"><p class="wa-e2e" aria-hidden="true"><i></i>' + esc(WA.e2e) + '</p><span class="wa-day">' + WA.day[k3] + '</span>' +
+      (bub ? '<blockquote>' + bub + '</blockquote>' : '') + (reply ? '<p class="wa-b me t">' + esc(WA.reply) + meta(last) + '</p>' : '') +
+      '<div class="wa-in" aria-hidden="true"><span class="wa-box"><i class="wa-emo"></i><span>הודעה</span><i class="wa-att"></i></span><i class="wa-mic"></i></div><i class="wa-nav"></i></div></div></figure>';
+  }
   function apply(D, o) {
     if (!D) return;
     o = o || {};
@@ -134,15 +159,11 @@
       [root, d.also ? q(d.also) : null].forEach(function (r) { if (r) { r.style.display = hide && !ghost ? 'none' : ''; r.style.opacity = ghost ? '.4' : ''; r.style.filter = ghost ? 'grayscale(.6)' : ''; } });
       Array.prototype.forEach.call(doc.querySelectorAll('a[href="' + d.root + '"]'), function (a) { a.style.display = hide ? 'none' : ''; });
     });
-    /* המלצות: שלוש הראשונות שמוצגות */
-    var tys = q('#stories .tys');
-    if (tys && D.testimonials) {
-      var vis = D.testimonials.filter(function (t) { return t.visible && (t.text || t.name); }).slice(0, 3);
-      tys.innerHTML = vis.map(function (t, i) {
-        var nm = String(t.name || '').trim();
-        return '<figure class="ty rv' + (o.shown ? ' in' : '') + '"' + (i ? ' style="--d:' + i * 120 + 'ms"' : '') + ' data-adm="' + esc(t.id) + '"><span class="ty-seal" aria-hidden="true">' + esc(nm.charAt(0) || '״') + '</span>' +
-          '<blockquote><p>' + esc(t.text) + '</p></blockquote><figcaption><span class="ty-line" aria-hidden="true"></span>' + esc(nm) + '</figcaption></figure>';
-      }).join('');
+    /* המלצות: עד שש הראשונות שמוצגות, כל אחת כצילום מסך מלא מוואטסאפ (1.11.2026, במקום כרטיסי התודה) */
+    var was = q('#stories .was');
+    if (was && D.testimonials) {
+      var vis = D.testimonials.filter(function (t) { return t.visible && (t.text || t.name); }).slice(0, 6);
+      was.innerHTML = vis.map(function (t, i) { return waShot(t, i, o.shown); }).join('');
       var st = q('#stories'); if (st && !vis.length) st.style.display = 'none';
     }
     /* טלפון ווואטסאפ, בכל מקום בעמוד */
@@ -154,6 +175,12 @@
     if (b.wa) {
       var wa = String(b.wa).replace(/\D/g, '');
       Array.prototype.forEach.call(doc.querySelectorAll('a[href^="https://wa.me/"]'), function (a) { var h = a.getAttribute('href'), qs = h.indexOf('?'); if (/^https:\/\/wa\.me\/\d/.test(h)) a.setAttribute('href', 'https://wa.me/' + wa + (qs > -1 ? h.slice(qs) : '')); });
+    }
+    /* אזורי המשלוח בפוטר, מהמערכת. בלי אזורים: העמודה לא מוצגת */
+    var ar = q('[data-areas]');
+    if (ar && Array.isArray(D.areas)) {
+      var an = D.areas.map(function (a) { return a && a.name; }).filter(Boolean);
+      if (an.length) ar.textContent = an.join(' · '); else if (ar.parentNode) ar.parentNode.hidden = true;
     }
   }
   /* ספר הגלריה: book3d.js קורא את זה לפני שהוא בונה את הספר */
@@ -173,7 +200,7 @@
     return { sec: null, el: null };
   }
 
-  window.PatCMS = { SECTIONS: SECTIONS, BOOK_BARS: BOOK_BARS, sec: sec, field: field, isNew: isNew, defaults: defaults, migrate: migrate, snapOf: snapOf, data: data, apply: apply, target: target, bookFor: bookFor };
+  window.PatCMS = { SECTIONS: SECTIONS, BOOK_BARS: BOOK_BARS, sec: sec, field: field, isNew: isNew, defaults: defaults, migrate: migrate, snapOf: snapOf, data: data, apply: apply, target: target, bookFor: bookFor, waShot: waShot };
 
   /* =========================================================
      באתר עצמו (לא במסכי המערכת)

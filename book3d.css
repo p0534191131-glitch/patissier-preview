@@ -36,7 +36,7 @@
 /* ---------- הגרסה השטוחה (בלי WebGL, או בתנועה מופחתת): אותן כפולות בדיוק ---------- */
 #gallery .b3-fl{position:absolute;inset:0;display:grid;place-items:center;pointer-events:auto;touch-action:pan-y pinch-zoom}
 #gallery .b3-fs{position:relative;display:flex;direction:ltr;border-radius:5px;box-shadow:0 0 0 1px rgba(20,6,2,.3),0 18px 40px -10px rgba(20,6,2,.65),0 4px 10px rgba(20,6,2,.35)}
-#gallery .b3-fs::before{content:'';position:absolute;inset:-9px -10px -9px -10px;z-index:-1;border-radius:9px;background:var(--esp-l);box-shadow:0 0 0 1px rgba(234,215,180,.16)}
+#gallery .b3-fs::before{content:'';position:absolute;inset:-9px -10px -9px -10px;z-index:-1;border-radius:9px;background:var(--crm);box-shadow:0 0 0 1px rgba(110,81,32,.45)} /* הכריכה בשמנת, כמו בתלת ממד */
 #gallery .b3-fp{position:relative;flex:1;min-width:0;height:100%;overflow:hidden}
 #gallery .b3-fc{display:block;width:100%;height:100%}
 #gallery .b3-fp.l::after,#gallery .b3-fp.r::after{content:'';position:absolute;top:0;bottom:0;width:12%;pointer-events:none}
@@ -83,3 +83,31 @@
 #gallery .b3-dl i.on{background:radial-gradient(circle at 35% 30%,#F7E7B0,#D9B666 45%,#9C7430);box-shadow:0 0 0 1px rgba(217,182,102,.55)}
 #gallery .b3-dots em{font:500 var(--t3)/1 var(--font);font-style:normal;letter-spacing:.03em;color:var(--c3);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){#gallery .b3-dots{transition:none}}
+
+/* ---------- הספר הממורכז (1.11.2026): אחרי הכפולה האחרונה בגלילה הספר זז לאמצע המסך וגדל מעט, הטור בצד דוהה,
+   ושני כפתורים בצדי הספר (הדף הבא משמאל). המידות במשתנים מ-centerGeo ב-book3d.js. בטלפון ובטאבלט החצים שמתחת לספר נשארים ---------- */
+#gallery .b3-nb{display:none}
+@media (min-width:1101px){
+  #gallery .b3-stage{transform-origin:var(--b3os,50% 50%);transition:transform .9s var(--ease)}
+  #gallery .b3-cv{transform-origin:var(--b3oc,50% 50%);transition:opacity .7s var(--ease),transform .9s var(--ease)}
+  #gallery.b3c .b3-stage,#gallery.b3c .b3-cv{transform:translate(var(--b3dx,0px),var(--b3dy,0px)) scale(var(--b3s,1))}
+  #gallery .b3-side{transition:opacity .5s var(--ease),visibility .5s}
+  #gallery.b3c .b3-side{opacity:0;visibility:hidden}
+  #gallery .b3-nb{position:absolute;z-index:7;left:var(--b3bl,0px);top:var(--b3by,50%);translate:-50% -50%;display:grid;place-items:center;width:56px;height:56px;border-radius:50%;
+    color:var(--gold-l);background:rgba(43,29,23,.55);box-shadow:inset 0 0 0 1.5px rgba(217,182,102,.6),0 10px 22px -10px rgba(20,6,2,.7);
+    opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s,background .25s,color .25s,box-shadow .25s}
+  #gallery .b3-nb.prev{left:var(--b3br,100%)}
+  #gallery .b3-nb svg{width:24px;height:24px}
+  #gallery.b3c .b3-nb,#gallery.b3cs .b3-nb{opacity:1;visibility:visible}
+  #gallery.b3c .b3-nb{transition-delay:.4s,.4s,0s,0s,0s}   /* מופיעים אחרי שהספר הגיע לאמצע */
+  #gallery .b3-nb:disabled{opacity:0;visibility:hidden}
+  @media (hover:hover){#gallery .b3-nb:hover:not(:disabled){color:#2B1D17;background:linear-gradient(90deg,var(--gs));box-shadow:inset 0 1px 0 rgba(247,231,176,.7)}}
+  /* בלי נעיצה (תנועה מופחתת או בלי תלת ממד): הכותרת מעל הספר, הספר באמצע והכפתורים בצדדיו */
+  #gallery.b3cs .b3{display:flex;flex-direction:column;align-items:stretch}
+  #gallery.b3cs .b3-side{display:contents}
+  #gallery.b3cs .b3 .head{order:0;margin-bottom:12px}
+  #gallery.b3cs .b3-stage{order:1}
+  #gallery.b3cs .b3-ui{display:none}
+}
+@media (prefers-reduced-motion:reduce){#gallery .b3-stage,#gallery .b3-cv,#gallery .b3-side,#gallery .b3-nb{transition:none}}
+html.a11y-still #gallery .b3-stage,html.a11y-still #gallery .b3-cv,html.a11y-still #gallery .b3-side,html.a11y-still #gallery .b3-nb{transition:none}

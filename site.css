@@ -3,6 +3,8 @@
    גופן: Google Sans בכל האתר (חוץ מהלוגו). מבטא אחד: רובי. */
 /* הגופן של כל האתר: Google Sans (גוגל פונטס, עם עברית, עובי 400 עד 700). רוביק נשאר רק כגיבוי */
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400..700&display=swap');
+/* הגופנים של אנדרואיד, רק בתוך צילומי הוואטסאפ ב"מה לקוחות מספרים" (1.11.2026) */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&family=Noto+Sans+Hebrew:wght@400;500&family=Roboto:wght@400;500&display=swap');
 @font-face{font-family:"Rubik Local";src:url("design/admin/yoman/fonts/rubik-hebrew-400-normal.woff2") format("woff2");font-weight:300 500;font-display:swap;unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
 @font-face{font-family:"Rubik Local";src:url("design/admin/yoman/fonts/rubik-hebrew-700-normal.woff2") format("woff2");font-weight:600 800;font-display:swap;unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
 @font-face{font-family:"Rubik Local";src:url("design/admin/yoman/fonts/rubik-hebrew-900-normal.woff2") format("woff2");font-weight:900;font-display:swap;unicode-range:U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}
@@ -132,7 +134,7 @@ main{overflow-x:clip}
    שכבת .h-lamp מציגה את המנורה החתוכה (IMG_6525-lamp.webp) מעל המסגרת, באותו מיקום ובאותו קנה מידה של הצילום */
 .hero{--hc:calc(41 * var(--k))}
 .h-ph{position:absolute;left:calc(50% - 50vw - 2px);top:calc(98.5 * var(--k) + var(--hc));width:calc(50vw - 50% + 2px + 770 * var(--k));height:calc(771 * var(--k) - var(--hc));z-index:2;overflow:hidden;
-  border-radius:0 calc(340 * var(--k)) calc(340 * var(--k)) 0 / 0 calc(330 * var(--k)) calc(326 * var(--k)) 0;
+  border-radius:0 calc(56 * var(--k)) calc(56 * var(--k)) 0;   /* 1.11.2026: חלון עם פינות רכות במקום חצי עיגול */
   box-shadow:0 calc(26 * var(--k)) calc(44 * var(--k)) calc(-12 * var(--k)) rgba(28,9,2,.5),0 0 0 1px rgba(40,14,4,.25)}
 .h-ph img{position:absolute;left:0;top:calc(-1 * var(--hc));width:100%;height:calc(100% + var(--hc));object-fit:cover;object-position:35.8% 50%;transform:scale(1.0036);transform-origin:35.8% 50%}
 /* שכבת המנורה: אותה תיבה כמו .h-ph (בלי חיתוך), בתוכה אותה תיבה של הצילום, ובתוכה "מישור" בגודל שה-cover נותן לצילום (1800x1200).
@@ -142,10 +144,33 @@ main{overflow-x:clip}
 .h-lamp-pl{position:absolute;width:max(100cqw,150cqh);height:max(100cqh,66.6667cqw);left:calc((100cqw - max(100cqw,150cqh)) * .358);top:calc((100cqh - max(100cqh,66.6667cqw)) * .5)}
 .h-lamp img{position:absolute;left:8.2222%;top:-1.8333%;width:37.2222%;height:72%;max-width:none;
   filter:drop-shadow(0 calc(9 * var(--k)) calc(9 * var(--k)) rgba(20,8,2,.42)) drop-shadow(0 calc(2 * var(--k)) calc(2 * var(--k)) rgba(20,8,2,.3))}
-/* קו הזהב: אותה צורה, מוזזת ימינה ולמטה, מאחורי הצילום */
-.h-ring{position:absolute;left:calc(50% - 50vw - 2px);top:calc(117.2 * var(--k) + var(--hc));width:calc(50vw - 50% + 2px + 796 * var(--k));height:calc(771 * var(--k) - var(--hc));z-index:1;
-  border:calc(2.4 * var(--k)) solid var(--gld);border-left-style:none;border-radius:0 calc(340 * var(--k)) calc(340 * var(--k)) 0 / 0 calc(330 * var(--k)) calc(326 * var(--k)) 0;
-  -webkit-mask:linear-gradient(180deg,transparent calc(128 * var(--k)),#000 calc(144 * var(--k)));mask:linear-gradient(180deg,transparent calc(128 * var(--k)),#000 calc(144 * var(--k)))}
+/* קו הזהב: אותה צורה בדיוק, 14 פיקסלים מסביב לצילום (למעלה, מימין ולמטה), מאחוריו. המנורה עוברת מעליו */
+.h-ring{position:absolute;left:calc(50% - 50vw - 2px);top:calc(84.5 * var(--k) + var(--hc));width:calc(50vw - 50% + 2px + 784 * var(--k));height:calc(799 * var(--k) - var(--hc));z-index:1;
+  border:calc(2 * var(--k)) solid var(--gld);border-left-style:none;border-radius:0 calc(70 * var(--k)) calc(70 * var(--k)) 0}
+/* הצד הימני של הצילום (1.11.2026, hero-wave.js): במחשב הוא נבנה לפי הכותרת (clip-path מהמשתנה --hw). היום: חלון עגול וישר.
+   קו הזהב והצל מצוירים ב-SVG בתוך .h-ring, שמקבל את אותה תיבה של הצילום. בטלפון אין .hw והכול כמו קודם */
+@media (min-width:821px){
+  /* סבב 2 (1.11.2026, "קצת להקטין את התמונה שיראו את כל האהיל"): הצילום והמנורה קטנים יחד פי --hs ונשארים מעוגנים לתחתית (869.5).
+     המסגרת מתחילה ב-300 וחוצה את הזכוכית, כך שכל האהיל (IMG_6525-lamp-full.webp, משלים 132 פיקסלים בקוד) עומד מעליה מתחת להדר.
+     הצילום הוא מישור בגודל קבוע (1.5 על 1): --hph הגובה שלו, --hc כמה הוא מתחיל מעל המסגרת. הקצה השמאלי שלו בדיוק בקצה המסך,
+     כך שלמנורה יש אוויר משמאל ולבטן של הגל יש כמה שיותר צילום מימין */
+  /* האהיל המלא (גרסה 2, ראש אמיתי בפרספקטיבה) מתחיל 1.1233 גבהי מישור מעל התחתית. במסך צר הצילום קטן עוד קצת,
+     כך שראש האהיל תמיד לפחות 100 פיקסלים מלמעלה ולא נוגע בהדר (אותה נוסחה ב-hero-wave.js) */
+  .hero{--hs:.857;--hph:min(calc(771 * var(--hs) * var(--k)),calc((869.5 * var(--k) - 100px) / 1.1233));--hc:calc(var(--hph) - 569.5 * var(--k))}
+  .h-ph,.h-lamp,.hero.hw .h-ring{top:calc(300 * var(--k));height:calc(569.5 * var(--k))}
+  .h-ring{top:calc(286 * var(--k));height:calc(597.5 * var(--k))}   /* בלי הגל (אם הסקריפט לא רץ): 14 מסביב לחלון */
+  .h-ph img,.h-lamp-im{left:0;top:calc(-1 * var(--hc));width:calc(1.5 * var(--hph));height:var(--hph);object-fit:fill}
+  .h-lamp img{top:-13.6667%;height:83.8333%}
+  /* התיבה רחבה (עד 960) ויש בה מקום לכל צורה; הצורה עצמה ב-clip-path */
+  .hero.hw .h-ph,.hero.hw .h-lamp,.hero.hw .h-ring{width:calc(50vw - 50% + 2px + 960 * var(--k))}
+  .hero.hw .h-ph{clip-path:var(--hw);border-radius:0;box-shadow:none}
+  .hero.hw .h-ring{border:0;border-radius:0}
+  /* "בלתי נשכחת" עולה על הפינה העליונה של הצילום (החלון הרחב): הילה כהה ורכה מאחורי האותיות, כמו לשורה הראשונה, כדי שיקראו על הקיר הבהיר */
+  .hero.hw .h-gold .h-g3d-gl{filter:drop-shadow(0 0 calc(16 * var(--k)) rgba(28,12,4,.62)) drop-shadow(0 calc(12 * var(--k)) calc(16 * var(--k)) rgba(12,4,0,.55)) drop-shadow(0 calc(2 * var(--k)) calc(3 * var(--k)) rgba(12,4,0,.35))}
+  .hw-svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+  .hw-sh{fill:rgb(28,9,2);fill-opacity:.5;filter:url(#hwBlur)}
+  .hw-ln{fill:none;stroke:var(--gld);stroke-linejoin:round}
+}
 /* כוכבי זהב */
 .spk{position:absolute;z-index:3;width:calc(27 * var(--k));height:calc(27 * var(--k));background:linear-gradient(135deg,var(--gs));
   clip-path:polygon(50% 0,58% 40%,100% 50%,58% 60%,50% 100%,42% 60%,0 50%,42% 40%);filter:drop-shadow(0 0 calc(5 * var(--k)) rgba(247,231,176,.6));animation:spk 3.4s ease-in-out infinite}
@@ -260,11 +285,11 @@ main{overflow-x:clip}
 .hs-on .hs-veil,.hs-on .hs-dust,.hs-on .hs-story{display:block;position:absolute;left:0;width:100%;top:calc(-1 * min(0px,calc(100svh - var(--hh,900px))));pointer-events:none}
 /* השכבה הכהה: בעיקר מאחורי הטקסט ובשוליים, כדי שהקינוחים יישארו מוארים */
 .hs-on .hs-veil{z-index:5;height:100lvh;opacity:0;
-  background:linear-gradient(270deg,rgba(43,29,23,.93) 0%,rgba(43,29,23,.86) 30%,rgba(43,29,23,.5) 46%,rgba(43,29,23,0) 60%),
+  background:radial-gradient(ellipse 46% 58% at 50% 50%,rgba(43,29,23,.9) 0%,rgba(43,29,23,.8) 48%,rgba(43,29,23,.42) 76%,rgba(43,29,23,0) 100%),
     linear-gradient(180deg,rgba(43,29,23,.42) 0%,rgba(43,29,23,0) 18%,rgba(43,29,23,0) 78%,rgba(43,29,23,.5) 100%)}
 .hs-on .hs-dust{z-index:6;height:100svh;opacity:0}
 .hs-on .hs-story{z-index:7;height:100svh;display:flex;align-items:center}
-.hs-on .hs-story > .wrap{display:flex;justify-content:flex-start}
+.hs-on .hs-story > .wrap{display:flex;justify-content:center}
 .hs-on .hs-story .st-txt{width:min(calc(560 * var(--k)),100%);gap:calc(24 * var(--k));color:var(--crm)}
 .hs-on .hs-story .st-txt h2{text-shadow:0 2px 18px rgba(43,29,23,.55)}
 .hs-on .hs-story .st-txt > p{color:var(--crm);text-shadow:0 1px 12px rgba(43,29,23,.7)}
@@ -272,7 +297,7 @@ main{overflow-x:clip}
 .hs-on .hs-story .rv,.hs-on .hs-story .kw,.hs-on .hs-story .hs-w{transition:none!important}
 .hs-on .hs-story .hs-w{display:inline-block}
 .hs-on .hs-story h2 em{position:relative;display:inline-block;color:var(--gld)}
-.hs-on .hs-story h2 em::after{content:"";position:absolute;inset-inline:0;bottom:-.06em;height:calc(4 * var(--k));border-radius:2px;background:linear-gradient(90deg,var(--gs));transform:scaleX(var(--u,0));transform-origin:100% 50%;box-shadow:0 2px 8px rgba(43,29,23,.4)}
+.hs-on .hs-story h2 em::after{content:"";position:absolute;inset-inline:0;bottom:-.06em;height:calc(4 * var(--k));border-radius:2px;background:linear-gradient(90deg,var(--gs));transform:scaleX(var(--u,0));transform-origin:50% 50%;box-shadow:0 2px 8px rgba(43,29,23,.4)}
 /* אחרי שהטקסט עבר לצילום, בחלק "הסיפור שלנו" נשארים התמונה והסרטון, במרכז */
 /* מצב פתוח: הצל של המסגרת עובר לאלמנט נפרד שנעלם בהדרגה (clip-path חותך box-shadow) */
 .h-shd{position:absolute;z-index:1;pointer-events:none;display:none}
@@ -394,7 +419,7 @@ main{overflow-x:clip}
 .chat-foot{display:flex;align-items:center;gap:8px;padding:10px 10px 20px;background:var(--cream-2);border-top:1px solid var(--line)}
 .chat-in{flex:1;min-width:0;height:48px;padding:0 16px;border:0;border-radius:var(--pill);background:var(--print);box-shadow:inset 0 0 0 1px var(--line);font:400 var(--t3)/1 var(--font);color:var(--ink)}
 .chat-in:focus{outline:none;box-shadow:inset 0 0 0 1.5px var(--ink)}
-.chat-send{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--choc-rib);color:var(--gold-l);font-size:0}
+.chat-send{width:48px;height:48px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--choc-rib);color:var(--gold-l);font-size:0}
 .chat-send::before{content:'';width:20px;height:20px;background:currentColor;transform:scaleX(-1);
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.5 3.5L3.5 10.5l7 3 3 7z'/%3E%3Cpath d='M10.5 13.5l4-4'/%3E%3C/svg%3E") center/contain no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.5 3.5L3.5 10.5l7 3 3 7z'/%3E%3Cpath d='M10.5 13.5l4-4'/%3E%3C/svg%3E") center/contain no-repeat}
@@ -451,13 +476,35 @@ main{overflow-x:clip}
 .word{position:relative;font:900 var(--t2)/1 var(--font-d);letter-spacing:-.035em;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px rgba(217,182,102,.4)}
 .word span{position:absolute;inset:0;background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:0;clip-path:inset(-10% 0 -10% calc(100% - var(--fill,0) * 100%));filter:drop-shadow(0 3px 0 rgba(46,20,10,.5))}
 .end .cta{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
-.foot{position:relative;z-index:2;margin-top:clamp(80px,8vw,120px);border-top:1px solid transparent}
-.foot .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:20px 40px;padding:30px 0 40px;flex-direction:row;text-align:start;color:var(--c3);font-size:var(--t3)}
-.foot .logo{width:120px}
-.foot nav{display:flex;flex-wrap:wrap;gap:8px 22px}
-.foot nav a{text-decoration:none;color:var(--c2)}
-.foot nav a:hover{color:var(--gold-l)}
-.foot .copy{margin-inline-start:auto}
+/* ---------- הפוטר (1.11.2026, אפרים: "פוטר יפה ומסודר"): ארבע עמודות (מותג, ניווט, יצירת קשר, משלוחים) ושורה תחתונה.
+   אותו רקע אספרסו כמו יצירת הקשר, בלי קו ביניהם. קו זהב דק אחד בפנים, מעל השורה התחתונה. כותרות קטנות בזהב, טקסט בשמנת, ריחוף בזהב ---------- */
+.foot{position:relative;z-index:2;margin-top:clamp(90px,9vw,140px);color:var(--c2);font:400 var(--t3)/1.6 var(--font)}
+.ft-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:40px clamp(28px,4vw,72px);padding-bottom:clamp(40px,4.4vw,60px)}
+.ft-brand{display:flex;flex-direction:column;align-items:flex-start;gap:18px}
+.ft-logo{display:inline-block;line-height:0}
+.foot .logo{width:150px}
+.ft-brand p{margin:0;color:var(--c1);max-width:22em}
+.ft-h{margin:0 0 16px;font:700 var(--t3)/1.2 var(--font);letter-spacing:.06em;color:var(--gold)}
+.ft-col ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.foot a:not(.btn){color:var(--c1);text-decoration:none;transition:color .2s}
+.foot a:not(.btn):hover{color:var(--gold)}
+.ft-ct{display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+.ft-ct > .ft-h{margin-bottom:4px}
+.ft-ct a:not(.btn){display:inline-flex;align-items:center;gap:10px}
+.ft-ct .i{width:20px;height:20px;color:var(--gold)}
+.ft-ct b{font-weight:700;letter-spacing:.02em}
+.ft-ct .btn{margin-top:8px;min-height:48px;padding:0 24px}
+.ft-areas p{margin:0;color:var(--c1)}
+/* תג הכשרות: התעודה האמיתית, נפתחת בחלון חדש */
+.ft-kosher{display:inline-flex;align-items:center;gap:12px;padding:8px 16px 8px 10px;border-radius:12px;font-size:var(--t3);line-height:1.3;box-shadow:inset 0 0 0 1px rgba(217,182,102,.42);transition:box-shadow .2s,color .2s}
+.ft-kosher:hover{box-shadow:inset 0 0 0 1px var(--gold)}
+.ft-kosher img{width:28px;height:40px;flex:none;object-fit:cover;object-position:50% 0;border-radius:3px;background:var(--crm)}
+.ft-bot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding:24px 0 44px;border-top:1px solid rgba(217,182,102,.26);color:var(--c3)}
+.ft-bot .copy{margin-inline-end:auto}
+.ft-top{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:var(--pill);box-shadow:inset 0 0 0 1px rgba(217,182,102,.45);transition:box-shadow .2s,color .2s}
+.ft-top:hover{box-shadow:inset 0 0 0 1px var(--gold)}
+.ft-top .i{width:16px;height:16px;rotate:180deg;color:var(--gold)}
+@media (max-width:1100px){ .ft-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
 
 /* ============ כניסה בגלילה ============ */
 .rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:var(--d,0ms)}
@@ -506,7 +553,13 @@ main{overflow-x:clip}
   .qa{padding:6px 18px}
   .qa .ans{padding:0 0 20px;flex-direction:column}
   .vids{display:none}
-  .foot .copy{margin-inline-start:0}
+  /* פוטר בטלפון: עמודה אחת, קישורים בשני טורים עם מקום ללחיצה, והשורה התחתונה מעל הכפתורים הצפים */
+  .ft-grid{grid-template-columns:1fr;gap:36px}
+  .ft-col ul{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+  .ft-col ul a{display:block;padding:9px 0}
+  .ft-ct a:not(.btn){min-height:44px}
+  .ft-bot{flex-direction:column;align-items:flex-start;gap:14px;padding-bottom:168px}
+  .ft-bot .copy{margin:0}
 }
 /* תפריט: שישה קישורים נכנסים בהדר מ-1240 ומעלה. מתחת לזה כפתור תפריט ומגירה */
 @media (max-width:1239px){
@@ -532,7 +585,7 @@ main{overflow-x:clip}
 /* התמונות והסרטון של הסיפור נמחקו (29.10.2026). כשהסיפור כתוב על הצילום של מסך הפתיחה, החלק עצמו ריק ומוסתר */
 .hs-on .story{display:none}
 .st-in{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(44px,6.5vw,110px);align-items:center}
-.st-txt{display:flex;flex-direction:column;align-items:flex-start;gap:24px}
+.st-txt{display:flex;flex-direction:column;align-items:center;text-align:center;gap:24px;margin-inline:auto}
 .st-txt h2{font:700 var(--t2)/1.12 var(--font-d)}
 .st-txt h2 .ln,.proc .head h2 .ln{display:block}
 .st-txt h2 em{font-style:normal;color:var(--ruby)}
@@ -540,8 +593,9 @@ main{overflow-x:clip}
 
 /* ---------- 3. הצעת מחיר: שני צדדים. המלל מימין, חלון השיחה (בלי טלפון) משמאל ---------- */
 .qt{z-index:2;padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
-/* הווילון: הסיפור על הצילום נשאר במקום, והחלק הזה עולה עליו כמו דף (hero-open.js קובע את --hs-cur) */
-.hs-on #bot{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));min-height:calc(var(--hs-vh,100lvh) + 3px); /* לפחות בגובה הצילום הפתוח, כדי שהוא לא יציץ מתחתיו גם במסך גבוה */background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
+/* הווילון: הסיפור על הצילום נשאר במקום, והחלק שבא אחריו עולה עליו כמו דף (hero-open.js קובע את --hs-cur).
+   1.11.2026: התהליך והצעת המחיר הוחלפו במקום ("תהפוך את המקום של הצעת מחיר עם התהליך"), אז הווילון הוא עכשיו התהליך */
+.hs-on #process{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));min-height:calc(var(--hs-vh,100lvh) + 3px); /* לפחות בגובה הצילום הפתוח, כדי שהוא לא יציץ מתחתיו גם במסך גבוה */background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
   box-shadow:0 -1px 0 rgba(217,182,102,.45),0 -40px 80px -30px rgba(10,3,0,.75)}
 .qt > .wrap{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(36px,5vw,84px);align-items:center}
 .qt-head{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(22px,2.4vw,32px)}
@@ -576,7 +630,7 @@ main{overflow-x:clip}
 .cwin .chat-in{display:block;flex:1;min-width:0;height:56px;padding:0 24px;border:0;border-radius:var(--pill);background:color-mix(in srgb,#EAD7B4 90%,#2B1D17);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 28%,transparent);font:400 var(--t3)/1 var(--font);color:var(--ink);transition:box-shadow .25s}
 .cwin .chat-in::placeholder{color:color-mix(in srgb,var(--ink) 46%,transparent)}
 .cwin .chat-in:focus{outline:none;box-shadow:inset 0 0 0 1.5px var(--esp),0 0 0 4px color-mix(in srgb,var(--gold) 20%,transparent)}
-.cwin .chat-send{width:56px;height:56px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:0;color:#2B1D17;
+.cwin .chat-send{width:56px;height:56px;flex:none;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0;color:#2B1D17;
   background:linear-gradient(90deg,var(--gs));box-shadow:inset 0 1px 0 rgba(247,231,176,.7),0 0 0 1.5px #9C7430,0 8px 16px -8px rgba(40,16,6,.5);transition:transform .2s var(--ease),filter .2s}
 .cwin .chat-send:hover{filter:brightness(1.06);transform:translateY(-1px)}
 .cwin .chat-send::before{content:'';width:22px;height:22px;background:currentColor;transform:none;
@@ -587,43 +641,44 @@ main{overflow-x:clip}
 .cwin .try{min-height:46px;padding:0 20px;border-radius:var(--pill);font:500 var(--t3)/1 var(--font);color:var(--ink);background:transparent;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--ink) 24%,transparent)}
 .cwin .try:hover{background:color-mix(in srgb,var(--gold) 16%,transparent);box-shadow:inset 0 0 0 1.5px var(--gold-d);transform:translateY(-1px)}
 
-/* ---------- 4. התהליך: סרט זהב גלי שמחבר שישה שלבים ונמתח בגלילה ---------- */
+/* ---------- 4. התהליך: מלמעלה למטה (1.11.2026). סרט זהב יורד דרך שלושת השלבים ונעלם בדהייה מתחת לאחרון (בלי קשר לספר) ---------- */
 .proc{padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
 .proc .head{margin-bottom:clamp(56px,6.4vw,100px)}
-/* במחשב (שורה אחת של שלבים): החלק נעצר מתחת להדר עד שכל השישה נדלקו, ורק אז ממשיכים (לבקשת אפרים).
-   הנעיצה: .proc-pin דביק בגובה המסך, ואחריו מרווח גלילה (--pl) שבו הסרט מתקדם */
-@media (min-width:1180px){
-  .proc.pin{--pl:120svh;scroll-margin-top:calc(72px - clamp(80px,9vw,140px))}
-  .proc.pin .proc-pin{position:sticky;top:72px;height:calc(100svh - 72px);display:flex;flex-direction:column;justify-content:center}
-  .proc.pin::after{content:'';display:block;height:var(--pl)}
-  .proc.pin .head{margin-bottom:clamp(40px,6svh,80px)}
-  /* שלושה גדלים: הכותרת הגדולה מתפצלת לשלוש שורות כדי לא לעלות על הסרטונים התלויים של שלבים 04-06 */
-  .proc .head h2{max-width:7.2em}
-}
 .proc .head h2 em,.blog .head h2 em{font-style:normal;color:var(--ruby)}
 .steps-w{position:relative}
-.steps{position:relative;z-index:2;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.24fr);gap:0 clamp(18px,2.2vw,34px);align-items:start}
-.stp{display:flex;flex-direction:column;align-items:flex-start}
+/* השלבים בטור: הנקודה על הסרט מימין למספר, והטקסט לידה */
+.steps{position:relative;z-index:2;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);max-width:640px}
+.stp{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:18px;align-items:start;padding-bottom:clamp(40px,6vw,96px)}
+.stp > *{grid-column:2}
+.stp:last-child{padding-bottom:0}
 .stp-n{display:block;font:700 var(--t2)/.92 var(--font-d);letter-spacing:-.04em;padding:0 .02em .04em;
   background:linear-gradient(0deg,var(--gs));-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 1px 0 rgba(234,215,180,.12)) drop-shadow(0 3px 3px rgba(90,50,15,.22))}
-.stp-dot{display:block;width:20px;height:20px;margin:22px 0 28px;margin-inline-start:6px;border-radius:50%;background:var(--paper);
+.stp-dot{display:block;grid-column:1;grid-row:1;align-self:center;justify-self:center;width:20px;height:20px;margin:0;border-radius:50%;background:var(--paper);
   box-shadow:0 0 0 2px var(--gold),0 3px 6px rgba(59,26,16,.22);transition:background .5s,box-shadow .5s,transform .6s var(--spring)}
-.stp h3{font:700 var(--t3)/1.3 var(--font-d);text-wrap:balance}
+.stp h3{margin-top:12px;font:700 var(--t3)/1.3 var(--font-d);text-wrap:balance}
 .stp p{margin-top:8px;font:400 var(--t3)/1.55 var(--font);color:var(--fade);text-wrap:pretty}
-.stp{position:relative}
-.stp-vid{--pp:7px;width:min(100%,172px);aspect-ratio:4/5;margin-top:26px;transform:rotate(-3deg)}
-/* במחשב הסרטונים של שלבים 04, 05 ו-06 נתלים מעל המספרים, במקום הריק שליד הכותרת, כל אחד בנטייה אחרת */
-@media (min-width:1180px){
-  .stp-vid{position:absolute;bottom:calc(100% + 22px);right:-4px;width:min(100%,176px);margin:0;transform:rotate(-4deg)}
-  .stp:nth-child(5) .stp-vid{bottom:calc(100% + 40px);transform:rotate(3deg)}
-  .stp.fin .stp-vid{bottom:calc(100% + 18px);transform:rotate(-2deg)}
-}
-.stp.fin .stp-n{background:linear-gradient(0deg,var(--gs));-webkit-background-clip:text;background-clip:text}
-.stp.fin h3{font-size:var(--t3);line-height:1.2;color:var(--ruby)}
+/* הסיום: הכותרת בגודל של כותרת חלק, "בשמחה" בזהב, והכפתור מתחת */
+.stp.fin h3{font:700 var(--t2)/1.06 var(--font-d);color:var(--crm)}
+.stp.fin h3 em{font-style:normal;padding-bottom:.06em;background:linear-gradient(0deg,var(--gs));-webkit-background-clip:text;background-clip:text;color:transparent}
 .stp-cta{margin-top:24px}
 .stp-cta .btn{padding:0 26px}
 .ribbon{position:absolute;left:0;top:0;z-index:1;width:100%;height:100%;overflow:visible;pointer-events:none}
+/* מסך רחב: הכותרת באמצע, והסרט יורד ממנה דרך האמצע. השלבים לסירוגין סביבו: 01 מימין, 02 משמאל, 03 מימין.
+   הנקודה של כל שלב יושבת בדיוק על הקו שבאמצע (חצי מהעמודה שלה נכנס לצד השני), והטקסט צמוד לסרט משני הצדדים */
+@media (min-width:821px){
+  .proc .head{align-items:center;text-align:center;margin-inline:auto;margin-bottom:clamp(64px,7vw,110px)}
+  .steps{grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:none}
+  .stp{grid-column:1;padding-bottom:clamp(28px,3.6vw,60px)}
+  .stp:nth-child(even){grid-column:2}
+  .stp:nth-child(1){grid-row:1} .stp:nth-child(2){grid-row:2} .stp:nth-child(3){grid-row:3} .stp:nth-child(4){grid-row:4} .stp:nth-child(5){grid-row:5} .stp:nth-child(6){grid-row:6}
+  .stp:nth-child(odd){grid-template-columns:minmax(0,1fr) 44px;margin-inline-end:-22px;justify-items:end;text-align:end}
+  .stp:nth-child(odd) > *{grid-column:1}
+  .stp:nth-child(odd) .stp-dot{grid-column:2}
+  .stp:nth-child(even){margin-inline-start:-22px}
+  .stp h3,.stp p{max-width:26em}
+  .stp.fin h3{max-width:9.6em}
+}
 /* כל שלב נדלק כשהסרט מגיע אליו (רק כש-JS פעיל) */
 .steps.js .stp > :not(.stp-dot){opacity:.16;translate:0 10px;transition:opacity .7s var(--ease),translate .8s var(--ease)}
 .steps.js .stp.on > :not(.stp-dot){opacity:1;translate:none}
@@ -636,7 +691,8 @@ main{overflow-x:clip}
 
 /* ---------- כרטיסי נייר (כמו "טעימות מהקינוחים", בצבעי האתר): הבלוג וסיפורי ההצלחה ---------- */
 .pcards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,2.8vw,42px);align-items:start;max-width:1140px;margin-inline:auto;padding-top:40px}
-.pcard{position:relative;display:flex;flex-direction:column;padding:clamp(10px,1vw,14px) clamp(10px,1vw,14px) clamp(18px,1.6vw,24px);rotate:var(--r,0deg);border-radius:8px;color:var(--ink);background:var(--grain),var(--paper);
+/* 1.11.2026: הפנים של כרטיסי המאמרים בשמנת (הצבע הבהיר של האתר), והטקסט באספרסו */
+.pcard{position:relative;display:flex;flex-direction:column;padding:clamp(10px,1vw,14px) clamp(10px,1vw,14px) clamp(18px,1.6vw,24px);rotate:var(--r,0deg);border-radius:8px;color:var(--esp);background:var(--grain),var(--crm);
   box-shadow:0 0 0 1px rgba(234,215,180,.16),0 2px 3px rgba(40,16,6,.1),0 18px 34px -16px rgba(40,16,6,.42),0 42px 64px -42px rgba(40,16,6,.38);transition:translate .5s var(--ease),box-shadow .5s}
 .pcard:nth-child(odd){margin-top:clamp(20px,2.2vw,34px)}
 .pcard:hover{translate:0 -8px;box-shadow:0 0 0 1px rgba(217,182,102,.45),0 4px 6px rgba(40,16,6,.12),0 26px 44px -18px rgba(40,16,6,.48),0 52px 74px -44px rgba(40,16,6,.4)}
@@ -644,19 +700,19 @@ main{overflow-x:clip}
 .pc-ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 .pcard:hover .pc-ph img{transform:scale(1.05)}
 .pcard h3{margin:clamp(16px,1.5vw,22px) 4px 0;font:700 var(--t3)/1.3 var(--font-d);text-wrap:balance}
-.pcard > p{flex:1;margin:8px 4px 0;font:400 var(--t3)/1.55 var(--font);color:var(--fade)}
-.pc-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin:18px 4px 0;border-radius:var(--pill);font:700 var(--t3)/1 var(--font);color:var(--ink);text-decoration:none;
-  box-shadow:inset 0 0 0 1.5px var(--ink);transition:background .3s,box-shadow .3s}
+.pcard > p{flex:1;margin:8px 4px 0;font:400 var(--t3)/1.55 var(--font);color:color-mix(in srgb,var(--esp) 78%,var(--crm))}
+.pc-btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;margin:18px 4px 0;border-radius:var(--pill);font:700 var(--t3)/1 var(--font);color:var(--esp);text-decoration:none;
+  box-shadow:inset 0 0 0 1.5px var(--esp);transition:background .3s,box-shadow .3s}
 .pc-btn .i{width:18px;height:18px}
 .pc-btn:hover{color:var(--esp);background:linear-gradient(90deg,var(--gs));box-shadow:inset 0 1px 0 rgba(247,231,176,.7),0 0 0 1px #9C7430}
 /* תווית קראפט שתלויה על סיכת זהב בפינת הכרטיס */
 .ptag{position:absolute;z-index:3;top:-28px;left:clamp(14px,1.6vw,24px);display:flex;align-items:flex-end;justify-content:center;min-width:66px;height:56px;padding:0 14px 10px;rotate:6deg;transform-origin:50% -16px;
   font:700 var(--t3)/1 var(--font);color:var(--esp);white-space:nowrap;filter:drop-shadow(0 3px 4px rgba(40,16,6,.28))}
-.ptag::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:polygon(20% 0,80% 0,100% 20%,100% 100%,0 100%,0 20%);background:var(--crm)}
+.ptag::before{content:'';position:absolute;inset:0;z-index:-1;clip-path:polygon(20% 0,80% 0,100% 20%,100% 100%,0 100%,0 20%);background:linear-gradient(0deg,var(--gs))}   /* זהב, כדי שהתווית לא תיבלע בכרטיס השמנת */
 .ptag::after{content:'';position:absolute;top:9px;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--esp);box-shadow:inset 0 0 0 3px var(--gld)}
 .ptag i{position:absolute;left:50%;bottom:calc(100% - 15px);width:1.5px;height:26px;margin-left:-.75px;background:linear-gradient(var(--gs))}
 .ptag i::before{content:'';position:absolute;top:-12px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#F7E7B0,#D9B666 45%,#9C7430);box-shadow:0 2px 3px rgba(40,16,6,.35)}
-/* ---------- 6. סיפורי הצלחה: כרטיסי תודה, שונים לגמרי מהבלוג. שוקולד / שמנת / שוקולד, מסגרת זהב דקה, חותם זהב עם האות ---------- */
+/* ---------- 6. סיפורי הצלחה, הגרסה הקודמת: כרטיסי תודה (שוקולד / שמנת / שוקולד, חותם זהב עם האות). בדף הבית הוחלפו בצילומי וואטסאפ (1.11.2026). נשארים בשביל דפי הניסוי c1-c6 ו-up.html ---------- */
 .tys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,2.6vw,40px);align-items:stretch;max-width:1180px;margin:clamp(40px,3.6vw,56px) auto 0}
 .ty{position:relative;isolation:isolate;margin:0;display:flex;flex-direction:column;min-height:clamp(330px,28vw,400px);padding:clamp(62px,5.2vw,78px) clamp(28px,2.6vw,42px) clamp(28px,2.6vw,38px);border-radius:22px;color:var(--cream);overflow:hidden;
   background:var(--esp-l);
@@ -676,6 +732,92 @@ main{overflow-x:clip}
 .ty:nth-child(2) figcaption{color:var(--ruby)}
 .ty-line{width:36px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gs))}
 @media (max-width:980px){.tys{grid-template-columns:1fr;max-width:560px}.ty:nth-child(2){translate:none}.ty{min-height:0}}
+/* ---------- 6. סיפורי הצלחה: צילומי מסך מוואטסאפ (1.11.2026, סבב 2: צילום מלא של הטלפון) ----------
+   כל המלצה = צילום מסך מלא של טלפון אנדרואיד (1080x2400): המסך בנוי בגודל אמיתי של מכשיר, 412 על 915 נקודות,
+   וכולו מוקטן יחד (transform: scale) לרוחב הצילום באתר. כך היחסים בין הטקסט, הבועות והפסים הם בדיוק כמו בצילום אמיתי שהוקטן.
+   היחס מחושב מהרוחב של הצילום עצמו: tan(atan2(100cqw, 412px)) = רוחב הצילום חלקי 412.
+   מלמעלה: פס הסטטוס של אנדרואיד (בעברית הפוך: השעה מימין), הפס העליון של וואטסאפ (חץ, עיגול פרופיל אפור, השם, וידאו, שיחה ועוד),
+   הטפט הבז' עם הציורים, ובתחתית, כמו בשיחה קצרה אמיתית: ההודעה הצהובה על ההצפנה, התאריך, הבועות של הלקוח מימין (זנב רק בראשונה, שעה בפינה, לב),
+   ובצילום אחד תשובה ירוקה של העסק משמאל. מתחת: שורת הכתיבה ("הודעה" ומיקרופון ירוק) ופס הניווט של אנדרואיד.
+   בתוך הצילום הצבעים של וואטסאפ והגופנים של אנדרואיד (Roboto, Noto Sans Hebrew, Noto Color Emoji, נטענים בראש הקובץ).
+   באתר: צילומים ישרים, פינות מעוגלות קטנות וצל רך. שורה אחת; אם יש יותר ממה שנכנס, גוללים לרוחב. עד 980px: 78% מרוחב המסך, עם הצמדה */
+.was{display:flex;gap:clamp(24px,3vw,48px);margin:clamp(36px,3.4vw,52px) calc(var(--pad) * -1) 0;padding:16px var(--pad) 64px;overflow-x:auto;scroll-snap-type:x proximity;
+  scrollbar-width:thin;scrollbar-color:rgba(234,215,180,.22) transparent}
+.was > .wa:first-child{margin-inline-start:auto}
+.was > .wa:last-child{margin-inline-end:auto}
+.wa{
+  --wa-sys:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 18'%3E%3Cg fill='%231F1F1F'%3E %3Cpath transform='translate(-5.1 -.6) scale(.8)' d='M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z'/%3E %3Cpath transform='translate(13 .6) scale(.7)' d='M2 22h20V2z'/%3E %3Cpath transform='translate(34 -1.5) scale(.82)' d='M12.01 21.49L23.64 7c-.45-.34-4.93-4-11.64-4C5.28 3 .81 6.66.36 7l11.63 14.49.01.01.01-.01z'/%3E%3C/g%3E%3C/svg%3E");
+  --wa-bk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23111B21' d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+  --wa-av:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23DFE5E7'/%3E%3CclipPath id='c'%3E%3Ccircle cx='20' cy='20' r='20'/%3E%3C/clipPath%3E%3Cg fill='%23fff' clip-path='url(%23c)'%3E%3Ccircle cx='20' cy='15.4' r='7.6'/%3E%3Cpath d='M20 25.6c-8.8 0-15.6 4.6-17 11.8V42h34v-4.6C35.6 30.2 28.8 25.6 20 25.6z'/%3E%3C/g%3E%3C/svg%3E");
+  --wa-ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 24'%3E%3Cg fill='%23111B21'%3E %3Ccircle cx='12' cy='5' r='2'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3Ccircle cx='12' cy='19' r='2'/%3E %3Cpath transform='translate(48 0)' d='M6.54 5c.06.89.21 1.76.45 2.59l-1.2 1.2c-.41-1.2-.67-2.47-.76-3.79h1.51m9.86 12.02c.85.24 1.72.39 2.6.45v1.49c-1.32-.09-2.59-.35-3.8-.75l1.2-1.19M7.5 3H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.49c0-.55-.45-1-1-1-1.24 0-2.45-.2-3.57-.57-.1-.04-.21-.05-.31-.05-.26 0-.51.1-.71.29l-2.2 2.2c-2.83-1.45-5.15-3.76-6.59-6.59l2.2-2.2c.28-.28.36-.67.25-1.02C8.7 6.45 8.5 5.25 8.5 4c0-.55-.45-1-1-1z'/%3E %3Cpath transform='translate(96 0)' d='M15 8v8H5V8h10m1-2H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4V7c0-.55-.45-1-1-1z'/%3E%3C/g%3E%3C/svg%3E");
+  --wa-lock:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2354656F' d='M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z'/%3E%3C/svg%3E");
+  --wa-tk:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11'%3E%3Cpath d='M1.2 5.9l3.1 3 6.3-7.7M7.5 8.2l.8.7 6.3-7.7' fill='none' stroke='%2353BDEB' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --wa-tin:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 13'%3E%3Cpath d='M0 1h5.19c1.77 0 2.34 1.16 1.28 2.57L0 12.19z' fill='%230B141A' fill-opacity='.13'/%3E%3Cpath d='M0 0h5.19c1.77 0 2.34 1.16 1.28 2.57L0 11.19z' fill='%23fff'/%3E%3C/svg%3E");
+  --wa-tout:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 13'%3E%3Cpath d='M8 1H2.81C1.04 1 .47 2.16 1.53 3.57L8 12.19z' fill='%230B141A' fill-opacity='.13'/%3E%3Cpath d='M8 0H2.81C1.04 0 .47 1.16 1.53 2.57L8 11.19z' fill='%23D9FDD3'/%3E%3C/svg%3E");
+  --wa-emo:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2354656F' d='M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z'/%3E%3C/svg%3E");
+  --wa-att:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 24'%3E%3Cg fill='%2354656F'%3E%3Cpath transform='rotate(45 12 12)' d='M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z'/%3E%3Cpath transform='translate(40 0)' d='M14.12 4l1.83 2H20v12H4V6h4.05l1.83-2h4.24M15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2zm-3 7c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3m0-2c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z'/%3E%3C/g%3E%3C/svg%3E");
+  --wa-mic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23fff' d='M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z'/%3E%3C/svg%3E");
+  --wa-wall:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 480'%3E%3Cg fill='none' stroke='%235B4A3A' stroke-opacity='.1' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cg%3E%3Cg transform='translate(8 10) rotate(-14 12 12) scale(1)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(52 4) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.5a2 2 0 0 1 0 4H16M9 6.5c0-1 1-1 1-2.2M12.5 6.5c0-1 1-1 1-2.2'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(112 6) rotate(18 12 12) scale(0.9)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(158 12) rotate(-6 12 12) scale(1)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(204 4) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(26 50) rotate(8 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(74 46) rotate(20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(96 50) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M5 11h14v9H5zM4 8h16v3H4zM12 8v12M12 8c-1.6-3.6-5.6-3.2-4 0M12 8c1.6-3.6 5.6-3.2 4 0'/%3E%3C/g%3E%3Cg transform='translate(140 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(168 48) rotate(24 12 12) scale(1)'%3E%3Cpath d='M5 19C5 10 10 5 19 5c0 9-5 14-14 14zM5 19l8.5-8.5'/%3E%3C/g%3E%3Cg transform='translate(214 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(4 92) rotate(-8 12 12) scale(1)'%3E%3Cpath d='M3 11.5l18-7.5-6 16.5-3.2-6.8zM11.8 13.7 21 4'/%3E%3C/g%3E%3Cg transform='translate(48 86) rotate(14 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='8.5' r='5'/%3E%3Cpath d='M12 13.5V21M12 8.5a1.6 1.6 0 0 1 2.2 1.6'/%3E%3C/g%3E%3Cg transform='translate(86 98) rotate(-18 12 12) scale(0.9)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3Cg transform='translate(128 90) rotate(6 12 12) scale(0.95)'%3E%3Cpath d='M15 4a8 8 0 1 0 5 13A7 7 0 0 1 15 4z'/%3E%3C/g%3E%3Cg transform='translate(170 94) rotate(-12 12 12) scale(0.95)'%3E%3Cpath d='M4 8.5h3.6l1.8-2.5h5.2l1.8 2.5H20V19H4z'/%3E%3Ccircle cx='12' cy='13.2' r='3.4'/%3E%3C/g%3E%3Cg transform='translate(210 88) rotate(16 12 12) scale(0.85)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(18 134) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M8.2 11.5 12 21l3.8-9.5M7 11.5a5 5 0 0 1 10 0z'/%3E%3C/g%3E%3Cg transform='translate(62 136) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(80 132) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M4 5h16v10H9.5L5.5 19v-4H4z'/%3E%3C/g%3E%3Cg transform='translate(124 132) rotate(14 12 12) scale(0.95)'%3E%3Cpath d='M3 12a9 9 0 0 1 18 0zM12 12v6a2 2 0 0 1-4 0'/%3E%3C/g%3E%3Cg transform='translate(168 138) rotate(-20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(196 128) rotate(-8 12 12) scale(0.95)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(0 178) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M3.5 6.5h17v11h-17zM3.5 7l8.5 6 8.5-6'/%3E%3C/g%3E%3Cg transform='translate(42 174) rotate(-6 12 12) scale(0.95)'%3E%3Cpath d='M6.5 13h11l-1.4 7H7.9zM6.6 13A3 3 0 0 1 7.4 8a4.8 4.8 0 0 1 9.2 0 3 3 0 0 1 .8 5M12 3.2v1.6'/%3E%3C/g%3E%3Cg transform='translate(88 182) rotate(0 12 12) scale(0.85)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(108 172) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M12 3c2.9 0 5 2.6 5 5.8 0 3.6-2.6 6.2-5 6.2s-5-2.6-5-6.2C7 5.6 9.1 3 12 3zM11.2 15.6h1.6M12 15.6c0 2.2-2 2.6-2 5'/%3E%3C/g%3E%3Cg transform='translate(152 178) rotate(-16 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(194 172) rotate(8 12 12) scale(0.9)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(22 214) rotate(-12 12 12) scale(0.7)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(132 216) rotate(10 12 12) scale(0.7)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(480 0) rotate(90)'%3E%3Cg transform='translate(8 10) rotate(-14 12 12) scale(1)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(52 4) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.5a2 2 0 0 1 0 4H16M9 6.5c0-1 1-1 1-2.2M12.5 6.5c0-1 1-1 1-2.2'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(112 6) rotate(18 12 12) scale(0.9)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(158 12) rotate(-6 12 12) scale(1)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(204 4) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(26 50) rotate(8 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(74 46) rotate(20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(96 50) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M5 11h14v9H5zM4 8h16v3H4zM12 8v12M12 8c-1.6-3.6-5.6-3.2-4 0M12 8c1.6-3.6 5.6-3.2 4 0'/%3E%3C/g%3E%3Cg transform='translate(140 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(168 48) rotate(24 12 12) scale(1)'%3E%3Cpath d='M5 19C5 10 10 5 19 5c0 9-5 14-14 14zM5 19l8.5-8.5'/%3E%3C/g%3E%3Cg transform='translate(214 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(4 92) rotate(-8 12 12) scale(1)'%3E%3Cpath d='M3 11.5l18-7.5-6 16.5-3.2-6.8zM11.8 13.7 21 4'/%3E%3C/g%3E%3Cg transform='translate(48 86) rotate(14 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='8.5' r='5'/%3E%3Cpath d='M12 13.5V21M12 8.5a1.6 1.6 0 0 1 2.2 1.6'/%3E%3C/g%3E%3Cg transform='translate(86 98) rotate(-18 12 12) scale(0.9)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3Cg transform='translate(128 90) rotate(6 12 12) scale(0.95)'%3E%3Cpath d='M15 4a8 8 0 1 0 5 13A7 7 0 0 1 15 4z'/%3E%3C/g%3E%3Cg transform='translate(170 94) rotate(-12 12 12) scale(0.95)'%3E%3Cpath d='M4 8.5h3.6l1.8-2.5h5.2l1.8 2.5H20V19H4z'/%3E%3Ccircle cx='12' cy='13.2' r='3.4'/%3E%3C/g%3E%3Cg transform='translate(210 88) rotate(16 12 12) scale(0.85)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(18 134) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M8.2 11.5 12 21l3.8-9.5M7 11.5a5 5 0 0 1 10 0z'/%3E%3C/g%3E%3Cg transform='translate(62 136) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(80 132) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M4 5h16v10H9.5L5.5 19v-4H4z'/%3E%3C/g%3E%3Cg transform='translate(124 132) rotate(14 12 12) scale(0.95)'%3E%3Cpath d='M3 12a9 9 0 0 1 18 0zM12 12v6a2 2 0 0 1-4 0'/%3E%3C/g%3E%3Cg transform='translate(168 138) rotate(-20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(196 128) rotate(-8 12 12) scale(0.95)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(0 178) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M3.5 6.5h17v11h-17zM3.5 7l8.5 6 8.5-6'/%3E%3C/g%3E%3Cg transform='translate(42 174) rotate(-6 12 12) scale(0.95)'%3E%3Cpath d='M6.5 13h11l-1.4 7H7.9zM6.6 13A3 3 0 0 1 7.4 8a4.8 4.8 0 0 1 9.2 0 3 3 0 0 1 .8 5M12 3.2v1.6'/%3E%3C/g%3E%3Cg transform='translate(88 182) rotate(0 12 12) scale(0.85)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(108 172) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M12 3c2.9 0 5 2.6 5 5.8 0 3.6-2.6 6.2-5 6.2s-5-2.6-5-6.2C7 5.6 9.1 3 12 3zM11.2 15.6h1.6M12 15.6c0 2.2-2 2.6-2 5'/%3E%3C/g%3E%3Cg transform='translate(152 178) rotate(-16 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(194 172) rotate(8 12 12) scale(0.9)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(22 214) rotate(-12 12 12) scale(0.7)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(132 216) rotate(10 12 12) scale(0.7)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(0 480) rotate(270)'%3E%3Cg transform='translate(8 10) rotate(-14 12 12) scale(1)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(52 4) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.5a2 2 0 0 1 0 4H16M9 6.5c0-1 1-1 1-2.2M12.5 6.5c0-1 1-1 1-2.2'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(112 6) rotate(18 12 12) scale(0.9)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(158 12) rotate(-6 12 12) scale(1)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(204 4) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(26 50) rotate(8 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(74 46) rotate(20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(96 50) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M5 11h14v9H5zM4 8h16v3H4zM12 8v12M12 8c-1.6-3.6-5.6-3.2-4 0M12 8c1.6-3.6 5.6-3.2 4 0'/%3E%3C/g%3E%3Cg transform='translate(140 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(168 48) rotate(24 12 12) scale(1)'%3E%3Cpath d='M5 19C5 10 10 5 19 5c0 9-5 14-14 14zM5 19l8.5-8.5'/%3E%3C/g%3E%3Cg transform='translate(214 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(4 92) rotate(-8 12 12) scale(1)'%3E%3Cpath d='M3 11.5l18-7.5-6 16.5-3.2-6.8zM11.8 13.7 21 4'/%3E%3C/g%3E%3Cg transform='translate(48 86) rotate(14 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='8.5' r='5'/%3E%3Cpath d='M12 13.5V21M12 8.5a1.6 1.6 0 0 1 2.2 1.6'/%3E%3C/g%3E%3Cg transform='translate(86 98) rotate(-18 12 12) scale(0.9)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3Cg transform='translate(128 90) rotate(6 12 12) scale(0.95)'%3E%3Cpath d='M15 4a8 8 0 1 0 5 13A7 7 0 0 1 15 4z'/%3E%3C/g%3E%3Cg transform='translate(170 94) rotate(-12 12 12) scale(0.95)'%3E%3Cpath d='M4 8.5h3.6l1.8-2.5h5.2l1.8 2.5H20V19H4z'/%3E%3Ccircle cx='12' cy='13.2' r='3.4'/%3E%3C/g%3E%3Cg transform='translate(210 88) rotate(16 12 12) scale(0.85)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(18 134) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M8.2 11.5 12 21l3.8-9.5M7 11.5a5 5 0 0 1 10 0z'/%3E%3C/g%3E%3Cg transform='translate(62 136) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(80 132) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M4 5h16v10H9.5L5.5 19v-4H4z'/%3E%3C/g%3E%3Cg transform='translate(124 132) rotate(14 12 12) scale(0.95)'%3E%3Cpath d='M3 12a9 9 0 0 1 18 0zM12 12v6a2 2 0 0 1-4 0'/%3E%3C/g%3E%3Cg transform='translate(168 138) rotate(-20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(196 128) rotate(-8 12 12) scale(0.95)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(0 178) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M3.5 6.5h17v11h-17zM3.5 7l8.5 6 8.5-6'/%3E%3C/g%3E%3Cg transform='translate(42 174) rotate(-6 12 12) scale(0.95)'%3E%3Cpath d='M6.5 13h11l-1.4 7H7.9zM6.6 13A3 3 0 0 1 7.4 8a4.8 4.8 0 0 1 9.2 0 3 3 0 0 1 .8 5M12 3.2v1.6'/%3E%3C/g%3E%3Cg transform='translate(88 182) rotate(0 12 12) scale(0.85)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(108 172) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M12 3c2.9 0 5 2.6 5 5.8 0 3.6-2.6 6.2-5 6.2s-5-2.6-5-6.2C7 5.6 9.1 3 12 3zM11.2 15.6h1.6M12 15.6c0 2.2-2 2.6-2 5'/%3E%3C/g%3E%3Cg transform='translate(152 178) rotate(-16 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(194 172) rotate(8 12 12) scale(0.9)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(22 214) rotate(-12 12 12) scale(0.7)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(132 216) rotate(10 12 12) scale(0.7)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(480 480) rotate(180)'%3E%3Cg transform='translate(8 10) rotate(-14 12 12) scale(1)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(52 4) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10.5h1.5a2 2 0 0 1 0 4H16M9 6.5c0-1 1-1 1-2.2M12.5 6.5c0-1 1-1 1-2.2'/%3E%3C/g%3E%3Cg transform='translate(92 20) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(112 6) rotate(18 12 12) scale(0.9)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(158 12) rotate(-6 12 12) scale(1)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(204 4) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(26 50) rotate(8 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(74 46) rotate(20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(96 50) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M5 11h14v9H5zM4 8h16v3H4zM12 8v12M12 8c-1.6-3.6-5.6-3.2-4 0M12 8c1.6-3.6 5.6-3.2 4 0'/%3E%3C/g%3E%3Cg transform='translate(140 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(168 48) rotate(24 12 12) scale(1)'%3E%3Cpath d='M5 19C5 10 10 5 19 5c0 9-5 14-14 14zM5 19l8.5-8.5'/%3E%3C/g%3E%3Cg transform='translate(214 52) rotate(0 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(4 92) rotate(-8 12 12) scale(1)'%3E%3Cpath d='M3 11.5l18-7.5-6 16.5-3.2-6.8zM11.8 13.7 21 4'/%3E%3C/g%3E%3Cg transform='translate(48 86) rotate(14 12 12) scale(0.95)'%3E%3Ccircle cx='12' cy='8.5' r='5'/%3E%3Cpath d='M12 13.5V21M12 8.5a1.6 1.6 0 0 1 2.2 1.6'/%3E%3C/g%3E%3Cg transform='translate(86 98) rotate(-18 12 12) scale(0.9)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3Cg transform='translate(128 90) rotate(6 12 12) scale(0.95)'%3E%3Cpath d='M15 4a8 8 0 1 0 5 13A7 7 0 0 1 15 4z'/%3E%3C/g%3E%3Cg transform='translate(170 94) rotate(-12 12 12) scale(0.95)'%3E%3Cpath d='M4 8.5h3.6l1.8-2.5h5.2l1.8 2.5H20V19H4z'/%3E%3Ccircle cx='12' cy='13.2' r='3.4'/%3E%3C/g%3E%3Cg transform='translate(210 88) rotate(16 12 12) scale(0.85)'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z'/%3E%3C/g%3E%3Cg transform='translate(18 134) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M8.2 11.5 12 21l3.8-9.5M7 11.5a5 5 0 0 1 10 0z'/%3E%3C/g%3E%3Cg transform='translate(62 136) rotate(0 12 12) scale(1)'%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3C/g%3E%3Cg transform='translate(80 132) rotate(-10 12 12) scale(0.95)'%3E%3Cpath d='M4 5h16v10H9.5L5.5 19v-4H4z'/%3E%3C/g%3E%3Cg transform='translate(124 132) rotate(14 12 12) scale(0.95)'%3E%3Cpath d='M3 12a9 9 0 0 1 18 0zM12 12v6a2 2 0 0 1-4 0'/%3E%3C/g%3E%3Cg transform='translate(168 138) rotate(-20 12 12) scale(0.8)'%3E%3Cpath d='M12 7v10M7 12h10'/%3E%3C/g%3E%3Cg transform='translate(196 128) rotate(-8 12 12) scale(0.95)'%3E%3Cpath d='M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4l-5.3 3 1.2-6-4.5-4.1 6-.7z'/%3E%3C/g%3E%3Cg transform='translate(0 178) rotate(10 12 12) scale(0.95)'%3E%3Cpath d='M3.5 6.5h17v11h-17zM3.5 7l8.5 6 8.5-6'/%3E%3C/g%3E%3Cg transform='translate(42 174) rotate(-6 12 12) scale(0.95)'%3E%3Cpath d='M6.5 13h11l-1.4 7H7.9zM6.6 13A3 3 0 0 1 7.4 8a4.8 4.8 0 0 1 9.2 0 3 3 0 0 1 .8 5M12 3.2v1.6'/%3E%3C/g%3E%3Cg transform='translate(88 182) rotate(0 12 12) scale(0.85)'%3E%3Ccircle cx='12' cy='12' r='4.5'/%3E%3C/g%3E%3Cg transform='translate(108 172) rotate(12 12 12) scale(0.95)'%3E%3Cpath d='M12 3c2.9 0 5 2.6 5 5.8 0 3.6-2.6 6.2-5 6.2s-5-2.6-5-6.2C7 5.6 9.1 3 12 3zM11.2 15.6h1.6M12 15.6c0 2.2-2 2.6-2 5'/%3E%3C/g%3E%3Cg transform='translate(152 178) rotate(-16 12 12) scale(0.9)'%3E%3Ccircle cx='12' cy='12' r='8'/%3E%3Cpath d='M8.6 13.6a4.4 4.4 0 0 0 6.8 0M9.3 9.6v.6M14.7 9.6v.6'/%3E%3C/g%3E%3Cg transform='translate(194 172) rotate(8 12 12) scale(0.9)'%3E%3Cpath d='M7 18a4 4 0 0 1-.4-8A5.5 5.5 0 0 1 17 8.8 4.6 4.6 0 0 1 17.4 18z'/%3E%3C/g%3E%3Cg transform='translate(22 214) rotate(-12 12 12) scale(0.7)'%3E%3Cpath d='M9 17.5V6l10-2v11.5'/%3E%3Ccircle cx='7' cy='17.5' r='2'/%3E%3Ccircle cx='17' cy='15.5' r='2'/%3E%3C/g%3E%3Cg transform='translate(132 216) rotate(10 12 12) scale(0.7)'%3E%3Cpath d='M3 12c1.5-2.4 3-2.4 4.5 0s3 2.4 4.5 0 3-2.4 4.5 0 3 2.4 4.5 0'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --ww:clamp(280px,26vw,380px);
+  position:relative;flex:none;display:flex;flex-direction:column;width:var(--ww);margin:0;container-type:inline-size;overflow:hidden;border-radius:14px;background:#EFEAE2;scroll-snap-align:center;
+  box-shadow:0 0 0 1px rgba(0,0,0,.28),0 2px 6px rgba(10,5,2,.3),0 24px 44px -20px rgba(10,5,2,.8)}
+/* המסך עצמו: ברוחב 412, מוקטן לרוחב הצילום.
+   סבב 3 (1.11.2026, "תמחוק את מה שמקושקש באדום"): הצילום חתוך כמו שחותכים צילום מסך לפני ששולחים. בלי פס הסטטוס, הפס העליון,
+   הטפט הריק, הודעת ההצפנה והתאריך. נשארים הבועות על הטפט, שורת הכתיבה ופס הניווט. הגובה לפי התוכן (zoom ולא transform, כדי שהגובה יזרום),
+   ושלושת הצילומים באותו גובה: בצילום עם פחות הודעות יש עוד קצת טפט מעל הבועות */
+.wa .wa-sb,.wa .wa-top,.wa .wa-e2e,.wa .wa-day{display:none}
+.wa-scr{flex:1;position:relative;width:412px;zoom:.9;zoom:tan(atan2(100cqw,412px));
+  display:flex;flex-direction:column;direction:rtl;text-align:right;color:#111B21;letter-spacing:normal;
+  font:400 16px/1.36 Roboto,'Noto Sans Hebrew','Noto Color Emoji',sans-serif;-webkit-font-smoothing:antialiased}
+.wa-scr i,.wa-scr b{font-style:normal}
+.wa-scr blockquote{margin:0}
+/* פס הסטטוס */
+.wa-sb{flex:none;display:flex;align-items:center;justify-content:space-between;height:36px;padding:2px 26px 0 24px;background:#fff;font:500 14.5px/1 Roboto,sans-serif;color:#1F1F1F}
+.wa-sb i{width:56px;height:18px;background:var(--wa-sys) no-repeat center/contain}
+/* הפס העליון */
+.wa-top{flex:none;display:flex;align-items:center;height:64px;padding:0 4px 0 14px;background:#fff}
+.wa-bk{flex:none;width:40px;height:24px;background:var(--wa-bk) no-repeat center/24px}
+.wa-av{flex:none;width:40px;height:40px;border-radius:50%;background:var(--wa-av) center/100% no-repeat}
+.wa-nm{flex:1;min-width:0;margin-inline-start:12px;font-size:18px;font-weight:500;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wa-ic{flex:none;width:120px;height:24px;margin-inline-start:10px;background:var(--wa-ic) no-repeat center/contain}
+/* השיחה: הטפט, וכל מה שבתוכה צמוד לתחתית */
+.wa-chat{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;padding:14px 0 0;background:var(--wa-wall) 0 0/420px auto,#EFEAE2}
+.wa-e2e{align-self:center;max-width:352px;margin:0 0 10px;padding:6px 12px 7px;border-radius:8px;background:#FFEECD;color:#54656F;font-size:13px;line-height:1.42;text-align:center;
+  box-shadow:0 1px .5px rgba(11,20,26,.13)}
+.wa-e2e i{display:inline-block;width:11px;height:11px;margin-inline-end:4px;vertical-align:-1px;background:var(--wa-lock) no-repeat center/contain}
+.wa-day{align-self:center;margin:2px 0 10px;padding:5px 12px 6px;border-radius:8px;background:#fff;color:#54656F;font-size:12.5px;line-height:1.2;box-shadow:0 1px .5px rgba(11,20,26,.13)}
+.wa-b{position:relative;width:fit-content;max-width:calc(100% - 78px);margin:2px 14px 0 auto;padding:6px 9px 8px;border-radius:8px;background:#fff;box-shadow:0 1px .5px rgba(11,20,26,.13);overflow-wrap:break-word}
+.wa-b.t{margin-top:10px;border-top-right-radius:0}
+.wa-day + blockquote .wa-b.t{margin-top:0}
+.wa-b.t::before{content:'';position:absolute;top:0;right:-7.6px;width:8px;height:13px;background:var(--wa-tin) no-repeat 0 0/100% 100%}
+/* הבועה של העסק: ירוקה, משמאל */
+.wa-b.me{margin-right:auto;margin-left:14px;background:#D9FDD3}
+.wa-b.me.t{border-top-right-radius:8px;border-top-left-radius:0}
+.wa-b.me.t::before{right:auto;left:-7.6px;background-image:var(--wa-tout)}
+/* השעה: מקום שמור בסוף השורה האחרונה, והשעה בפינה השמאלית התחתונה. בבועה של העסק גם וי כחול כפול */
+.wa-m{display:inline-block;width:40px;height:10px}
+.wa-b.me .wa-m{width:60px}
+.wa-m span{position:absolute;left:7px;bottom:4px;display:flex;align-items:center;gap:3px;direction:ltr;font:400 11.5px/1 Roboto,sans-serif;color:#667781}
+.wa-b.me .wa-m span::before{content:'';width:16px;height:11px;background:var(--wa-tk) no-repeat center/contain}
+/* הלב */
+.wa-b.r{margin-bottom:17px}
+.wa-re{position:absolute;right:8px;bottom:-19px;display:flex;align-items:center;justify-content:center;height:25px;padding:0 6px;border-radius:13px;background:#fff;
+  box-shadow:0 0 0 2px #EFEAE2,0 1.5px 3px 1px rgba(11,20,26,.16);font:14px/1 'Noto Color Emoji',sans-serif}
+/* שורת הכתיבה */
+.wa-in{flex:none;display:flex;align-items:flex-end;gap:6px;padding:14px 6px 6px}
+.wa-box{flex:1;display:flex;align-items:center;height:50px;padding:0 12px 0 14px;border-radius:25px;background:#fff;box-shadow:0 1px .5px rgba(11,20,26,.13)}
+.wa-box span{flex:1;margin-inline-start:10px;font-size:17.5px;line-height:1;color:#8696A0}
+.wa-emo{flex:none;width:26px;height:26px;background:var(--wa-emo) no-repeat center/contain}
+.wa-att{flex:none;width:64px;height:24px;background:var(--wa-att) no-repeat center/contain}
+.wa-mic{flex:none;width:50px;height:50px;border-radius:50%;background:var(--wa-mic) no-repeat center/24px,#1DAA61}
+/* פס הניווט של אנדרואיד (ניווט במחוות): קו כהה קטן באמצע */
+.wa-nav{flex:none;display:grid;place-items:center;height:22px}
+.wa-nav::before{content:'';width:108px;height:4px;border-radius:2px;background:rgba(0,0,0,.72)}
+@media (max-width:980px){
+  .was{gap:14px;margin-inline:calc(var(--pad) * -1);padding:16px var(--pad) 48px;scroll-snap-type:x mandatory;scroll-padding-inline:var(--pad)}
+  .wa{--ww:min(78vw,340px);scroll-snap-align:start}
+}
+/* סוף צילומי הוואטסאפ */
 
 /* כרטיס המלצה: ציטוט במקום כותרת, ושם עם אות בעיגול */
 .qcard blockquote{flex:1;margin:clamp(16px,1.5vw,22px) 4px 0}
@@ -789,21 +931,40 @@ main{overflow-x:clip}
 .ct-tel .i{width:30px;height:30px;color:var(--gold)}
 .ct-tel:hover{color:#F7E7B0}
 .ct-alt .btn{width:min(100%,280px)}
+/* ---------- חלקים בהירים (1.11.2026, אפרים: "גם את האלבום וגם את היצירת קשר אני רוצה ברקע הבהיר") ----------
+   הגלריה ויצירת הקשר (.lt) על שמנת לכל הרוחב, עם גבול ישר. הטקסט באספרסו, והזהב רק איפה שהניגוד מספיק.
+   עדכון באותו יום: "ביצירת קשר התכוונתי גם לכרטיסיה ולא לרקע". החלק חזר לאספרסו (on-choc), ו-.lt יושב עכשיו רק על כרטיס הטופס (.ct-card.sheet.lt).
+   הכרטיס מקבל מ-.lt את הנייר הבהיר, הטקסט באספרסו והשדות, ומשאיר את הצל הכהה והקו הזהוב של .ct-card.sheet הרגיל, שמתאימים לרקע הכהה.
+   במקום הזהב הבהיר: אותו זהב בגרסה כהה. --gold-ink לטקסט קטן ולקווים (5.2:1 על השמנת), --foil-d לכותרת הגדולה (3.7:1 ומעלה) */
+.choc.lt{color:var(--esp);background:var(--crm)}
+.lt{--ink:var(--esp);--c1:var(--esp);--c2:color-mix(in srgb,#2B1D17 78%,#EAD7B4);--c3:color-mix(in srgb,#2B1D17 70%,#EAD7B4);--fade:var(--c2);
+  --paper:color-mix(in srgb,#EAD7B4 55%,#F7E7B0);--gold-ink:#6E5120;
+  --foil-d:linear-gradient(0deg,#5E4318 0%,#7A5A22 22%,#8A6526 42%,#765520 55%,#5A4216 78%,#7E5E24 100%)}
+.lt :focus-visible{outline-color:var(--gold-ink)}
+.lt .dust{display:none} /* אבק הזהב נראה על שמנת כמו לכלוך */
+.lt .btn-main{box-shadow:inset 0 1px 0 rgba(247,231,176,.7),inset 0 -2px 0 rgba(156,116,48,.35),0 0 0 1.6px #9C7430,0 12px 22px -12px rgba(90,58,28,.45)}
+.lt .btn-line{color:var(--esp);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#2B1D17 55%,transparent)}
+.lt .btn-line:hover{box-shadow:inset 0 0 0 1.5px var(--esp)}
+/* "בלתי נשכח": המתאר והמילוי בזהב הכהה */
+.lt .word{-webkit-text-stroke-color:rgba(110,81,32,.45)}
+.lt .word span{background:var(--foil-d);-webkit-background-clip:text;background-clip:text;filter:drop-shadow(0 2px 0 rgba(90,58,28,.18))}
+/* הכרטיס של הטופס: נייר שמנת בהיר עם קו זהב וצל חום רך */
+.lt .ct-card.sheet{box-shadow:0 0 0 1px rgba(156,116,48,.55),0 2px 4px rgba(90,58,28,.1),0 30px 54px -30px rgba(90,58,28,.45)}
+.lt .fld input,.lt .fld textarea{box-shadow:inset 0 -1.5px 0 color-mix(in srgb,#2B1D17 55%,transparent)}
+.lt .fld input::placeholder,.lt .fld textarea::placeholder{color:color-mix(in srgb,#2B1D17 67%,transparent)}
+.lt .fld input:focus,.lt .fld textarea:focus{box-shadow:inset 0 -2px 0 var(--esp)}
+.lt .fld.bad input,.lt .fld.bad textarea{box-shadow:inset 0 -2px 0 var(--gold-ink)}
+.lt .err{color:var(--gold-ink)}
+.lt .ct-priv .i{color:var(--gold-ink)}
+.lt .ct-alt h3{color:var(--esp)}
+.lt .ct-tel{color:var(--esp)}
+.lt .ct-tel .i{color:var(--gold-ink)}
+.lt .ct-tel:hover{color:var(--gold-ink)}
+.lt .logo[data-tone="ink"] svg rect{fill:var(--esp)}
 
 /* ---------- טאבלט ---------- */
-@media (max-width:1179px){
-  .steps{grid-template-columns:1fr;max-width:640px}
-  .stp{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:18px;align-items:start;padding-bottom:clamp(36px,5vw,50px)}
-  .stp > *{grid-column:2}
-  .stp-dot{grid-column:1;grid-row:1;align-self:center;justify-self:center;margin:0}
-  .stp-n{font-size:var(--t2)}
-  .stp h3{margin-top:12px}
-  .stp:last-child{padding-bottom:0}
-}
-/* טאבלט: הכותרת מימין (נשארת במקום בגלילה), והשלבים משמאל */
+/* טאבלט: המאמר הגדול בבלוג בשני טורים */
 @media (min-width:821px) and (max-width:1179px){
-  .proc .wrap{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1fr);gap:clamp(36px,5vw,70px);align-items:start}
-  .proc .head{position:sticky;top:120px;margin-bottom:0}
   .art.big{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
   .art.big .print{grid-area:1/2;aspect-ratio:4/3}
   .art.big .art-t{grid-area:1/1}

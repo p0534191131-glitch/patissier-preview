@@ -116,9 +116,9 @@
     var m = mobile();
     hs.style.setProperty('--hh', hero.offsetHeight + 'px');
     var hh = hero.offsetHeight, svh = probeS.offsetHeight || innerHeight, lvh = probeL.offsetHeight || innerHeight;
-    // הווילון (29.10.2026): אחרי שהסיפור נכתב הוא נשאר במקום, ו"ספרי לנו על השמחה" (#bot) עולה עליו מלמטה.
-    // המסילה ארוכה יותר בגובה של מסך (svh), כך ש-#bot נכנס מתחתית המסך בדיוק כשהסיפור גמר להיכתב.
-    // #bot נמשך למעלה בגובה החלק הנצמד (--hs-cur), וגבוה לפחות כמו הצילום הפתוח (--hs-vh), שבמסך גבוה ארוך ממסך הפתיחה
+    // הווילון (29.10.2026): אחרי שהסיפור נכתב הוא נשאר במקום, והחלק הבא עולה עליו מלמטה (מ-1.11.2026 זה התהליך, #process).
+    // המסילה ארוכה יותר בגובה של מסך (svh), כך שהחלק הבא נכנס מתחתית המסך בדיוק כשהסיפור גמר להיכתב.
+    // החלק הבא נמשך למעלה בגובה החלק הנצמד (--hs-cur), וגבוה לפחות כמו הצילום הפתוח (--hs-vh), שבמסך גבוה ארוך ממסך הפתיחה
     var cur = Math.min(hh, svh), vh = Math.max(lvh, svh);
     hs.style.setProperty('--run', 'calc(' + (m ? 230 : 250) + 'svh + ' + svh + 'px)');
     document.documentElement.style.setProperty('--hs-cur', cur + 'px');
@@ -130,12 +130,18 @@
     var c0 = cover(I, OX, OY), o = { x: I.x + I.w * OX, y: I.y + I.h * OY };
     var R0 = zoomR(c0, SC, o);
     // היעד: הצילום מכסה את כל המסך. במחשב העוגה קצת משמאל למרכז, בטלפון המצלמה נכנסת מלמטה כדי שהעוגה תעלה מעל הטקסט
-    var R1 = cover(V, m ? .4 : .36, .5);
+    // הסוף של הפתיחה (1.11.2026, "שימלא את המסך ולא ישאר חלק"): המסגרת לא נעצרת במסך אלא בתיבה גדולה ממנו (VX), שבה הפינות העגולות
+    // כבר מחוץ למסך. במחשב זה ה-D הסופי של hero-wave.js, ובטלפון המסך גדל ב-32% מהפינות (מספיק כדי שהפינה תצא מהמסך).
+    // הצילום מתכסה על VX (R1 = cover), ולכן בכל רגע הצילום מכיל את המסגרת ואף פעם לא רואים את הקצה הישר של התמונה
+    var WV = !m && window.PatHeroWave && PatHeroWave.on(), rd = radii(csPh, F0);
+    var gx = .32 * Math.max(rd[0][0], rd[1][0], rd[2][0], rd[3][0]), gy = .32 * Math.max(rd[0][1], rd[1][1], rd[2][1], rd[3][1]);
+    var VX = WV ? PatHeroWave.final(V) : { x: V.x - gx, y: V.y - gy, w: V.w + 2 * gx, h: V.h + 2 * gy };
+    var R1 = cover(VX, m ? .4 : .36, .5), zmax = WV ? 1.03 : ZMAX;   // במחשב הצילום כבר גדל ל-D הסופי, אז המצלמה נכנסת רק מעט
     var P = m ? { x: R1.x + R1.w * .43, y: V.y + V.h * .96 } : { x: V.x + V.w * .82, y: R1.y + R1.h * .5 };
-    var Rmax = zoomR(R1, ZMAX, P);
+    var Rmax = zoomR(R1, zmax, P);
     var hr = h1.getBoundingClientRect(), lr = null;
     $$('.h-l1,.h-l2', h1).forEach(function (l) { var b = l.getBoundingClientRect(); if (!b.width) return; lr = lr ? { l: Math.min(lr.l, b.left), t: Math.min(lr.t, b.top), r: Math.max(lr.r, b.right), b: Math.max(lr.b, b.bottom) } : { l: b.left, t: b.top, r: b.right, b: b.bottom }; });
-    G = { stk: stk, run: Math.max(1, run), V: V, F0: F0, rad: radii(csPh, F0), radStr: csPh.borderRadius, shadow: csPh.boxShadow, R0: R0, R1: R1, P: P, L: { w: Rmax.w, h: Rmax.h },
+    G = { stk: stk, run: Math.max(1, run), V: V, VX: VX, zmax: zmax, F0: F0, rad: rd, radStr: csPh.borderRadius, shadow: csPh.boxShadow, R0: R0, R1: R1, P: P, L: { w: Rmax.w, h: Rmax.h },
       ring: ring ? relBox(ring) : null, h1o: lr ? px((lr.l + lr.r) / 2 - hr.left) + ' ' + px((lr.t + lr.b) / 2 - hr.top) : '50% 50%', k: Math.min(1, innerWidth / 1440) };
     gapForFabs(stk);
     measureLines();
@@ -183,6 +189,7 @@
     [ph, img, lamp, lampIm, lampPl].forEach(function (el) { if (el) el.style.cssText = ''; });
     [ring, sub, cta, h1, veil, dustC].concat(spk).forEach(function (el) { if (!el) return; el.style.transform = ''; el.style.opacity = ''; el.style.filter = ''; el.style.animation = ''; el.style.transformOrigin = ''; });
     hero.classList.remove('is-open');
+    if (window.PatHeroWave) PatHeroWave.ring(null, 0);   // קו הזהב חוזר ל-D של מסך הפתיחה
     if (window.PatHero3D && PatHero3D.pause) PatHero3D.pause(false);
   }
 
@@ -199,17 +206,24 @@
 
     // 1. המסגרת נפתחת
     var e = inOut(seg(p, .03, .42)), F = lerpR(G.F0, V, e);
-    var t = Math.max(0, F.y - V.y), l = Math.max(0, F.x - V.x), r = Math.max(0, V.x + V.w - F.x - F.w), b = Math.max(0, V.y + V.h - F.y - F.h);
     var R = G.rad;   // העיגול נשאר לאורך כל הפתיחה, גם כשהצילום ממלא את המסך (29.10.2026: "שישאר עגול כל הזמן")
-    ph.style.clipPath = 'inset(' + px(t) + ' ' + px(r) + ' ' + px(b) + ' ' + px(l) + ' round ' + R.map(function (c) { return px(c[0]); }).join(' ') + ' / ' + R.map(function (c) { return px(c[1]); }).join(' ') + ')';
+    // במחשב הצד הימני הוא D (hero-wave.js): חצי עיגול בכל רגע, שגדל עד ה-D הסופי שמחוץ למסך
+    var WV = window.PatHeroWave && PatHeroWave.on();
+    // בלי הגל (טלפון וחלון צר): המסגרת הולכת אל VX (מעבר למסך), כך שבסוף הפינות העגולות מחוץ למסך והצילום ממלא הכול
+    var Fi = lerpR(G.F0, G.VX, e), ti = Fi.y - V.y, li = Fi.x - V.x, ri = V.x + V.w - Fi.x - Fi.w, bi = V.y + V.h - Fi.y - Fi.h;
+    ph.style.clipPath = WV ? PatHeroWave.clip(F, V, e) : 'inset(' + px(ti) + ' ' + px(ri) + ' ' + px(bi) + ' ' + px(li) + ' round ' + R.map(function (c) { return px(c[0]); }).join(' ') + ' / ' + R.map(function (c) { return px(c[1]); }).join(' ') + ')';
     // הצילום והמנורה: אותו transform בדיוק. המצלמה נכנסת לאט לאורך כל הציר
-    var B = lerpR(G.R0, G.R1, e), z = 1 + (ZMAX - 1) * inOut(p);
+    var B = lerpR(G.R0, G.R1, e), z = 1 + (G.zmax - 1) * inOut(p);
     var Pz = { x: clamp(G.P.x, B.x, B.x + B.w), y: clamp(G.P.y, B.y, B.y + B.h) }, Rr = zoomR(B, z, Pz);
     var tf = 'translate(' + px(Rr.x - V.x) + ',' + px(Rr.y - V.y) + ') scale(' + (Rr.w / G.L.w).toFixed(5) + ')';
     img.style.transform = tf;
     if (lamp) { lampPl.style.transform = tf; lamp.style.opacity = (1 - seg(e, .62, .96)).toFixed(3); }
     if (shd) shd.style.opacity = (1 - seg(e, 0, .14)).toFixed(3);
-    if (ring) { ring.style.transform = 'translate(' + px(F.x + F.w - G.F0.x - G.F0.w) + ',' + px(F.y + F.h - G.F0.y - G.F0.h) + ')'; ring.style.opacity = (1 - seg(e, .04, .42)).toFixed(3); }
+    if (ring) {
+      if (WV) PatHeroWave.ring(F, e, V);   // קו הזהב רץ עם הקצה של ה-D
+      else ring.style.transform = 'translate(' + px(F.x + F.w - G.F0.x - G.F0.w) + ',' + px(F.y + F.h - G.F0.y - G.F0.h) + ')';
+      ring.style.opacity = (1 - seg(e, .04, .42)).toFixed(3);
+    }
     spk.forEach(function (s) { s.style.opacity = (1 - seg(e, 0, .22)).toFixed(3); });
     // הכותרת עפה החוצה בעומק (לכיוון הצופה), עם טשטוש ודהייה. שורת המשנה והכפתור אחריה
     var a1 = outC(seg(p, .02, .24)), a2 = outC(seg(p, .035, .25)), a3 = outC(seg(p, .045, .26));

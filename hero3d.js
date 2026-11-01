@@ -51,7 +51,7 @@ async function start() {
   const envScene = new THREE.Scene();
   envScene.add(new THREE.Mesh(new THREE.SphereGeometry(60, 48, 24), new THREE.ShaderMaterial({ side: THREE.BackSide,
     vertexShader: 'varying vec3 vP;void main(){vP=normalize(position);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader: 'varying vec3 vP;void main(){float y=vP.y;vec3 top=vec3(.42,.32,.22),hor=vec3(.2,.14,.09),bot=vec3(.05,.035,.025);vec3 c=y>0.?mix(hor,top,smoothstep(0.,.8,y)):mix(hor,bot,smoothstep(0.,.5,-y));gl_FragColor=vec4(c,1.);}' })));
+    fragmentShader: 'varying vec3 vP;void main(){float y=vP.y;vec3 top=vec3(.44,.39,.28),hor=vec3(.22,.19,.13),bot=vec3(.06,.05,.035);vec3 c=y>0.?mix(hor,top,smoothstep(0.,.8,y)):mix(hor,bot,smoothstep(0.,.5,-y));gl_FragColor=vec4(c,1.);}' })));
   const panel = (w, h, dir, col, k, grad) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.ShaderMaterial({ side: THREE.DoubleSide,
       uniforms: { uC: { value: new THREE.Color(col).multiplyScalar(k) }, uG: { value: new THREE.Vector4(...grad) } },
@@ -60,10 +60,10 @@ async function start() {
     m.position.copy(new THREE.Vector3(...dir).normalize().multiplyScalar(30)); m.lookAt(0, 0, 0); envScene.add(m);
   };
   panel(40, 16, [0, 1, .5], '#fff4e2', 5.5, [.55, .4, .6, 1]);
-  panel(62, 32, [0, .2, 1], '#ffe7c2', 3.4, [.7, .45, .3, 1]);
+  panel(62, 32, [0, .2, 1], '#fff1d6', 3.4, [.7, .45, .3, 1]);
   panel(4, 36, [-1, .15, .45], '#fff7ea', 9.0, [.3, .8, 1, 1]);
   panel(3.5, 32, [1, .1, .35], '#ffefd6', 7.0, [.3, .8, 1, 1]);
-  panel(12, 4, [.4, -.6, .8], '#ffd9a8', 1.2, [.5, .5, 1, 1]);
+  panel(12, 4, [.4, -.6, .8], '#ffe9c4', 1.2, [.5, .5, 1, 1]);
   const pm = new THREE.PMREMGenerator(renderer);
   const envTex = pm.fromScene(envScene, 0.02).texture; pm.dispose();
 
@@ -73,7 +73,7 @@ async function start() {
 
   /* ---------- החומר: הזהב הצהוב של פלטה 41, ועוד סיבוב של הסטודיו כדי שהברק ירוץ על האותיות בלי להזיז אותן ---------- */
   const envRot = { value: new THREE.Matrix3() };
-  const gold = new THREE.MeshPhysicalMaterial({ color: '#F2C879', metalness: 1, roughness: .1, clearcoat: .7, clearcoatRoughness: .02, envMapIntensity: 1.9 });
+  const gold = new THREE.MeshPhysicalMaterial({ color: '#F1DC9C', metalness: 1, roughness: .1, clearcoat: .7, clearcoatRoughness: .02, envMapIntensity: 1.9 });
   gold.onBeforeCompile = sh => {
     sh.uniforms.uEnvRot = envRot;
     const chunk = THREE.ShaderChunk.envmap_physical_pars_fragment
@@ -174,7 +174,7 @@ async function start() {
       shapes.push(...glyphShapes(g.ch, ox, oy, s));
     }
     const depth = fs * .15, bt = fs * .05, bs = fs * .03;
-    const geo = new THREE.ExtrudeGeometry(shapes, { depth, bevelEnabled: true, bevelThickness: bt, bevelSize: bs, bevelOffset: -bs, bevelSegments: 5, curveSegments: 7 });
+    const geo = new THREE.ExtrudeGeometry(shapes, { depth, bevelEnabled: true, bevelThickness: bt, bevelSize: bs, bevelOffset: 0, bevelSegments: 5, curveSegments: 7 });
     const tcx = (m.box.l + m.box.r) / 2 - cx, tcy = -((m.base - fs * .36) - cy);
     geo.translate(-tcx, -tcy, -(depth + bt));
     mesh.geometry.dispose(); mesh.geometry = geo;

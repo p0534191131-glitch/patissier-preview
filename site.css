@@ -1074,3 +1074,59 @@ html #a11y-panel .reset{background:transparent;box-shadow:inset 0 0 0 1px rgba(2
 /* שלושת הגדלים גם במה שמוזרק מקבצים משותפים (a11y.js, lightbox.js) */
 html #a11y-panel,html #a11y-panel h2,html #a11y-panel a,html .lb figcaption{font-size:var(--t3)}
 html .lb button{font-size:var(--t3)}
+
+/* ---------- חלון יצירת קשר (2.11.2026, אפרים: "שיצירת קשר... נפתח באנימציה יפה וזה לא מריץ את האתר") ----------
+   contact-panel.js: "יצירת קשר" בהדר פותח חלון במקום לגלול. העיגול גדל מתוך הקישור (כמו ה-D העגול של הפתיחה),
+   על הקצה שלו רץ קו זהב, הרקע מתכהה ומיטשטש, והתוכן נכנס בשכבות. בסגירה הכול מתכווץ חזרה לקישור.
+   קו הזהב = שכבת זהב (.cp-rim) מתחת לחלון (.cp-face), ושתיהן נחתכות באותו עיגול, הזהב רק קצת יותר רחב. ככה הקו תמיד בדיוק על הקצה.
+   העמוד מאחור לא ננעל ב-overflow (זה היה משנה את הרוחב ואת ה-vw של הפתיחה), אלא ב-contact-panel.js: גלגלת, מגע ומקשים נחסמים מחוץ לחלון. */
+.cp{position:fixed;inset:0;z-index:8500;display:grid;place-items:center;padding:24px}
+.cp[hidden]{display:none}
+.cp-bg{position:absolute;inset:0;background:rgba(18,9,5,.6);-webkit-backdrop-filter:blur(10px) saturate(.85);backdrop-filter:blur(10px) saturate(.85);opacity:0;transition:opacity .55s var(--ease)}
+.cp.on .cp-bg{opacity:1}
+.cp.out .cp-bg{opacity:0;transition:opacity .5s ease .05s}
+.cp-win{position:relative;width:min(1000px,100%);transform:scale(.985);transition:transform .7s cubic-bezier(.62,0,.22,1)}
+.cp.on .cp-win{transform:none}
+.cp.out .cp-win{transform:scale(.985);transition:transform .52s cubic-bezier(.55,0,.75,.2)}
+.cp-win:focus{outline:none}
+.cp-rim,.cp-face{clip-path:circle(0px at var(--ox,50%) var(--oy,0px));transition:clip-path .7s cubic-bezier(.62,0,.22,1)}
+.cp-rim{position:absolute;inset:-1px;border-radius:33px;background:linear-gradient(120deg,var(--gs));pointer-events:none}
+.cp-face{position:relative;max-height:min(860px,calc(100svh - 48px));display:flex;flex-direction:column;overflow:hidden;border-radius:32px;
+  background:var(--esp);color:var(--cream);box-shadow:0 50px 90px -40px rgba(0,0,0,.8)}
+.cp.on .cp-rim{clip-path:circle(var(--r,150vmax) at var(--ox,50%) var(--oy,0px))}
+.cp.on .cp-face{clip-path:circle(calc(var(--r,150vmax) - 6px) at var(--ox,50%) var(--oy,0px))}
+/* בסוף הפתיחה בלי חיתוך בכלל (שהצל יהיה שלם), ושכבת הזהב נשארת קו דק סביב החלון */
+.cp.on.done .cp-rim,.cp.on.done .cp-face{clip-path:none}
+.cp.out .cp-rim,.cp.out .cp-face{transition:clip-path .52s cubic-bezier(.55,0,.75,.2)}
+.cp.notr .cp-win,.cp.notr .cp-rim,.cp.notr .cp-face{transition:none}
+.cp-body{position:relative;overflow:auto;overscroll-behavior:contain;padding:68px clamp(28px,4.4vw,60px) 52px}
+.cp-t{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cp-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(28px,4vw,56px);align-items:center}
+.cp .rv{opacity:1;transform:none;transition:none}
+.cp-alt{align-items:flex-start}
+.cp-x{position:absolute;z-index:4;top:18px;left:18px;width:48px;height:48px;display:grid;place-items:center;border:0;border-radius:50%;color:var(--cream);background:rgba(234,215,180,.06);
+  box-shadow:inset 0 0 0 1px rgba(217,182,102,.5);cursor:pointer;transition:background .25s,transform .35s var(--ease)}
+.cp-x:hover{background:rgba(217,182,102,.16);transform:rotate(90deg)}
+.cp-x:focus-visible{outline:2px solid var(--gld);outline-offset:3px}
+.cp-x .i{width:22px;height:22px}
+/* השכבות: כפתור הסגירה, התווית, הכותרת, השדות, השליחה והדרכים האחרות, אחד אחרי השני */
+.cp .cp-s{opacity:0;transform:translateY(16px);transition:opacity .45s var(--ease),transform .6s var(--ease)}
+.cp.on .cp-s{opacity:1;transform:none;transition-delay:calc(260ms + var(--i,0) * 55ms)}
+.cp.out .cp-s{opacity:0;transform:none;transition:opacity .16s}
+/* בלי תנועה (?still, הפחתת תנועה, מצב נגישות): דהייה פשוטה */
+.cp.calm{opacity:0;transition:opacity .2s}
+.cp.calm.on{opacity:1}
+.cp.calm .cp-win,.cp.calm .cp-face,.cp.calm .cp-rim{clip-path:none;transform:none;transition:none}
+.cp.calm .cp-rim{display:none}
+.cp.calm .cp-face{box-shadow:0 0 0 1px rgba(217,182,102,.5),0 50px 90px -40px rgba(0,0,0,.8)}
+.cp.calm .cp-s,.cp.calm.on .cp-s{opacity:1;transform:none;transition:none}
+@media (max-width:820px){
+  .cp{padding:10px;place-items:stretch}
+  .cp-win{width:100%;height:100%}
+  .cp-face{height:100%;max-height:none;border-radius:24px}
+  .cp-rim{border-radius:25px}
+  .cp-body{flex:1;padding:78px 14px 30px}
+  .cp-grid{grid-template-columns:1fr;gap:36px}
+  .cp-alt{align-items:center;text-align:center}
+  .cp-x{top:14px;left:14px;width:52px;height:52px}
+}

@@ -48,6 +48,10 @@
     { id: 'stories', name: 'סיפורי הצלחה', root: '#stories', fields: [
       { k: 'label', l: 'תווית', def: 'סיפורי הצלחה', s: '#stories .head .label', lim: 24 },
       { k: 'title', l: 'כותרת', def: 'מה לקוחות מספרים.', s: '#stories .head h2', lim: 40, r: 'ההמלצות עצמן בלשונית "המלצות".' }] },
+    /* 2.11.2026: חלק חדש אחרי סיפורי ההצלחה. השאלות עצמן מגיעות מהלשונית "שאלות נפוצות" (faqItem למטה) */
+    { id: 'faq', name: 'שאלות נפוצות', root: '#faq', fields: [
+      { k: 'label', l: 'תווית', def: 'שאלות נפוצות', s: '#faq .head .label', lim: 24 },
+      { k: 'title', l: 'כותרת', def: 'מה שואלים אותנו.', s: '#faq .head h2', lim: 40, r: 'השאלות עצמן בלשונית "שאלות נפוצות".' }] },
     { id: 'blog', name: 'בלוג', root: '#blog', fields: [
       { k: 'label', l: 'תווית', def: 'בלוג ותוכן', s: '#blog .bl-head .label', lim: 24 },
       { k: 'title', l: 'כותרת', def: 'לקרוא לפני שמחליטים.', s: '#blog .bl-head h2', t: 'lastEm', lim: 40, r: 'המילה האחרונה יוצאת מודגשת. המאמרים עצמם במסך "מאמרים".' },
@@ -80,7 +84,16 @@
   function migrate(S) {
     var did = false;
     if (!isNew(S.site)) { S.siteOld = S.site; S.site = defaults(); did = true; }
-    else S.site.forEach(function (s) { var d = sec(s.id); if (d) d.fields.forEach(function (x) { if (s.fields[x.k] == null) { s.fields[x.k] = x.def; did = true; } }); });
+    else {
+      S.site.forEach(function (s) { var d = sec(s.id); if (d) d.fields.forEach(function (x) { if (s.fields[x.k] == null) { s.fields[x.k] = x.def; did = true; } }); });
+      /* חלק חדש באתר (למשל "שאלות נפוצות", 2.11.2026) נכנס לרשימה במקום שלו, אחרי החלק שלפניו */
+      SECTIONS.forEach(function (d, i) {
+        if (byId(S.site, d.id)) return;
+        var f = {}; d.fields.forEach(function (x) { f[x.k] = x.def; });
+        var prev = i ? byId(S.site, SECTIONS[i - 1].id) : null;
+        S.site.splice(prev ? S.site.indexOf(prev) + 1 : 0, 0, { id: d.id, name: d.name, visible: true, fields: f }); did = true;
+      });
+    }
     if (!S.testimonials) S.testimonials = [];
     if (!S.tmSite) { SITE_TM.slice().reverse().forEach(function (t) { if (!byId(S.testimonials, t.id)) S.testimonials.unshift(clone(t)); }); S.tmSite = true; did = true; }
     if (!S.book || !Array.isArray(S.book.bars)) { S.book = { bars: clone(BOOK_BARS) }; did = true; }
@@ -148,6 +161,24 @@
       (bub ? '<blockquote>' + bub + '</blockquote>' : '') + (reply ? '<p class="wa-b me t">' + esc(WA.reply) + meta(last) + '</p>' : '') +
       '<div class="wa-in" aria-hidden="true"><span class="wa-box"><i class="wa-emo"></i><span>הודעה</span><i class="wa-att"></i></span><i class="wa-mic"></i></div><i class="wa-nav"></i></div></div></figure>';
   }
+  /* ---------- שאלות נפוצות = "תפריט מודפס" (2.11.2026, סגנון 9 גרסה א): כל שאלה היא שורה בתפריט, הכול גלוי.
+     faqMenu מחלק לשני טורים לפי הסדר, במקום שבו שני הטורים יוצאים הכי קרובים באורך (לפי כמות הטקסט, ועוד קצת לכל שאלה בשביל המספר והרווח).
+     index.html כתוב בדיוק עם מה ש-faqMenu בונה ---------- */
+  function faqItem(f, i) {
+    return '<div class="fq-it" style="--i:' + i + '" data-adm="' + esc(f.id) + '"><h3 class="fq-q"><span class="fq-n" aria-hidden="true">' + ('0' + (i + 1)).slice(-2) + '</span><span class="fq-t">' + esc(f.q) + '</span></h3>' +
+      '<p class="fq-a">' + esc(f.a).replace(/\n/g, '<br>') + '</p></div>';
+  }
+  function faqMenu(list) {
+    var w = list.map(function (f) { return String(f.q || '').length + String(f.a || '').length + 90; });
+    var all = w.reduce(function (s, x) { return s + x; }, 0), h = list.length, run = 0, best = Infinity;
+    for (var k = 1; k < list.length; k++) { run += w[k - 1]; var d = Math.abs(all - 2 * run); if (d < best) { best = d; h = k; } }
+    var col = function (part, s) { return part.length ? '<div class="fq-col">' + part.map(function (f, j) { return faqItem(f, s + j); }).join('') + '</div>' : ''; };
+    return col(list.slice(0, h), 0) + col(list.slice(h), h);
+  }
+  function faqLd(list) {
+    return JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: list.map(function (f) {
+      return { '@type': 'Question', name: String(f.q), acceptedAnswer: { '@type': 'Answer', text: String(f.a || '') } }; }) }).replace(/</g, '\\u003c');
+  }
   function apply(D, o) {
     if (!D) return;
     o = o || {};
@@ -165,6 +196,15 @@
       var vis = D.testimonials.filter(function (t) { return t.visible && (t.text || t.name); }).slice(0, 6);
       was.innerHTML = vis.map(function (t, i) { return waShot(t, i, o.shown); }).join('');
       var st = q('#stories'); if (st && !vis.length) st.style.display = 'none';
+    }
+    /* שאלות נפוצות: רק מה שמסומן "מוצג באתר", בסדר של המערכת. בלי שאלות מוצגות: החלק והקישורים אליו לא מוצגים */
+    var fq = q('#faq [data-faqs]');
+    if (fq && Array.isArray(D.faqs)) {
+      var fv = D.faqs.filter(function (f) { return f && f.visible && String(f.q || '').trim(); });
+      fq.innerHTML = faqMenu(fv);
+      fq.classList.toggle('one', fv.length < 2);   /* שאלה אחת: טור אחד, בלי קו באמצע */
+      var ld = q('#fq-ld'); if (ld) ld.textContent = faqLd(fv);
+      if (!fv.length) { var fs = q('#faq'); if (fs) fs.style.display = 'none'; Array.prototype.forEach.call(doc.querySelectorAll('a[href="#faq"]'), function (a) { a.style.display = 'none'; }); }
     }
     /* טלפון ווואטסאפ, בכל מקום בעמוד */
     var b = D.biz || {};
@@ -195,12 +235,13 @@
     var q = function (s) { try { return doc.querySelector(s); } catch (e) { return null; } };
     if (tab === 'texts') { var d = sec(id), f = d && k && field(id, k); return { sec: d ? q(d.root) : null, el: f ? q(f.s) : null }; }
     if (tab === 'reviews') return { sec: q('#stories'), el: id ? q('#stories [data-adm="' + id + '"]') : null };
+    if (tab === 'faq') return { sec: q('#faq'), el: id ? q('#faq [data-adm="' + id + '"]') : null };
     if (tab === 'gallery') return { sec: q('#gallery'), el: q('#alb') };
     if (tab === 'biz') return { sec: q('#contact'), el: q('#contact .ct-alt') };
     return { sec: null, el: null };
   }
 
-  window.PatCMS = { SECTIONS: SECTIONS, BOOK_BARS: BOOK_BARS, sec: sec, field: field, isNew: isNew, defaults: defaults, migrate: migrate, snapOf: snapOf, data: data, apply: apply, target: target, bookFor: bookFor, waShot: waShot };
+  window.PatCMS = { SECTIONS: SECTIONS, BOOK_BARS: BOOK_BARS, sec: sec, field: field, isNew: isNew, defaults: defaults, migrate: migrate, snapOf: snapOf, data: data, apply: apply, target: target, bookFor: bookFor, waShot: waShot, faqItem: faqItem, faqMenu: faqMenu };
 
   /* =========================================================
      באתר עצמו (לא במסכי המערכת)

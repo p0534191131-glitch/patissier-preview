@@ -61,6 +61,8 @@ const sm = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
 const html = document.documentElement;
 const calm = () => /(^|[?&])still(=|&|$)/.test(location.search) || html.classList.contains('a11y-still') || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const phoneW = () => innerWidth <= 820;
+// עמוד אחד בכל פעם רק בטלפון. טאבלט לאורך מקבל כפולות כמו במחשב, כדי שלא יציץ לצד הדף דף חתוך (3.11.2026)
+const onePage = () => innerWidth <= 640;
 const TEST = /(^|[?&])b3test/.test(location.search);
 const MAXC = 2 * BARS.length + 2;                                                    // מצבים: 0 סגור, 1 שער, 2..9 ברים, 10 סוף
 
@@ -308,7 +310,8 @@ function paint(sp, m) {
     gutter(x, W, H, side, 1.1);
   } else if (sp.k === 'A') {
     // טלפון, עמוד א: הצילום המלא למעלה, ומתחתיו הכותרת ומה רואים
-    const ph = W / 1.7; cover(x, img(b.lead), 0, 0, W, ph, b.lead.fx, .5); reg(R, m, 0, 0, W, ph, { t: 'ph', n: b.lead.n });
+    // הצילום לא מגיע עד הקצה החיצוני של הדף (3.11.2026): אחרת הקצוות של הצילומים בדפים שמתחת מציצים כפסים צבעוניים ליד הדף
+    const ph = W / 1.7, ox = 3 * U; cover(x, img(b.lead), ox, 0, W - ox, ph, b.lead.fx, .5); reg(R, m, ox, 0, W - ox, ph, { t: 'ph', n: b.lead.n });
     flow(x, m, [{ t: 'tx', s: b.when, z: 4.2, w: 700, c: C.gd, ls: .1, one: 1 },
       { t: 'tx', s: b.title, z: 7.6, w: 700, c: C.ink, lh: 1.12, gap: 1.8 },
       { t: 'tx', s: BOOK.seeL, z: 4.2, w: 700, c: C.gd, gap: 3.4, ls: .06, one: 1 },
@@ -580,7 +583,7 @@ function photoAt(cur) {
   const b = BARS[Math.floor((cur - 2) / 2)]; return cur % 2 === 0 ? b.lead.n : b.more[0].n;
 }
 function ui() {
-  const cur = S.cur, ph = S.mode ? S.mode.ph : phoneW();
+  const cur = S.cur, ph = S.mode ? S.mode.ph : onePage();
   A.classList.toggle('shut', !cur);
   S.cnt.textContent = cur ? (ph ? 'עמוד ' : 'כפולה ') + cur + ' מתוך ' + MAXC : '';
   S.prev.disabled = S.nbp.disabled = !cur; S.next.disabled = S.nbn.disabled = cur >= MAXC;
@@ -610,7 +613,7 @@ async function boot() {
 }
 function rebuild() {
   if (!S.ready) return;
-  const m = phoneW() ? MODES.M : MODES.D;
+  const m = onePage() ? MODES.M : MODES.D;
   if (S.E) { S.E.dispose(); S.E = null; }
   if (S.flat) { S.flat.dispose(); S.flat = null; }
   S.mode = m; ui();
@@ -620,7 +623,7 @@ function rebuild() {
 }
 function resize() {
   if (!S.ready) return;
-  const want = phoneW() ? 'M' : 'D';
+  const want = onePage() ? 'M' : 'D';
   if (!S.mode || want !== S.mode.k) { rebuild(); return; }
   if (S.E) S.E.size(); if (S.flat) S.flat.size();
 }
@@ -911,7 +914,7 @@ function Engine(m) {
   /* ---------- מצלמה ותנוחה ---------- */
   const ph = m.ph;
   const P0 = ph ? { el: 50, az: 14, yaw: -4 } : { el: 37, az: 22, yaw: -8 };
-  const P1 = ph ? { el: 60, az: 0, yaw: 0 } : { el: 55, az: 0, yaw: 0 };
+  const P1 = ph ? { el: 80, az: 0, yaw: 0 } : { el: 55, az: 0, yaw: 0 };   // טלפון (3.11.2026): כמעט מלמעלה, שהדף ייראה ישר ולא עקום
   const cxC = -Wb / 2, cxO = ph ? (-Wb + Sw / 2 + .06) / 2 : Sw / 2;
   let fitC = null, fitO = null, vw = 1, vh = 1, ext = { t: 0, b: 0 };
   const tilt = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -929,12 +932,14 @@ function Engine(m) {
     poseBook(q);
     const pts = []; for (let i = 0; i < 8; i++) pts.push(new T.Vector3(i & 1 ? box[1] : box[0], i & 2 ? box[3] : box[2], i & 4 ? box[5] : box[4]).applyMatrix4(book.matrixWorld));
     cam.clearViewOffset(); cam.aspect = vw / vh; cam.updateProjectionMatrix();
-    const mg = ph ? { l: ext.l + .012, r: ext.r, t: ext.t + .03, b: ext.b + .03 } : { l: ext.l + .03, r: ext.r + .03, t: ext.t + .03, b: ext.b + .035 };
+    // טלפון פתוח: השדרה בדיוק בקצה הימני של המסך, כדי שלא תציץ חתיכה חתוכה מהדף השכן (3.11.2026)
+    const mg = ph ? { l: ext.l + .012, r: q ? 0 : ext.r, t: ext.t + .03, b: ext.b + .03 } : { l: ext.l + .03, r: ext.r + .03, t: ext.t + .03, b: ext.b + .035 };
     const bnd = () => { let x0 = 9, x1 = -9, y1 = -9, y2 = 9; pts.forEach(p => { const v = p.clone().project(cam); x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y2 = Math.min(y2, v.y); y1 = Math.max(y1, v.y); }); return [x0, x1, y2, y1]; };
     let lo = .5, hi = 60;
     for (let it = 0; it < 30; it++) { const d = (lo + hi) / 2; placeCam(d, P.el, P.az); const b = bnd(); if (b[1] - b[0] <= 2 - mg.l - mg.r && b[3] - b[2] <= 2 - mg.t - mg.b) hi = d; else lo = d; }
     placeCam(hi, P.el, P.az); const b = bnd();
-    return { d: hi, sx: (mg.l - mg.r) / 2 - (b[0] + b[1]) / 2, sy: (mg.b - mg.t) / 2 - (b[2] + b[3]) / 2 };
+    // טלפון פתוח: גם כשהגובה מגביל והדף צר מהמסך, השדרה נשארת בקצה הימני (המקום הפנוי משמאל), ולא מציץ דף חתוך מימין
+    return { d: hi, sx: ph && q ? 1 - mg.r - b[1] : (mg.l - mg.r) / 2 - (b[0] + b[1]) / 2, sy: (mg.b - mg.t) / 2 - (b[2] + b[3]) / 2 };
   }
   function size() {
     // הקנבס: כל רוחב החלק ועוד שוליים, וגבוה מהבמה (מקום לדף שעומד באמצע ההיפוך ולצל שלו)
@@ -952,7 +957,7 @@ function Engine(m) {
     ext = { t: 2 * Math.max(0, r.top - cr.top) / vh, b: 2 * Math.max(0, cr.bottom - r.bottom) / vh, l: 2 * Math.max(0, r.left - cr.left) / vw, r: 2 * Math.max(0, cr.right - r.right) / vw };
     const zz = Hb / 2 + .01;
     fitC = fit(0, [-Wb - .01, .05 + .1 * Sw, 0, Sw + .01, -zz, zz], P0);
-    fitO = fit(1, ph ? [-Wb + .012, Sw / 2 + .055, 0, .1, -zz, zz] : [-Wb - .01, Sw + Wb + .01, 0, .1, -zz, zz], P1);
+    fitO = fit(1, ph ? [-Wb + .012, Sw / 2, 0, .1, -zz, zz] : [-Wb - .01, Sw + Wb + .01, 0, .1, -zz, zz], P1);
     camPose(); wake();
     centerGeo();
   }

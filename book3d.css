@@ -60,11 +60,14 @@
   #gallery.b3g{padding-top:80px;scroll-margin-top:60px}
   #gallery.b3g .b3 .head{margin-bottom:6px}
   #gallery.b3g .b3 .head h2{font-size:var(--t2)}
-  #gallery .b3-stage{height:clamp(440px,146vw,640px)}
   #gallery .b3-cv{-webkit-mask-image:linear-gradient(180deg,transparent,#000 8%,#000 94%,transparent);mask-image:linear-gradient(180deg,transparent,#000 8%,#000 94%,transparent)}
   #gallery .b3-ui{margin-top:8px}
   #gallery .b3-arr{width:48px;height:48px}
   #gallery .b3-mid{min-width:9em}
+}
+/* טלפון (עמוד אחד, עד 640): הבמה לא יותר גבוהה מהמסך פחות ההדר, החצים וכפתור הוואטסאפ, כדי שהכפתור לא יכסה את החץ בטלפון נמוך (3.11.2026) */
+@media (max-width:640px){
+  #gallery .b3-stage{height:clamp(380px,min(146vw,calc(100svh - 280px)),640px)}
 }
 
 /* ---------- נעיצה: הבמה נעוצה מתחת להדר, והגלילה מדפדפת את הכריכה ועוד שני דפים ---------- */

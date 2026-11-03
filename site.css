@@ -610,11 +610,11 @@ main{overflow-x:clip}
 .qt{z-index:2;padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
 /* הווילון: הסיפור על הצילום נשאר במקום, והחלק שבא אחריו עולה עליו כמו דף (hero-open.js קובע את --hs-cur).
    1.11.2026: התהליך והצעת המחיר הוחלפו במקום ("תהפוך את המקום של הצעת מחיר עם התהליך"), אז הווילון הוא עכשיו התהליך */
-.hs-on #process{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
+.hs-on #process{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));min-height:calc(var(--hs-vh,100lvh) + 3px);display:flex;flex-direction:column;justify-content:flex-end;background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
   box-shadow:0 -1px 0 rgba(217,182,102,.45),0 -40px 80px -30px rgba(10,3,0,.75)}
-/* לפחות בגובה הצילום הפתוח, כדי שהוא לא יציץ מתחתיו גם במסך גבוה. 3.11.2026: במקום min-height (שהוסיף רווח ריק לפני הצעת המחיר בטלפון)
-   הווילון נמשך למטה בשכבה, בלי להוסיף גובה לחלק, כך שהרווח עד החלק הבא שווה לרווח בין כל החלקים */
-.hs-on #process::after{content:"";position:absolute;inset-inline:0;top:100%;height:max(0px,calc(var(--hs-vh,100lvh) + 3px - 100%));background:var(--esp);pointer-events:none}
+/* min-height: לפחות בגובה הצילום הפתוח, כדי שהוא (והסיפור שעליו) לא יציץ מתחתיו גם במסך גבוה.
+   3.11.2026: התוכן יושב בתחתית הווילון (flex-end), כך שהגובה העודף נשאר למעלה ולא נוסף לרווח לפני הצעת המחיר.
+   (שכבה שנמשכת למטה במקום זה כיסתה בטאבלט לאורך את הכותרת של הצעת המחיר, אז לא) */
 .qt > .wrap{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(36px,5vw,84px);align-items:center}
 .qt-head{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(22px,2.4vw,32px)}
 .qt-t{display:flex;flex-direction:column;align-items:flex-start;gap:22px}

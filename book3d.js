@@ -61,8 +61,9 @@ const sm = t => { t = clamp(t, 0, 1); return t * t * (3 - 2 * t); };
 const html = document.documentElement;
 const calm = () => /(^|[?&])still(=|&|$)/.test(location.search) || html.classList.contains('a11y-still') || matchMedia('(prefers-reduced-motion: reduce)').matches;
 const phoneW = () => innerWidth <= 820;
-// עמוד אחד בכל פעם רק בטלפון. טאבלט לאורך מקבל כפולות כמו במחשב, כדי שלא יציץ לצד הדף דף חתוך (3.11.2026)
-const onePage = () => innerWidth <= 640;
+// עמוד אחד בכל פעם (מצב M): כבר לא בשימוש. 3.11.2026: אפרים רוצה לראות גם בטלפון את כל הספר ואת כל התמונות,
+// אז בכל גודל מסך כפולות (מצב D). מצב M נשאר בקוד למקרה שנחזור אליו
+const onePage = () => false;
 const TEST = /(^|[?&])b3test/.test(location.search);
 const MAXC = 2 * BARS.length + 2;                                                    // מצבים: 0 סגור, 1 שער, 2..9 ברים, 10 סוף
 
@@ -942,6 +943,8 @@ function Engine(m) {
     return { d: hi, sx: ph && q ? 1 - mg.r - b[1] : (mg.l - mg.r) / 2 - (b[0] + b[1]) / 2, sy: (mg.b - mg.t) / 2 - (b[2] + b[3]) / 2 };
   }
   function size() {
+    // טלפון (עד 640) בכפולות: מצלמה גבוהה יותר, שהכפולה תיראה גדולה יותר והתמונות ברורות (3.11.2026)
+    if (!ph) P1.el = innerWidth <= 640 ? 72 : 55;
     // הקנבס: כל רוחב החלק ועוד שוליים, וגבוה מהבמה (מקום לדף שעומד באמצע ההיפוך ולצל שלו)
     // במידות הפריסה ביחס ל-A (כשהספר ממורכז הבמה והקנבס מוזזים ומוגדלים, והמלבנים על המסך משתנים)
     const aw = A.offsetWidth, st = S.stage, r = { left: st.offsetLeft, top: st.offsetTop, width: st.offsetWidth, height: st.offsetHeight };

@@ -356,6 +356,6 @@
   var tt = 0;
   function toast(m) { var t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove('on'); }, 3400); }
   if (window.PatLightbox) PatLightbox.init();
-  if (window.PatA11y) PatA11y.init({ position: innerWidth > 820 ? 'end' : 'start' });
+  if (window.PatA11y) PatA11y.init({ position: 'end' });   // כפתור הנגישות למטה משמאל בכל גודל מסך (3.11.2026: בטלפון "הכפתור של נגישות בצד שמאל")
   $$('[data-a11y]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); var b = document.getElementById('a11y-btn'); if (b) b.click(); }); });
 })();

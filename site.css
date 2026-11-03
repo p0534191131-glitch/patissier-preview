@@ -316,8 +316,9 @@ main{overflow-x:clip}
 .hero.h-entered .h-ph,.hero.h-entered .h-lamp,.hero.h-entered .h-ring,.hero.h-entered .h-l1,.hero.h-entered .h-l2,.hero.h-entered .h-sub,.hero.h-entered .h-cta{animation:none}
 .hero.is-open .h-shd{display:block}
 @media (max-width:820px){
-  .hs-on .hs-veil{background:linear-gradient(0deg,rgba(43,29,23,.94) 0%,rgba(43,29,23,.86) 34%,rgba(43,29,23,.4) 52%,rgba(43,29,23,0) 64%),linear-gradient(180deg,rgba(43,29,23,.55) 0%,rgba(43,29,23,0) 18%)}
-  .hs-on .hs-story{align-items:flex-end;padding-bottom:max(26px,env(safe-area-inset-bottom))}
+  /* 3.11.2026: בטלפון הסיפור באמצע הגובה של המסך (מתחת להדר), לא למטה. ההכהיה עברה איתו לאמצע, שהטקסט יישאר קריא */
+  .hs-on .hs-veil{background:radial-gradient(ellipse 140% 44% at 50% 54%,rgba(43,29,23,.92) 0%,rgba(43,29,23,.84) 52%,rgba(43,29,23,.4) 80%,rgba(43,29,23,0) 100%),linear-gradient(180deg,rgba(43,29,23,.55) 0%,rgba(43,29,23,0) 18%)}
+  .hs-on .hs-story{align-items:center;padding-top:60px}
   .hs-on .hs-story .st-txt{width:100%;gap:14px}
 }
 

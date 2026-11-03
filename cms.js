@@ -162,16 +162,15 @@
       '<div class="wa-in" aria-hidden="true"><span class="wa-box"><i class="wa-emo"></i><span>הודעה</span><i class="wa-att"></i></span><i class="wa-mic"></i></div><i class="wa-nav"></i></div></div></figure>';
   }
   /* ---------- שאלות נפוצות = "תפריט מודפס" (2.11.2026, סגנון 9 גרסה א): כל שאלה היא שורה בתפריט, הכול גלוי.
-     faqMenu מחלק לשני טורים לפי הסדר, במקום שבו שני הטורים יוצאים הכי קרובים באורך (לפי כמות הטקסט, ועוד קצת לכל שאלה בשביל המספר והרווח).
+     faqMenu מחלק לשני טורים לפי הסדר: הטור הראשון (מימין) מקבל את החצי הגדול, 7 שאלות = 4 ו-3. מי נמצא באיזה טור קובעים בסדר השאלות במערכת
+     (3.11.2026, אפרים: "תחליף את שאלה 4 עם חמש ותשים את 4 בטור הראשון". קודם החלוקה הייתה לפי אורך הטקסט).
      index.html כתוב בדיוק עם מה ש-faqMenu בונה ---------- */
   function faqItem(f, i) {
     return '<div class="fq-it" style="--i:' + i + '" data-adm="' + esc(f.id) + '"><h3 class="fq-q"><span class="fq-n" aria-hidden="true">' + ('0' + (i + 1)).slice(-2) + '</span><span class="fq-t">' + esc(f.q) + '</span></h3>' +
       '<p class="fq-a">' + esc(f.a).replace(/\n/g, '<br>') + '</p></div>';
   }
   function faqMenu(list) {
-    var w = list.map(function (f) { return String(f.q || '').length + String(f.a || '').length + 90; });
-    var all = w.reduce(function (s, x) { return s + x; }, 0), h = list.length, run = 0, best = Infinity;
-    for (var k = 1; k < list.length; k++) { run += w[k - 1]; var d = Math.abs(all - 2 * run); if (d < best) { best = d; h = k; } }
+    var h = Math.ceil(list.length / 2);
     var col = function (part, s) { return part.length ? '<div class="fq-col">' + part.map(function (f, j) { return faqItem(f, s + j); }).join('') + '</div>' : ''; };
     return col(list.slice(0, h), 0) + col(list.slice(h), h);
   }

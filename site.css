@@ -610,8 +610,11 @@ main{overflow-x:clip}
 .qt{z-index:2;padding-top:clamp(80px,9vw,140px);padding-bottom:clamp(80px,9vw,140px)}
 /* הווילון: הסיפור על הצילום נשאר במקום, והחלק שבא אחריו עולה עליו כמו דף (hero-open.js קובע את --hs-cur).
    1.11.2026: התהליך והצעת המחיר הוחלפו במקום ("תהפוך את המקום של הצעת מחיר עם התהליך"), אז הווילון הוא עכשיו התהליך */
-.hs-on #process{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));min-height:calc(var(--hs-vh,100lvh) + 3px); /* לפחות בגובה הצילום הפתוח, כדי שהוא לא יציץ מתחתיו גם במסך גבוה */background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
+.hs-on #process{z-index:9;margin-top:calc(-1 * var(--hs-cur,100svh));background:var(--esp);border-radius:clamp(28px,4vw,56px) clamp(28px,4vw,56px) 0 0;
   box-shadow:0 -1px 0 rgba(217,182,102,.45),0 -40px 80px -30px rgba(10,3,0,.75)}
+/* לפחות בגובה הצילום הפתוח, כדי שהוא לא יציץ מתחתיו גם במסך גבוה. 3.11.2026: במקום min-height (שהוסיף רווח ריק לפני הצעת המחיר בטלפון)
+   הווילון נמשך למטה בשכבה, בלי להוסיף גובה לחלק, כך שהרווח עד החלק הבא שווה לרווח בין כל החלקים */
+.hs-on #process::after{content:"";position:absolute;inset-inline:0;top:100%;height:max(0px,calc(var(--hs-vh,100lvh) + 3px - 100%));background:var(--esp);pointer-events:none}
 .qt > .wrap{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);gap:clamp(36px,5vw,84px);align-items:center}
 .qt-head{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(22px,2.4vw,32px)}
 .qt-t{display:flex;flex-direction:column;align-items:flex-start;gap:22px}
@@ -1081,8 +1084,12 @@ html .lb button{font-size:var(--t3)}
    כל השאלות והתשובות גלויות, בלי ללחוץ. במחשב שני טורים עם קו זהב דק ביניהם, בטלפון טור אחד.
    קריא: הטקסט מיושר לימין ולא ממורכז, המספר בעיגול זהב תלוי מימין, התשובה כהה ובשורות מרווחות. גדלים: t2 לכותרת, t3 לכל השאר.
    cms.js בונה את הטורים ואת השאלות מהמערכת (faqMenu), בדיוק כמו שכתוב ב-index.html. */
-#faq.fq{padding-top:clamp(40px,5vw,80px)}
-.fq-sheet{position:relative;display:block;max-width:1240px;margin-inline:auto;padding:clamp(46px,3.4vw,50px) clamp(30px,5.4vw,84px) clamp(40px,3.2vw,46px);color:var(--esp);
+/* 3.11.2026: אותו רווח בין כל החלקים. מלמעלה מורידים את השוליים שמתחת לצילומי הוואטסאפ, ולמטה מוסיפים את הצל של הדף.
+   קישור עם #faq מביא את הדף כולו 12 פיקסלים מתחת להדר */
+#faq.fq{--fq-pt:calc(clamp(80px,9vw,140px) - 58px);padding-top:var(--fq-pt);padding-bottom:calc(clamp(80px,9vw,140px) + clamp(13px,1.6vw,24px));scroll-margin-top:calc(84px - var(--fq-pt))}
+@media (max-width:980px){#faq.fq{--fq-pt:calc(clamp(80px,9vw,140px) - 47px)}}
+@media (max-width:820px){#faq.fq{scroll-margin-top:calc(72px - var(--fq-pt))}}
+.fq-sheet{position:relative;display:block;max-width:1240px;margin-inline:auto;padding:clamp(34px,2.6vw,40px) clamp(30px,4.6vw,70px) clamp(34px,2.6vw,40px);color:var(--esp);
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .1 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(120% 90% at 30% 0%,rgba(255,250,236,.55),rgba(255,250,236,0) 60%),
@@ -1103,8 +1110,8 @@ html .lb button{font-size:var(--t3)}
 .fq-cn b:nth-child(1){top:-5px;right:-5px}.fq-cn b:nth-child(2){top:-5px;left:-5px}.fq-cn b:nth-child(3){bottom:-5px;right:-5px}.fq-cn b:nth-child(4){bottom:-5px;left:-5px}
 
 /* ראש התפריט */
-.fq-head{align-items:center;text-align:center;gap:8px;max-width:none;margin:0 0 clamp(14px,1.4vw,20px)}
-.fq-logo{display:block;width:clamp(110px,9vw,132px);margin-bottom:0}
+.fq-head{align-items:center;text-align:center;gap:4px;max-width:none;margin:0 0 clamp(4px,.6vw,10px)}
+.fq-logo{display:block;width:clamp(92px,7vw,108px);margin-bottom:0}
 .fq-logo svg{display:block;width:100%;height:auto;filter:drop-shadow(0 1px 0 rgba(255,250,236,.8)) drop-shadow(0 -.5px 0 rgba(70,45,10,.35))}
 .fq-logo stop:nth-child(1){stop-color:#6E5120}.fq-logo stop:nth-child(2){stop-color:#C9A04A}.fq-logo stop:nth-child(3){stop-color:#9C7430}.fq-logo stop:nth-child(4){stop-color:#6E5120}
 #faq.fq .fq-head .label{padding:0;clip-path:none;filter:none;background:none;display:inline-flex;align-items:center;gap:14px;font:500 var(--t3)/1.2 var(--font);letter-spacing:.05em;color:#6E5120}
@@ -1112,26 +1119,26 @@ html .lb button{font-size:var(--t3)}
 #faq.fq .fq-head .label::after{background:linear-gradient(270deg,transparent,#A07834)}
 #faq.fq .fq-head h2{font:700 var(--t2)/1.08 var(--font-d);color:var(--esp);text-shadow:0 1px 0 rgba(255,250,236,.6)}
 /* קישוט: קו זהב עם יהלום באמצע */
-.fq-orn{position:relative;display:block;width:min(220px,60%);height:11px;margin-top:4px;
+.fq-orn{position:relative;display:block;width:min(220px,60%);height:11px;margin-top:2px;
   background:linear-gradient(90deg,transparent,#A07834 30%,#A07834 calc(50% - 12px),transparent calc(50% - 12px),transparent calc(50% + 12px),#A07834 calc(50% + 12px),#A07834 70%,transparent) center/100% 1px no-repeat}
 .fq-orn::before{content:'';position:absolute;left:50%;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;rotate:45deg;background:linear-gradient(135deg,#F3DD9A,#B8913F 55%,#7A5A22)}
 
 /* השאלות: שני טורים, קו זהב דק ביניהם */
-.fq-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(48px,6vw,104px);position:relative}
+.fq-list{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:clamp(40px,4.4vw,72px);position:relative}
 .fq-list::before{content:'';position:absolute;top:10px;bottom:10px;left:50%;width:1px;background:linear-gradient(180deg,transparent,rgba(160,120,52,.55) 12%,rgba(160,120,52,.55) 88%,transparent)}
 .fq-list.one{grid-template-columns:minmax(0,1fr)}
 .fq-list.one::before{display:none}
 .fq-col{display:flex;flex-direction:column}
-.fq-it{position:relative;display:flex;flex-direction:column;text-align:right;padding:clamp(20px,1.7vw,26px) 0}
+.fq-it{position:relative;display:flex;flex-direction:column;text-align:right;padding:clamp(10px,1vw,14px) 0}
 .fq-it + .fq-it::before{content:'';position:absolute;top:0;right:0;width:100%;height:1px;background:linear-gradient(270deg,rgba(110,81,32,.42),rgba(110,81,32,.14) 75%,transparent)}
-.fq-q{display:grid;grid-template-columns:2.6em minmax(0,1fr);align-items:center;margin:0 0 8px;font:700 var(--t3)/1.4 var(--font-d);letter-spacing:.005em;color:var(--esp);text-shadow:0 1px 0 rgba(255,250,236,.55)}
-.fq-n{display:grid;place-items:center;width:2.15em;height:2.15em;border-radius:50%;font:700 var(--t3)/1 var(--font);letter-spacing:0;color:#7A5A22;
+.fq-q{display:grid;grid-template-columns:2.6em minmax(0,1fr);align-items:center;margin:0 0 2px;font:700 var(--t3)/1.4 var(--font-d);letter-spacing:.005em;color:var(--esp);text-shadow:0 1px 0 rgba(255,250,236,.55)}
+.fq-n{display:grid;place-items:center;width:1.85em;height:1.85em;border-radius:50%;font:700 var(--t3)/1 var(--font);letter-spacing:0;color:#7A5A22;
   box-shadow:inset 0 0 0 1px rgba(160,120,52,.8),0 1px 0 rgba(255,250,236,.7)}
 .fq-t{text-wrap:pretty}
-.fq-a{margin:0;padding-inline-start:2.6em;font:400 var(--t3)/1.75 var(--font);color:color-mix(in srgb,var(--esp) 92%,var(--crm));text-wrap:pretty;text-shadow:0 1px 0 rgba(255,250,236,.45)}
+.fq-a{margin:0;padding-inline-start:2.6em;font:400 var(--t3)/1.6 var(--font);color:color-mix(in srgb,var(--esp) 92%,var(--crm));text-wrap:pretty;text-shadow:0 1px 0 rgba(255,250,236,.45)}
 
 /* תחתית התפריט: הכפתור לוואטסאפ */
-.fq-foot{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:clamp(14px,1.4vw,20px)}
+.fq-foot{display:flex;flex-direction:column;align-items:center;gap:16px;margin-top:clamp(8px,.8vw,12px)}
 #faq.fq .fq-foot .btn-line{color:var(--esp);box-shadow:inset 0 0 0 1.5px rgba(110,81,32,.55)}
 #faq.fq .fq-foot .btn-line:hover{box-shadow:inset 0 0 0 1.5px var(--esp);background:rgba(110,81,32,.06)}
 #faq.fq .fq-foot .btn-line:focus-visible{outline:3px solid var(--esp)}
@@ -1141,6 +1148,21 @@ html .lb button{font-size:var(--t3)}
 .fq-sheet.rv.in .fq-it{opacity:1;translate:none}
 html.still .fq-sheet .fq-it,html.a11y-still .fq-sheet .fq-it{opacity:1!important;translate:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){.fq-sheet .fq-it{opacity:1!important;translate:none!important;transition:none!important}}
+
+/* מסך אחד (3.11.2026): "תקטין לי את השאלות למסך אחד". במחשב ובטאבלט כל התפריט נכנס במסך אחד מתחת להדר.
+   במסכים נמוכים (מחשב נייד 768 או 720) מהדקים עוד את הרווחים, בלי לגעת בגודל הכתב */
+@media (min-width:761px) and (max-height:820px){
+  .fq-sheet{padding-top:30px;padding-bottom:32px}
+  .fq-head{margin-bottom:2px}
+  .fq-logo{width:84px}
+  .fq-it{padding:8px 0}
+  .fq-a{line-height:1.5}
+  .fq-foot{margin-top:6px}
+}
+@media (min-width:761px) and (max-height:740px){
+  .fq-it{padding:6px 0}
+  .fq-head{gap:2px}
+}
 
 /* טלפון: טור אחד, עדיין תפריט. התשובה ברוחב מלא, שהשורות לא יהיו קצרות */
 @media (max-width:760px){

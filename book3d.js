@@ -525,6 +525,10 @@ function centerGeo() {
   const set = (k, v) => G.style.setProperty(k, v), px = v => v.toFixed(1) + 'px';
   set('--b3dx', px(dx)); set('--b3dy', px(dy)); set('--b3s', s.toFixed(3));
   set('--b3os', px(bx - sx) + ' ' + px(by - sy)); set('--b3oc', px(bx - cv.offsetLeft) + ' ' + px(by - cv.offsetTop));
+  /* הרווח מתחת לספר (3.11.2026): במחשב הספר באמצע והכפתורים בצדדים, ומתחתיו נשאר חלק ריק של הבמה.
+     השטח הזה (--b3tail) יורד מהגובה של הבמה ב-book3d.css, כך שהרווח עד "מה לקוחות מספרים" שווה לרווח בין כל החלקים */
+  const tail = innerWidth > 1100 ? Math.max(0, S.pw.offsetHeight - (A.offsetTop + by + dy + (b.b - by) * s)) : 0;
+  set('--b3tail', px(tail));
   const hw = (b.r - b.l) / 2 * s, gap = 30 + 28;
   set('--b3bl', px(Math.max(16 + 28 - ar.left, bx + dx - hw - gap))); set('--b3br', px(Math.min(cw - ar.left - 16 - 28, bx + dx + hw + gap))); set('--b3by', px(by + dy));
 }

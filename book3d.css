@@ -88,6 +88,7 @@
    ושני כפתורים בצדי הספר (הדף הבא משמאל). המידות במשתנים מ-centerGeo ב-book3d.js. בטלפון ובטאבלט החצים שמתחת לספר נשארים ---------- */
 #gallery .b3-nb{display:none}
 @media (min-width:1101px){
+  #gallery .b3-pw{margin-bottom:calc(-1 * var(--b3tail,0px))}   /* השטח הריק מתחת לספר לא נספר ברווח (3.11.2026) */
   #gallery .b3-stage{transform-origin:var(--b3os,50% 50%);transition:transform .9s var(--ease)}
   #gallery .b3-cv{transform-origin:var(--b3oc,50% 50%);transition:opacity .7s var(--ease),transform .9s var(--ease)}
   #gallery.b3c .b3-stage,#gallery.b3c .b3-cv{transform:translate(var(--b3dx,0px),var(--b3dy,0px)) scale(var(--b3s,1))}
